@@ -1,0 +1,25 @@
+# =============================================================================
+# Google Ads API Configuration
+# =============================================================================
+# Copy this file to config/google-ads.yaml and fill in your credentials.
+# This file is used by the google-ads Python client library.
+#
+# How to obtain each value:
+#   developer_token    → https://ads.google.com/aw/apicenter
+#   client_id          → https://console.cloud.google.com/apis/credentials
+#   client_secret      → Same page as client_id
+#   refresh_token      → Run: python scripts/setup_credentials.py
+#   login_customer_id  → Your MCC account ID (if using a manager account)
+#   customer_id        → The specific Google Ads account to query
+# =============================================================================
+
+developer_token: "INSERT_DEVELOPER_TOKEN"
+client_id: "INSERT_CLIENT_ID.apps.googleusercontent.com"
+client_secret: "INSERT_CLIENT_SECRET"
+refresh_token: "INSERT_REFRESH_TOKEN"
+login_customer_id: "INSERT_MCC_CUSTOMER_ID"
+
+# Remove dashes from customer ID (e.g., 123-456-7890 → 1234567890)
+# customer_id: "INSERT_CUSTOMER_ID"
+
+use_proto_plus: true

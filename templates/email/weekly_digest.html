@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Digest — 1BOX Marketing Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f4f5f7;
+      color: #1a1a2e;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .header {
+      background: #003B73;
+      padding: 24px 32px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+    .body {
+      padding: 32px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1>Weekly Performance Digest</h1>
+        <div style="color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 4px;">
+          {{ period_start }} — {{ period_end }}
+        </div>
+      </div>
+      <div class="body">
+        <p>Weekly digest template — to be implemented in Phase 4.</p>
+        <!-- TODO: KPI summary, top alerts, recommendations -->
+      </div>
+    </div>
+  </div>
+</body>
+</html>
