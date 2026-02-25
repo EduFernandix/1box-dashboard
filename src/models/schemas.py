@@ -204,6 +204,21 @@ class GA4PageRead(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class GA4GeoRead(BaseModel):
+    """GA4 geographic data."""
+
+    id: int
+    date: date
+    city: str
+    country: str = "Netherlands"
+    sessions: int = 0
+    users: int = 0
+    conversions: int = 0
+    fetched_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
 # ---------------------------------------------------------------------------
 # Alert Schemas
 # ---------------------------------------------------------------------------

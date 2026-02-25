@@ -213,6 +213,28 @@ class GA4Page(Base):
     )
 
 
+class GA4Geo(Base):
+    """GA4 geographic data aggregated by date and city."""
+
+    __tablename__ = "ga4_geo"
+    __table_args__ = (
+        UniqueConstraint("date", "city", name="uq_ga4geo_key"),
+        Index("ix_ga4geo_date", "date"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    date: Mapped[date] = mapped_column(Date, nullable=False)
+    city: Mapped[str] = mapped_column(String(128), nullable=False)
+    country: Mapped[str] = mapped_column(String(64), default="Netherlands")
+    sessions: Mapped[int] = mapped_column(Integer, default=0)
+    users: Mapped[int] = mapped_column(Integer, default=0)
+    conversions: Mapped[int] = mapped_column(Integer, default=0)
+
+    fetched_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), nullable=False
+    )
+
+
 # ---------------------------------------------------------------------------
 # System Tables
 # ---------------------------------------------------------------------------

@@ -32,6 +32,7 @@ from src.models.database import (
     Base,
     Campaign,
     GA4Conversion,
+    GA4Geo,
     GA4Page,
     GA4Traffic,
     Keyword,
@@ -151,12 +152,24 @@ GA4_PAGES = [
     ("/blog/verhuistips", "Verhuistips Blog", 0.06),
 ]
 
-# Dutch cities for GA4 geo data
-DUTCH_CITIES = [
-    "Amsterdam", "Rotterdam", "Utrecht", "Den Haag", "Eindhoven",
-    "Groningen", "Tilburg", "Almere", "Breda", "Nijmegen",
-    "Haarlem", "Arnhem", "Zaanstad", "Amersfoort", "Apeldoorn",
-]
+# Dutch cities for GA4 geo data — with session share weights
+DUTCH_CITIES = {
+    "Amsterdam": 0.18,
+    "Rotterdam": 0.14,
+    "Utrecht": 0.10,
+    "Den Haag": 0.09,
+    "Eindhoven": 0.08,
+    "Groningen": 0.06,
+    "Tilburg": 0.05,
+    "Almere": 0.05,
+    "Breda": 0.05,
+    "Nijmegen": 0.04,
+    "Haarlem": 0.04,
+    "Arnhem": 0.04,
+    "Zaanstad": 0.03,
+    "Amersfoort": 0.03,
+    "Apeldoorn": 0.02,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -444,6 +457,26 @@ def generate_ga4_pages(
     return rows
 
 
+def generate_ga4_geo(
+    day: date, total_sessions: int, rng: random.Random
+) -> list[dict]:
+    """Generate GA4 city-level geographic data for the Netherlands map."""
+    rows = []
+    for city, share in DUTCH_CITIES.items():
+        city_sessions = max(1, int(total_sessions * share * (1 + rng.uniform(-0.25, 0.25))))
+        city_users = max(1, int(city_sessions * rng.uniform(0.70, 0.90)))
+        city_conversions = max(0, int(city_sessions * rng.uniform(0.02, 0.06)))
+        rows.append({
+            "date": day,
+            "city": city,
+            "country": "Netherlands",
+            "sessions": city_sessions,
+            "users": city_users,
+            "conversions": city_conversions,
+        })
+    return rows
+
+
 # ---------------------------------------------------------------------------
 # Main Seeder
 # ---------------------------------------------------------------------------
@@ -480,6 +513,7 @@ def seed_database() -> None:
     total_traffic = 0
     total_conversions = 0
     total_pages = 0
+    total_geo = 0
 
     with Session(engine) as session:
         for day_offset in range(NUM_DAYS):
@@ -521,6 +555,12 @@ def seed_database() -> None:
             for pg_row in page_rows:
                 session.add(GA4Page(**pg_row))
                 total_pages += 1
+
+            # GA4 geo (city-level)
+            geo_rows = generate_ga4_geo(day, total_sessions, rng)
+            for geo_row in geo_rows:
+                session.add(GA4Geo(**geo_row))
+                total_geo += 1
 
         # Add a couple of sample alert history entries
         session.add(AlertHistory(
@@ -564,6 +604,7 @@ def seed_database() -> None:
     print(f"  GA4 Traffic:  {total_traffic:,} rows")
     print(f"  GA4 Converts: {total_conversions:,} rows")
     print(f"  GA4 Pages:    {total_pages:,} rows")
+    print(f"  GA4 Geo:      {total_geo:,} rows")
     print(f"  Alerts:       2 sample entries")
     print(f"  Pipeline:     1 run logged")
     print(f"  ─────────────────────────────────────")

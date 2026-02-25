@@ -1,13 +1,15 @@
 """1BOX Marketing Dashboard — Streamlit Application.
 
 Main entry point for the Streamlit dashboard. Configures the page
-layout, theme, and navigation sidebar.
+layout, theme, and multipage navigation.
 
 Run with:
     uv run streamlit run src/dashboard/app.py
 """
 
 import streamlit as st
+
+from src.dashboard.theme import inject_custom_css
 
 
 def main() -> None:
@@ -19,17 +21,35 @@ def main() -> None:
         initial_sidebar_state="expanded",
     )
 
-    st.title("📦 1BOX Marketing Dashboard")
-    st.caption("Real-time Google Ads & GA4 analytics for 1BOX Self-Storage")
+    inject_custom_css()
 
-    st.info(
-        "Dashboard under construction. "
-        "Run `uv run python scripts/seed_demo_data.py` to populate demo data, "
-        "then check back as pages are implemented in Phase 3."
+    # Import page modules
+    from src.dashboard.pages import (
+        page_01_overview,
+        page_02_campaigns,
+        page_03_keywords,
+        page_04_traffic,
+        page_05_conversions,
+        page_06_alerts,
     )
 
-    # TODO: Phase 3 — Add sidebar filters and page navigation
-    # Pages are in src/dashboard/pages/
+    pages = {
+        "Google Ads": [
+            st.Page(page_01_overview.render, title="Overview", icon=":material/dashboard:", default=True),
+            st.Page(page_02_campaigns.render, title="Campaigns", icon=":material/campaign:"),
+            st.Page(page_03_keywords.render, title="Keywords", icon=":material/key:"),
+        ],
+        "GA4 Analytics": [
+            st.Page(page_04_traffic.render, title="Traffic", icon=":material/language:"),
+            st.Page(page_05_conversions.render, title="Conversions", icon=":material/target:"),
+        ],
+        "System": [
+            st.Page(page_06_alerts.render, title="Alerts & Log", icon=":material/notifications:"),
+        ],
+    }
+
+    pg = st.navigation(pages)
+    pg.run()
 
 
 if __name__ == "__main__":

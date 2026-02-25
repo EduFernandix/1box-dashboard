@@ -9,6 +9,7 @@ dependencies = [
     "aiosqlite>=0.22.1",
     "apscheduler>=3.11.2",
     "fastapi>=0.133.0",
+    "folium>=0.20.0",
     "google-ads>=29.1.0",
     "google-analytics-data>=0.20.0",
     "google-auth>=2.48.0",
@@ -27,6 +28,7 @@ dependencies = [
     "scipy>=1.17.1",
     "sqlalchemy>=2.0.47",
     "streamlit>=1.54.0",
+    "streamlit-folium>=0.26.2",
     "uvicorn[standard]>=0.41.0",
 ]
 
