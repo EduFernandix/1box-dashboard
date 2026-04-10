@@ -1732,7 +1732,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         </button>
         <div class="nav-spacer"></div>
-        <button class="nav-btn" title="Settings">
+        <button class="nav-btn" title="Settings" onclick="promptOpenAIKey()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         </button>
     </div>
@@ -3065,37 +3065,138 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ===== OPENAI DIRECT CALL HELPER =====
+    function getOpenAIKey() {
+        return localStorage.getItem('1box_openai_key') || '';
+    }
+    function setOpenAIKey(key) {
+        localStorage.setItem('1box_openai_key', key);
+    }
+    function promptOpenAIKey() {
+        const current = getOpenAIKey();
+        const masked = current ? current.slice(0, 8) + '...' + current.slice(-4) : '';
+        const msg = current
+            ? `Current key: ${masked}\n\nEnter new OpenAI API key (or leave empty to keep current):`
+            : 'Enter your OpenAI API key to enable AI Insights:';
+        const key = prompt(msg);
+        if (key !== null && key.trim()) {
+            setOpenAIKey(key.trim());
+            alert('API key saved. Reloading page...');
+            location.reload();
+        }
+    }
+
+    async function callOpenAI(prompt) {
+        const apiKey = getOpenAIKey();
+        if (!apiKey) throw new Error('NO_KEY');
+        const r = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                messages: [
+                    { role: 'system', content: 'You are a senior digital marketing and operations analyst for 1BOX Self-Storage in the Netherlands. Provide concise, data-driven insights. Use **bold** for key numbers and metrics. Each insight should be 1-2 sentences max. No headers, no titles — just numbered insights.' },
+                    { role: 'user', content: prompt },
+                ],
+                temperature: 0.7,
+                max_tokens: 1200,
+            }),
+        });
+        const data = await r.json();
+        if (data.error) throw new Error(data.error.message || 'OpenAI API error');
+        return data.choices[0].message.content;
+    }
+
+    function renderInsightCards(el, text) {
+        const lines = text.split('\n')
+            .map(l => l.replace(/^[\s]*[-*]\s*/, '').replace(/^\d+\.\s*/, '').trim())
+            .filter(l => l.length > 0);
+        el.innerHTML = lines.map((line, i) => {
+            const styled = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            return `<div class="ai-insight-item" style="animation-delay:${i * 0.08}s">
+                <div class="ai-insight-num">${i + 1}</div>
+                <div class="ai-insight-text">${styled}</div>
+            </div>`;
+        }).join('');
+    }
+
     async function loadAiInsights(data) {
         const el = document.getElementById('mktAiInsights');
         el.innerHTML = `<div class="ai-loading-state">
             <div class="ai-loading-dots"><span></span><span></span><span></span></div>
-            <div class="ai-loading-label">Analyzing data...</div>
+            <div class="ai-loading-label">Analyzing marketing data...</div>
         </div>`;
         try {
-            const r = await fetch('/api/ai/insights', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-            const result = await r.json();
-            if (result.error) {
-                el.innerHTML = '<div class="ai-error-state">Could not generate insights.</div>';
-                return;
-            }
-            // Parse bullet points into styled insight cards
-            const lines = result.insights.split('\n')
-                .map(l => l.replace(/^[\s]*[-*]\s*/, '').replace(/^\d+\.\s*/, '').trim())
-                .filter(l => l.length > 0);
-            el.innerHTML = lines.map((line, i) => {
-                // Bold text between ** **
-                const styled = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                return `<div class="ai-insight-item" style="animation-delay:${i * 0.08}s">
-                    <div class="ai-insight-num">${i + 1}</div>
-                    <div class="ai-insight-text">${styled}</div>
-                </div>`;
-            }).join('');
+            // Build marketing context prompt — handle both object and array formats
+            const sc = data.scorecards || {};
+
+            // conversions_by_source is an array of {source, users}
+            const src = data.conversions_by_source || [];
+            const srcStr = Array.isArray(src)
+                ? src.map(s => `${s.source}: ${s.users} users`).join(', ')
+                : Object.entries(src).map(([k,v]) => `${k}: ${v}`).join(', ');
+
+            // visits_by_device is {mobile: N, desktop: N, tablet: N}
+            const vbd = data.visits_by_device || {};
+            const devVisits = typeof vbd === 'object' && !Array.isArray(vbd)
+                ? Object.entries(vbd).map(([k,v]) => `${k}: ${v}`).join(', ')
+                : '';
+
+            // conversions_by_device is {desktop: N, mobile: N, tablet: N}
+            const cbd = data.conversions_by_device || {};
+            const devConv = typeof cbd === 'object' && !Array.isArray(cbd)
+                ? Object.entries(cbd).map(([k,v]) => `${k}: ${v}`).join(', ')
+                : '';
+
+            // demographics_gender is {male: N, female: N, unknown: N}
+            const dg = data.demographics_gender || {};
+            const gender = typeof dg === 'object' && !Array.isArray(dg)
+                ? Object.entries(dg).filter(([k]) => k !== 'unknown').map(([k,v]) => `${k}: ${v}`).join(', ')
+                : '';
+
+            // demographics_age is {age_group: N, ...}
+            const da = data.demographics_age || {};
+            const age = typeof da === 'object' && !Array.isArray(da)
+                ? Object.entries(da).filter(([k]) => k !== 'unknown').map(([k,v]) => `${k}: ${v}`).join(', ')
+                : '';
+
+            // top_cities is an array [{city, users, sessions}, ...]
+            const tc = data.top_cities || [];
+            const topCities = Array.isArray(tc)
+                ? tc.slice(0, 5).map(c => `${c.city}: ${c.sessions} sessions`).join(', ')
+                : '';
+
+            const prompt = `Analyze this digital marketing data for 1BOX Self-Storage (Netherlands, 28 locations). Provide exactly 5 concise, actionable insights.
+
+Scorecard metrics:
+- Total Cost: ${sc.total_cost != null ? '$' + Number(sc.total_cost).toLocaleString() : 'N/A'}
+- Rent conversions: ${sc.rent || 'N/A'}
+- Reservation conversions: ${sc.reservations || 'N/A'}
+
+Conversions by source: ${srcStr || 'N/A'}
+Visits by device: ${devVisits || 'N/A'}
+Conversions by device: ${devConv || 'N/A'}
+Gender breakdown: ${gender || 'N/A'}
+Age breakdown: ${age || 'N/A'}
+Top cities: ${topCities || 'N/A'}
+
+Focus on: channel efficiency, device conversion gap, demographic opportunities, geographic priorities, and one quick-win recommendation.`;
+
+            const text = await callOpenAI(prompt);
+            renderInsightCards(el, text);
         } catch (e) {
-            el.innerHTML = '<div class="ai-error-state">Failed to load AI insights.</div>';
+            console.warn('Marketing AI insights failed:', e.message);
+            if (e.message === 'NO_KEY') {
+                el.innerHTML = `<div class="ai-error-state" style="color:rgba(255,255,255,0.5);font-size:12px;padding:16px;text-align:center;">
+                    <div style="margin-bottom:8px;">Configure your OpenAI API key to enable AI Insights</div>
+                    <button onclick="promptOpenAIKey()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;">Set API Key</button>
+                </div>`;
+            } else {
+                el.innerHTML = '<div class="ai-error-state" style="color:rgba(255,255,255,0.5);font-size:12px;padding:16px;">Failed to load AI insights.</div>';
+            }
         }
     }
 
@@ -3817,15 +3918,9 @@ Generate insights covering ALL of these topics:
 7) Quick win that could improve overall conversion by 1-2%`;
 
         try {
-            const r = await fetch('/api/ai/insights', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt }),
-            });
-            const data = await r.json();
-            if (data.error) throw new Error(data.error);
+            const text = await callOpenAI(prompt);
 
-            // Wait until at least 25 seconds have passed
+            // Wait until at least MIN_DELAY has passed for smooth UX
             const elapsed = Date.now() - startTime;
             const remaining = Math.max(0, MIN_DELAY - elapsed);
             if (remaining > 0) {
@@ -3833,22 +3928,18 @@ Generate insights covering ALL of these topics:
             }
             clearInterval(progressInterval);
 
-            const text = data.insights;
-            const lines = text.split('\n')
-                .map(l => l.replace(/^[\s]*[-*]\s*/, '').replace(/^\d+\.\s*/, '').trim())
-                .filter(l => l.length > 0);
-
-            el.innerHTML = lines.map((line, i) => {
-                const styled = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                return `<div class="ai-insight-item" style="animation-delay:${i * 0.08}s">
-                    <div class="ai-insight-num">${i + 1}</div>
-                    <div class="ai-insight-text">${styled}</div>
-                </div>`;
-            }).join('');
+            renderInsightCards(el, text);
         } catch (e) {
             clearInterval(progressInterval);
             console.warn('Funnel AI insights failed:', e.message);
-            el.innerHTML = '<div class="ai-error-state" style="color:rgba(255,255,255,0.4);font-size:12px;padding:16px;">AI insights unavailable.</div>';
+            if (e.message === 'NO_KEY') {
+                el.innerHTML = `<div class="ai-error-state" style="color:rgba(255,255,255,0.5);font-size:12px;padding:16px;text-align:center;">
+                    <div style="margin-bottom:8px;">Configure your OpenAI API key to enable AI Insights</div>
+                    <button onclick="promptOpenAIKey()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:white;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;">Set API Key</button>
+                </div>`;
+            } else {
+                el.innerHTML = '<div class="ai-error-state" style="color:rgba(255,255,255,0.4);font-size:12px;padding:16px;">AI insights unavailable.</div>';
+            }
         }
     }
 
