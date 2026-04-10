@@ -8,6 +8,7 @@ All sync API calls are wrapped with asyncio.to_thread().
 import asyncio
 import logging
 from datetime import date, datetime
+from pathlib import Path
 from typing import Any
 
 from google.analytics.data_v1beta import BetaAnalyticsDataClient
@@ -19,28 +20,52 @@ from google.analytics.data_v1beta.types import (
     RunReportResponse,
 )
 from google.oauth2.credentials import Credentials
+from google.oauth2 import service_account
 
 from config.settings import settings
 
 logger = logging.getLogger(__name__)
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+SERVICE_ACCOUNT_PATH = PROJECT_ROOT / "credentials" / "gen-lang-client-0243781846-d4bc18d0f557.json"
+
 
 class GA4Fetcher:
     """Fetches session, conversion, and page data from GA4 Data API.
 
-    Uses the same OAuth2 credentials as Google Ads (shared refresh token).
+    Tries service account first, falls back to OAuth2.
     """
 
     def __init__(self) -> None:
-        """Initialize the GA4 Data API client with OAuth2 credentials."""
-        creds = Credentials(
-            token=None,
-            refresh_token=settings.google_ads_refresh_token,
-            token_uri="https://oauth2.googleapis.com/token",
-            client_id=settings.google_ads_client_id,
-            client_secret=settings.google_ads_client_secret,
-            scopes=["https://www.googleapis.com/auth/analytics.readonly"],
-        )
+        """Initialize the GA4 Data API client."""
+        creds = None
+
+        # Try service account first
+        if SERVICE_ACCOUNT_PATH.exists():
+            try:
+                creds = service_account.Credentials.from_service_account_file(
+                    str(SERVICE_ACCOUNT_PATH),
+                    scopes=["https://www.googleapis.com/auth/analytics.readonly"],
+                )
+                logger.info("Using service account credentials")
+            except Exception as e:
+                logger.warning(f"Service account failed: {e}")
+
+        # Fallback to OAuth2
+        if creds is None and settings.google_ads_refresh_token:
+            creds = Credentials(
+                token=None,
+                refresh_token=settings.google_ads_refresh_token,
+                token_uri="https://oauth2.googleapis.com/token",
+                client_id=settings.google_ads_client_id,
+                client_secret=settings.google_ads_client_secret,
+                scopes=["https://www.googleapis.com/auth/analytics.readonly"],
+            )
+            logger.info("Using OAuth2 credentials")
+
+        if creds is None:
+            raise RuntimeError("No GA4 credentials configured")
+
         self._client = BetaAnalyticsDataClient(credentials=creds)
         self._property = f"properties/{settings.ga4_property_id}"
 
@@ -242,6 +267,34 @@ class GA4Fetcher:
         logger.info(f"Fetched {len(rows)} GA4 page rows")
         return rows
 
+    def _fetch_conversions_by_location_sync(
+        self, start: date, end: date
+    ) -> list[dict[str, Any]]:
+        """Fetch conversion events grouped by eventName and pagePath."""
+        request = RunReportRequest(
+            property=self._property,
+            dimensions=[
+                Dimension(name="eventName"),
+                Dimension(name="pagePath"),
+            ],
+            metrics=[
+                Metric(name="eventCount"),
+            ],
+            date_ranges=[self._make_date_range(start, end)],
+        )
+        response = self._client.run_report(request)
+        rows = []
+        for row in response.rows:
+            dims = row.dimension_values
+            vals = row.metric_values
+            rows.append({
+                "event_name": dims[0].value,
+                "page_path": dims[1].value,
+                "event_count": self._safe_int(vals[0].value),
+            })
+        logger.info(f"Fetched {len(rows)} GA4 conversion-by-location rows")
+        return rows
+
     def _test_connection_sync(self) -> bool:
         """Verify GA4 API credentials and property access."""
         request = RunReportRequest(
@@ -281,6 +334,14 @@ class GA4Fetcher:
         """Fetch page-level metrics (views, bounce rate, time on page)."""
         return await asyncio.to_thread(
             self._fetch_pages_sync, start_date, end_date
+        )
+
+    async def fetch_conversions_by_location(
+        self, start_date: date, end_date: date
+    ) -> list[dict[str, Any]]:
+        """Fetch conversion events grouped by eventName and pagePath."""
+        return await asyncio.to_thread(
+            self._fetch_conversions_by_location_sync, start_date, end_date
         )
 
     async def test_connection(self) -> bool:
