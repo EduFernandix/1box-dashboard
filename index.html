@@ -991,6 +991,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         /* Chart Panel */
+        .gads-chart-funnel-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
         .gads-chart-panel {
             background: var(--bg-card);
             border-radius: 10px;
@@ -1009,6 +1014,96 @@ document.addEventListener('DOMContentLoaded', () => {
         .gads-chart-body {
             position: relative;
             height: 320px;
+        }
+
+        /* Funnel panel */
+        .gads-funnel-panel {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 18px 22px 14px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .gads-funnel-panel .chart-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 0.05em;
+            color: var(--green-700);
+            margin-bottom: 16px;
+        }
+        .gads-funnel-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0;
+        }
+        .gads-funnel-step {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 0;
+        }
+        .gads-funnel-shape {
+            position: relative;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.04em;
+        }
+        .gads-funnel-shape svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .gads-funnel-shape-label {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            line-height: 1.2;
+        }
+        .gads-funnel-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 0 0 0 14px;
+            white-space: nowrap;
+        }
+        .gads-funnel-val {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--text-card);
+            line-height: 1;
+        }
+        .gads-funnel-rate {
+            font-size: 0.75rem;
+            color: #888;
+            font-weight: 500;
+        }
+        .gads-funnel-delta {
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+        .gads-funnel-delta.up { color: var(--green-700); }
+        .gads-funnel-delta.down { color: #c62828; }
+        .gads-funnel-connector {
+            display: flex;
+            justify-content: center;
+            padding: 2px 0;
+            grid-column: 1 / -1;
+        }
+        .gads-funnel-connector svg {
+            width: 24px;
+            height: 18px;
+            color: #ccc;
         }
 
         /* Campaign Table */
@@ -1119,6 +1214,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .monthly-pace-grid { grid-template-columns: 1fr; }
             .gads-kpis { grid-template-columns: repeat(3, 1fr); }
             .gads-chart-body { height: 260px; }
+            .gads-chart-funnel-row { grid-template-columns: 1fr; }
         }
 
         /* ===== RESPONSIVE: SMALL TABLET (max-width: 900px) ===== */
@@ -1197,6 +1293,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .gads-kpi { padding: 14px 16px; }
             .gads-kpi-value { font-size: 2rem; }
             .gads-chart-body { height: 240px; }
+            .gads-chart-funnel-row { grid-template-columns: 1fr; }
         }
 
         /* ===== RESPONSIVE: MOBILE (max-width: 600px) ===== */
@@ -1301,6 +1398,9 @@ document.addEventListener('DOMContentLoaded', () => {
             .gads-kpi-label { font-size: 10px; }
             .gads-chart-body { height: 200px; }
             .gads-chart-panel { padding: 14px 12px; }
+            .gads-chart-funnel-row { grid-template-columns: 1fr; }
+            .gads-funnel-shape { height: 56px; }
+            .gads-funnel-val { font-size: 1.6rem; }
             /* Page content overflow */
             .page.active { overflow-y: auto; overflow-x: hidden; }
             /* NL Map */
@@ -2626,11 +2726,68 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
-                <!-- Dual-axis chart -->
-                <div class="gads-chart-panel">
-                    <div class="chart-title">Conversions vs. Cost Over Time</div>
-                    <div class="gads-chart-body">
-                        <canvas id="gadsLineChart"></canvas>
+                <!-- Chart + Funnel row -->
+                <div class="gads-chart-funnel-row">
+                    <!-- Dual-axis chart -->
+                    <div class="gads-chart-panel">
+                        <div class="chart-title">Conversions vs. Cost Over Time</div>
+                        <div class="gads-chart-body">
+                            <canvas id="gadsLineChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Booking Funnel -->
+                    <div class="gads-funnel-panel">
+                        <div class="chart-title">Booking Funnel</div>
+                        <div class="gads-funnel-body">
+                            <!-- Step 1: Clicks -->
+                            <div class="gads-funnel-step" style="grid-template-columns: 1fr 120px;">
+                                <div class="gads-funnel-shape" style="margin: 0;">
+                                    <svg viewBox="0 0 400 72" preserveAspectRatio="none"><polygon points="0,0 400,0 380,72 20,72" fill="#1a3a5c"/></svg>
+                                    <span class="gads-funnel-shape-label">Clicks</span>
+                                </div>
+                                <div class="gads-funnel-info">
+                                    <div class="gads-funnel-val">102.7K</div>
+                                    <div class="gads-funnel-delta up">&#9650; 14.5% MoM</div>
+                                </div>
+                            </div>
+
+                            <!-- Connector -->
+                            <div class="gads-funnel-connector">
+                                <svg viewBox="0 0 24 18" fill="none"><path d="M12 0v14M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+
+                            <!-- Step 2: Transparent Bookings -->
+                            <div class="gads-funnel-step" style="grid-template-columns: 1fr 120px; padding: 0 8%;">
+                                <div class="gads-funnel-shape" style="margin: 0;">
+                                    <svg viewBox="0 0 400 72" preserveAspectRatio="none"><polygon points="10,0 390,0 370,72 30,72" fill="#c62828"/></svg>
+                                    <span class="gads-funnel-shape-label">Transparent<br>Bookings</span>
+                                </div>
+                                <div class="gads-funnel-info">
+                                    <div class="gads-funnel-val">2,682</div>
+                                    <div class="gads-funnel-rate">2.61% of clicks</div>
+                                    <div class="gads-funnel-delta up">&#9650; 72.5% MoM</div>
+                                </div>
+                            </div>
+
+                            <!-- Connector -->
+                            <div class="gads-funnel-connector">
+                                <svg viewBox="0 0 24 18" fill="none"><path d="M12 0v14M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+
+                            <!-- Step 3: Bookings Complete -->
+                            <div class="gads-funnel-step" style="grid-template-columns: 1fr 120px; padding: 0 16%;">
+                                <div class="gads-funnel-shape" style="margin: 0;">
+                                    <svg viewBox="0 0 400 72" preserveAspectRatio="none"><polygon points="20,0 380,0 360,72 40,72" fill="#5a9a2f"/></svg>
+                                    <span class="gads-funnel-shape-label">Bookings<br>Complete</span>
+                                </div>
+                                <div class="gads-funnel-info">
+                                    <div class="gads-funnel-val">213</div>
+                                    <div class="gads-funnel-rate">7.9% of bookings</div>
+                                    <div class="gads-funnel-delta up">&#9650; 96.6% MoM</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
