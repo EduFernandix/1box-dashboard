@@ -1721,11 +1721,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <aside class="sidebar">
     <div class="sidebar-logo"><img src="1box brand guideline/1box logo.webp" alt="1BOX"></div>
     <div class="nav-items">
-        <button class="nav-btn active" title="Global Operation" onclick="switchPage('overview',this)">
-            <!-- Dashboard grid icon -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        </button>
-        <button class="nav-btn" title="MYM Results" onclick="switchPage('mym',this)">
+        <button class="nav-btn active" title="MYM Results" onclick="switchPage('mym',this)">
             <!-- Table/list icon -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         </button>
@@ -1752,7 +1748,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="main">
     <header class="header">
         <div class="header-left">
-            <h1 id="pageTitle">Global Operation</h1>
+            <h1 id="pageTitle">MYM Results</h1>
             <span class="sample-badge">Sample Data — Sources not connected</span>
         </div>
         <div class="date-range-wrap">
@@ -1785,136 +1781,8 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     </header>
 
-    <!-- PAGE 1: OVERVIEW -->
-    <div class="page active" id="page-overview">
-    <div class="dashboard">
-        <!-- SCORECARDS -->
-        <div class="scorecards">
-            <div class="sc">
-                <div class="sc-top"><span class="sc-label">Total Tenants</span><span class="sc-sample">Sample</span></div>
-                <div class="sc-value">12,847</div>
-                <div class="sc-sub"><span>+142</span> vs last month</div>
-            </div>
-            <div class="sc">
-                <div class="sc-top"><span class="sc-label">MRR</span><span class="sc-sample">Sample</span></div>
-                <div class="sc-value">&euro;2.84M</div>
-                <div class="sc-sub"><span>+8.7%</span> vs last month</div>
-            </div>
-            <div class="sc">
-                <div class="sc-top"><span class="sc-label">LTV / Tenant</span><span class="sc-sample">Sample</span></div>
-                <div class="sc-value">&euro;4,260</div>
-                <div class="sc-sub">Avg lifetime value</div>
-            </div>
-            <div class="sc">
-                <div class="sc-top"><span class="sc-label">AVG &euro; / mo</span><span class="sc-sample">Sample</span></div>
-                <div class="sc-value">&euro;221</div>
-                <div class="sc-sub">Per tenant per month</div>
-            </div>
-            <div class="sc">
-                <div class="sc-top"><span class="sc-label">LTV / CAC</span><span class="sc-sample">Sample</span></div>
-                <div class="sc-value">7.23</div>
-                <div class="sc-sub"><span>Healthy</span> ratio</div>
-            </div>
-            <div class="sc">
-                <div class="sc-top"><span class="sc-label">Payback</span><span class="sc-sample">Sample</span></div>
-                <div class="sc-value">4.2 MO</div>
-                <div class="sc-sub">Months to recover CAC</div>
-            </div>
-        </div>
-
-        <!-- 2x2 GRID: Left (CAC+Reviews) / Right (MRR+Tenants) -->
-        <div class="charts-grid">
-            <!-- TOP-LEFT: CAC vs LTV -->
-            <div class="chart-panel">
-                <div class="chart-top">
-                    <div class="chart-title">CAC vs LTV — Monthly Breakdown</div>
-                    <div class="chart-legend">
-                        <div class="leg"><span class="leg-dot" style="background:#7CB342"></span> CAC</div>
-                        <div class="leg"><span class="leg-dot" style="background:#C5E1A5"></span> LTV</div>
-                        <div class="leg"><span class="leg-line" style="background:var(--gold)"></span> Ratio</div>
-                        <span class="sc-sample">Sample</span>
-                    </div>
-                </div>
-                <div class="chart-body"><canvas id="mainChart"></canvas></div>
-            </div>
-
-            <!-- TOP-RIGHT: MRR Evolution -->
-            <div class="chart-panel" style="animation-delay:0.3s;">
-                <div class="chart-top">
-                    <div class="chart-title">MRR Evolution</div>
-                    <div class="chart-legend">
-                        <div class="leg"><span class="leg-line" style="background:#ef5350"></span> Churn</div>
-                        <div class="leg"><span class="leg-line" style="background:#7CB342"></span> MRR</div>
-                        <div class="leg"><span class="leg-line" style="background:var(--gold)"></span> Added</div>
-                    </div>
-                </div>
-                <div class="chart-body"><canvas id="mrrChart"></canvas></div>
-            </div>
-
-            <!-- BOTTOM-LEFT: Reviews & Ratings -->
-            <div class="chart-panel" style="animation-delay:0.35s;">
-                <div class="reviews-header">
-                    <div>
-                        <div class="chart-title">Reviews & Ratings Over Time</div>
-                        <div class="reviews-stats" style="margin-top:6px;">
-                            <div>
-                                <div class="reviews-big" id="totalReviewsDisplay">681</div>
-                                <div class="reviews-big-label">Reviews</div>
-                            </div>
-                            <div>
-                                <div class="reviews-big" id="avgRatingDisplay">4.8 <span class="star">&#9733;</span></div>
-                                <div class="reviews-big-label">Avg Rating</div>
-                            </div>
-                            <div style="margin-left:8px;">
-                                <span class="velocity-badge up" id="velocityDisplay">&#9650; +23% velocity</span>
-                                <div class="reviews-big-label" style="margin-top:3px;">vs prev. period</div>
-                            </div>
-                            <span class="sc-sample" style="margin-left:12px;">Sample</span>
-                        </div>
-                    </div>
-                    <div class="reviews-controls">
-                        <select class="facility-select" id="facilityFilter" onchange="updateReviews()">
-                            <option value="all">All Locations</option>
-                            <option value="amsterdam">1BOX Amsterdam</option>
-                            <option value="utrecht">1BOX Utrecht</option>
-                            <option value="rotterdam">1BOX Rotterdam</option>
-                            <option value="groningen">1BOX Groningen</option>
-                            <option value="den-haag">1BOX Den Haag</option>
-                            <option value="eindhoven">1BOX Eindhoven</option>
-                            <option value="breda">1BOX Breda</option>
-                            <option value="arnhem">1BOX Arnhem</option>
-                            <option value="haarlem">1BOX Haarlem</option>
-                            <option value="tilburg">1BOX Tilburg</option>
-                            <option value="almere">1BOX Almere</option>
-                            <option value="leiden">1BOX Leiden</option>
-                        </select>
-                        <button class="date-btn" style="font-size:12px;padding:8px 14px;">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                            Last 12 months
-                        </button>
-                    </div>
-                </div>
-                <div class="chart-body"><canvas id="reviewsChart"></canvas></div>
-            </div>
-
-            <!-- BOTTOM-RIGHT: Tenants Flow -->
-            <div class="chart-panel" style="animation-delay:0.4s;">
-                <div class="chart-top">
-                    <div class="chart-title">Tenants Flow</div>
-                    <div class="chart-legend">
-                        <div class="leg"><span class="leg-line" style="background:#ef5350"></span> Out</div>
-                        <div class="leg"><span class="leg-line" style="background:#7CB342"></span> In</div>
-                        <div class="leg"><span class="leg-line" style="background:var(--gold)"></span> Total</div>
-                    </div>
-                </div>
-                <div class="chart-body"><canvas id="tenantsChart"></canvas></div>
-            </div>
-        </div>
-    </div>
-    </div><!-- /page-overview -->
-
-    <!-- PAGE 2: MYM RESULTS -->
-    <div class="page" id="page-mym">
+    <!-- PAGE: MYM RESULTS (default) -->
+    <div class="page active" id="page-mym">
     <div class="tables-dashboard">
 
         <!-- PACE SECTION -->
@@ -2500,177 +2368,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const noBorder = { display: false };
     const dimTick = { color: 'rgba(51,51,51,0.4)' };
 
-    const months = ['Mar 1, 2025','Apr 1, 2025','May 1, 2025','Jun 1, 2025','Jul 1, 2025','Aug 1, 2025','Sep 1, 2025','Oct 1, 2025','Nov 1, 2025','Dec 1, 2025','Jan 1, 2026','Feb 1, 2026'];
-    const mS = ['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'];
-
-    // ===== MAIN CHART =====
-    new Chart(document.getElementById('mainChart'), {
-        type: 'bar',
-        data: {
-            labels: months,
-            datasets: [
-                {
-                    label: 'CAC', data: [42.92,56.77,60.46,131.41,120.40,151.56,162.78,114.24,164.30,158.82,138.50,145.20],
-                    backgroundColor: '#7CB342', hoverBackgroundColor: '#8DC24C',
-                    borderRadius: 4, barPercentage: 0.38, categoryPercentage: 0.72, order: 2,
-                    datalabels: { anchor:'end', align:'end', color:'#5a9a2f', font:{size:10,weight:700}, formatter:v=>'$'+v.toFixed(2) }
-                },
-                {
-                    label: 'LTV', data: [727.69,744.68,828.93,853.39,853.39,853.39,853.39,853.39,997.06,1149.00,1080.00,1120.00],
-                    backgroundColor: '#C5E1A5', hoverBackgroundColor: '#AED581',
-                    borderRadius: 4, barPercentage: 0.38, categoryPercentage: 0.72, order: 2,
-                    datalabels: { anchor:'end', align:'end', color:'#5a9a2f', font:{size:10,weight:700}, formatter:v=>'$'+v.toFixed(2) }
-                },
-                {
-                    label: 'LTV/CAC Ratio', data: [16.95,13.12,13.71,6.49,8.99,7.49,6.44,9.85,6.22,7.23,7.79,7.71],
-                    type: 'line', borderColor: '#e2b93b', backgroundColor: 'rgba(226,185,59,0.05)',
-                    borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: '#e2b93b',
-                    pointBorderColor: '#ffffff', pointBorderWidth: 3, pointHoverRadius: 7,
-                    tension: 0.35, fill: false, yAxisID: 'y1', order: 1,
-                    datalabels: { anchor:'end', align:'top', offset:6, color:'#e2b93b', font:{size:11,weight:700}, formatter:v=>v.toFixed(2) }
-                }
-            ]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            layout: { padding: { top: 30 } },
-            plugins: { legend:{display:false}, tooltip:{...darkTooltip} },
-            scales: {
-                x: { grid:{display:false}, border:noBorder, ticks:{font:{size:10},...dimTick,maxRotation:45,minRotation:45} },
-                y: { position:'left', grid:gridStyle, border:noBorder, title:{display:true,text:'CAC / LTV',...dimTick,font:{size:11}}, ticks:{callback:v=>'$'+v,...dimTick} },
-                y1: { position:'right', grid:{drawOnChartArea:false}, border:noBorder, title:{display:true,text:'Ratio',...dimTick,font:{size:11}}, min:0,max:30, ticks:{stepSize:5,...dimTick} }
-            }
-        }
-    });
-
     // ===== LINE HELPERS =====
     const lineD = (color, w=2) => ({
         borderColor:color, backgroundColor:'transparent', borderWidth:w,
         pointRadius:3, pointBackgroundColor:color, pointBorderColor:'#ffffff',
         pointBorderWidth:2, pointHoverRadius:5, tension:0.35,
     });
-
-    // ===== MRR =====
-    new Chart(document.getElementById('mrrChart'), {
-        type:'line',
-        data: {
-            labels: mS,
-            datasets: [
-                { label:'Revenue Churn', data:[-8200,-9100,-8800,-10500,-11200,-9800,-10200,-11800,-12500,-13200,-11900,-12800], ...lineD('#ef5350') },
-                { label:'MRR', data:[82000,95000,108000,125000,142000,158000,178000,198000,225000,252000,268000,284000], ...lineD('#7CB342',2.5) },
-                { label:'Added MRR', data:[12000,14500,15800,18200,19500,18000,22000,23500,29000,30200,19800,21600], ...lineD('#e2b93b') },
-            ]
-        },
-        options: {
-            responsive:true, maintainAspectRatio:false,
-            plugins: { legend:{display:false}, datalabels:{display:false},
-                tooltip: { ...darkTooltip, callbacks: { label:ctx=>{ const v=ctx.parsed.y; return ctx.dataset.label+': '+(v<0?'-':'')+'€'+Math.abs(v/1000).toFixed(0)+'K'; } } }
-            },
-            scales: {
-                x: { grid:{display:false}, border:noBorder, ticks:{...dimTick,font:{size:10}} },
-                y: { grid:gridStyle, border:noBorder, ticks:{...dimTick,font:{size:10},callback:v=>{if(v===0)return'0';return(v<0?'-':'')+'€'+Math.abs(v/1000)+'K';}} }
-            },
-            interaction: { intersect:false, mode:'index' }
-        }
-    });
-
-    // ===== TENANTS =====
-    new Chart(document.getElementById('tenantsChart'), {
-        type:'line',
-        data: {
-            labels: mS,
-            datasets: [
-                { label:'Move-outs', data:[-45,-52,-48,-61,-58,-54,-63,-55,-70,-65,-58,-62], ...lineD('#ef5350') },
-                { label:'Move-ins', data:[120,135,148,162,175,168,190,182,210,205,178,195], ...lineD('#7CB342',2.5) },
-                { label:'Total', data:[10890,10973,11073,11174,11291,11405,11532,11659,11799,11939,12059,12192], ...lineD('#e2b93b'), yAxisID:'y1' },
-            ]
-        },
-        options: {
-            responsive:true, maintainAspectRatio:false,
-            plugins: { legend:{display:false}, datalabels:{display:false}, tooltip:{...darkTooltip} },
-            scales: {
-                x: { grid:{display:false}, border:noBorder, ticks:{...dimTick,font:{size:10}} },
-                y: { position:'left', grid:gridStyle, border:noBorder, ticks:{...dimTick,font:{size:10}} },
-                y1: { position:'right', grid:{drawOnChartArea:false}, border:noBorder, ticks:{...dimTick,font:{size:10},callback:v=>(v/1000).toFixed(1)+'K'} }
-            },
-            interaction: { intersect:false, mode:'index' }
-        }
-    });
-
-    // ===== REVIEWS — FACILITY-AWARE =====
-    const facilityReviews = {
-        all:       { reviews: [38,33,29,26,38,56,43,65,70,82,41,147,81], ratings: [4.9,4.9,5.0,4.9,4.8,4.6,4.8,4.9,4.8,4.8,4.9,4.9,4.7], total: 681, avg: 4.8, vel: 23 },
-        amsterdam: { reviews: [8,6,5,4,7,12,8,14,15,18,9,32,17], ratings: [5.0,5.0,5.0,4.9,4.9,4.7,4.8,5.0,4.9,4.9,5.0,5.0,4.8], total: 89, avg: 4.9, vel: 35 },
-        utrecht:   { reviews: [5,4,4,3,5,8,6,9,10,12,6,21,12], ratings: [4.9,4.9,5.0,4.9,4.8,4.6,4.9,4.9,4.8,4.8,4.9,4.9,4.8], total: 72, avg: 4.9, vel: 18 },
-        rotterdam: { reviews: [5,4,3,3,4,7,5,8,9,11,5,19,10], ratings: [4.9,4.8,5.0,4.9,4.8,4.5,4.8,4.9,4.7,4.8,4.9,4.9,4.7], total: 68, avg: 4.8, vel: 28 },
-        groningen: { reviews: [3,3,2,2,3,4,3,5,5,7,3,12,6], ratings: [5.0,5.0,5.0,5.0,4.9,4.7,4.9,4.9,4.9,4.8,5.0,4.9,4.8], total: 54, avg: 4.9, vel: 12 },
-        'den-haag':{ reviews: [4,3,3,2,4,6,4,7,7,8,4,15,8], ratings: [4.8,4.8,4.9,4.8,4.7,4.5,4.7,4.8,4.8,4.7,4.8,4.8,4.6], total: 61, avg: 4.8, vel: 15 },
-        eindhoven: { reviews: [4,3,3,3,4,5,4,6,6,7,4,13,7], ratings: [4.8,4.8,5.0,4.9,4.8,4.6,4.7,4.8,4.7,4.7,4.8,4.8,4.6], total: 58, avg: 4.8, vel: -3 },
-        breda:     { reviews: [3,2,2,2,3,4,3,4,5,5,3,9,5], ratings: [4.9,4.9,5.0,4.8,4.8,4.6,4.8,4.8,4.7,4.8,4.8,4.8,4.7], total: 42, avg: 4.8, vel: 6 },
-        arnhem:    { reviews: [1,2,1,1,2,3,2,4,4,5,2,10,4], ratings: [5.0,5.0,5.0,5.0,4.9,4.8,4.9,5.0,4.9,4.9,5.0,4.9,4.8], total: 38, avg: 4.9, vel: 45 },
-        haarlem:   { reviews: [2,2,2,2,2,3,3,3,4,4,2,8,4], ratings: [4.7,4.8,4.8,4.7,4.7,4.6,4.7,4.7,4.7,4.7,4.7,4.7,4.6], total: 35, avg: 4.7, vel: 10 },
-        tilburg:   { reviews: [2,2,2,2,2,3,2,3,3,4,2,7,3], ratings: [4.7,4.7,4.8,4.7,4.7,4.6,4.7,4.7,4.7,4.7,4.7,4.7,4.6], total: 33, avg: 4.7, vel: 5 },
-        almere:    { reviews: [1,1,1,1,2,2,2,3,3,3,2,6,3], ratings: [4.8,4.7,4.8,4.7,4.7,4.6,4.7,4.7,4.7,4.7,4.7,4.7,4.6], total: 28, avg: 4.7, vel: 14 },
-        leiden:    { reviews: [2,2,2,2,2,3,2,3,3,4,2,7,3], ratings: [4.6,4.6,4.7,4.6,4.6,4.5,4.6,4.6,4.6,4.6,4.6,4.6,4.5], total: 31, avg: 4.6, vel: -2 },
-    };
-
-    const reviewLabels = ['Mar\n2025','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan\n2026','Feb','Mar'];
-
-    let reviewsChartInstance = null;
-
-    function updateReviews() {
-        const facility = document.getElementById('facilityFilter').value;
-        const d = facilityReviews[facility];
-
-        // Update stats
-        document.getElementById('totalReviewsDisplay').textContent = d.total;
-        document.getElementById('avgRatingDisplay').innerHTML = d.avg.toFixed(1) + ' <span class="star">★</span>';
-        const velEl = document.getElementById('velocityDisplay');
-        velEl.className = 'velocity-badge ' + (d.vel >= 0 ? 'up' : 'down');
-        velEl.innerHTML = (d.vel >= 0 ? '▲' : '▼') + ' ' + (d.vel >= 0 ? '+' : '') + d.vel + '% velocity';
-
-        // Rebuild chart
-        if (reviewsChartInstance) reviewsChartInstance.destroy();
-
-        reviewsChartInstance = new Chart(document.getElementById('reviewsChart'), {
-            type: 'bar',
-            data: {
-                labels: reviewLabels,
-                datasets: [
-                    {
-                        label: 'Reviews', data: d.reviews,
-                        backgroundColor: 'rgba(124,179,66,0.55)',
-                        hoverBackgroundColor: '#7CB342',
-                        borderRadius: 4, barPercentage: 0.55, categoryPercentage: 0.8, order: 2,
-                        datalabels: { anchor:'end', align:'end', color:'#5a9a2f', font:{size:12,weight:700} }
-                    },
-                    {
-                        label: 'Rating', data: d.ratings,
-                        type: 'line', borderColor: '#5a9a2f', backgroundColor: 'transparent',
-                        borderWidth: 2.5, pointRadius: 16, pointBackgroundColor: '#5a9a2f',
-                        pointBorderColor: '#5a9a2f', pointBorderWidth: 0, pointHoverRadius: 18,
-                        tension: 0.3, yAxisID: 'y1', order: 1,
-                        datalabels: { color:'#ffffff', font:{size:10,weight:700}, formatter:v=>v.toFixed(1) }
-                    }
-                ]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                layout: { padding: { top: 20 } },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { ...darkTooltip, callbacks: { label: ctx => ctx.dataset.label === 'Rating' ? 'Rating: '+ctx.parsed.y.toFixed(1)+' ★' : ctx.parsed.y+' reviews' } },
-                },
-                scales: {
-                    x: { grid:{display:false}, border:noBorder, ticks:{...dimTick, font:{size:11}} },
-                    y: { grid:gridStyle, border:noBorder, title:{display:true,text:'Reviews',...dimTick,font:{size:10}}, ticks:{...dimTick} },
-                    y1: { position:'right', grid:{drawOnChartArea:false}, border:noBorder, min:4.0, max:5.2, title:{display:true,text:'Rating',...dimTick,font:{size:10}}, ticks:{...dimTick,stepSize:0.2} }
-                }
-            }
-        });
-    }
-
-    updateReviews();
 
     // ===== MARKETING PAGE =====
     const MKT_API = '/api/ga4/overview';
@@ -3210,7 +2913,7 @@ Focus on: channel efficiency, device conversion gap, demographic opportunities, 
     }
 
     // ===== PAGE NAVIGATION =====
-    const pageTitles = { overview: 'Global Operation', mym: 'MYM Results', marketing: 'Digital Marketing Overview', funnel: 'Events & Conversion Rates', monthly: 'Monthly Report' };
+    const pageTitles = { mym: 'MYM Results', marketing: 'Digital Marketing Overview', funnel: 'Events & Conversion Rates', monthly: 'Monthly Report' };
 
     function switchPage(pageId, btn) {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
