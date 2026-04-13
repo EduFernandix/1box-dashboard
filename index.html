@@ -942,6 +942,7 @@ document.addEventListener('DOMContentLoaded', () => {
             border-radius: 10px;
             padding: 20px 22px;
             min-width: 0;
+            border-left: 3px solid var(--green-500);
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
             transition: background 0.2s, box-shadow 0.2s;
             animation: slideIn 0.5s ease both;
@@ -960,8 +961,8 @@ document.addEventListener('DOMContentLoaded', () => {
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--text-card-dim);
+            letter-spacing: 0.04em;
+            color: var(--green-700);
             margin-bottom: 10px;
         }
         .gads-kpi-value {
@@ -991,9 +992,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /* Chart Panel */
         .gads-chart-panel {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: 10px;
-            padding: 20px 24px;
+            padding: 18px 22px 14px;
+            border: 1px solid var(--border);
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
             flex-shrink: 0;
         }
@@ -1001,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', () => {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 1.25rem;
             letter-spacing: 0.05em;
-            color: var(--text-card);
+            color: var(--green-700);
             margin-bottom: 16px;
         }
         .gads-chart-body {
@@ -1011,8 +1013,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /* Campaign Table */
         .gads-table-wrap {
-            background: #fff;
+            background: var(--bg-card);
             border-radius: 10px;
+            border: 1px solid var(--border);
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
             overflow: hidden;
             flex-shrink: 0;
@@ -1022,7 +1025,7 @@ document.addEventListener('DOMContentLoaded', () => {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 1.25rem;
             letter-spacing: 0.05em;
-            color: var(--text-card);
+            color: var(--green-700);
         }
         .gads-table-scroll {
             overflow-x: auto;
@@ -3247,7 +3250,9 @@ Focus on: channel efficiency, device conversion gap, demographic opportunities, 
         btn.classList.add('active');
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById('page-' + pageId).classList.add('active');
-        document.getElementById('pageTitle').textContent = pageTitles[pageId] || pageId;
+        const titleEl = document.getElementById('pageTitle');
+        titleEl.textContent = pageTitles[pageId] || pageId;
+        titleEl.style.color = (pageId === 'marketing' || pageId === 'gads') ? 'var(--green-700)' : '';
         const badge = document.querySelector('.sample-badge');
         if (badge) badge.style.display = (pageId === 'marketing' || pageId === 'funnel' || pageId === 'gads') ? 'none' : '';
         // All pages use the shared header
