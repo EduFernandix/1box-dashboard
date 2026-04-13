@@ -2024,13 +2024,7 @@ document.addEventListener('DOMContentLoaded', () => {
             max-width: 100%;
         }
         .metaads-header {
-            background: #1a1f36;
-            padding: 20px 28px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-radius: 12px;
-            margin: 0 0 20px;
+            display: none;
         }
         .metaads-header-left {
             display: flex;
@@ -2507,6 +2501,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="main">
     <header class="header">
         <div class="header-left">
+            <span id="metaPageIcon" style="display:none;margin-right:10px;vertical-align:middle;"><svg viewBox="0 0 24 24" width="30" height="30" fill="#5a9a2f" stroke="none"><path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a4.892 4.892 0 0 0 1.116 2.23c.506.546 1.168.898 1.947.898 1.07 0 1.953-.463 2.852-1.382.882-.901 1.756-2.198 2.677-3.81l.89-1.556.842 1.372c.874 1.424 1.673 2.57 2.517 3.372.858.815 1.788 1.286 2.899 1.286.834 0 1.544-.328 2.087-.87.53-.529.88-1.232 1.078-2.03.204-.82.3-1.73.3-2.697 0-2.46-.682-5.04-1.93-7.048C16.276 5.307 14.56 4.03 12.6 4.03c-1.17 0-2.152.458-3.073 1.337-.558.532-1.09 1.208-1.612 2.043l-.296.473-.29-.47c-.465-.752-.934-1.373-1.434-1.878-.883-.896-1.81-1.505-2.98-1.505zm-.07 1.782c.686 0 1.347.376 2.058 1.1.37.376.745.855 1.132 1.445l1.145 1.745-1.116 1.95c-.88 1.538-1.706 2.764-2.478 3.552-.78.796-1.504 1.18-2.313 1.18-.544 0-.975-.2-1.336-.59-.347-.381-.613-.926-.767-1.586a8.497 8.497 0 0 1-.172-1.757c0-2.341.627-4.752 1.682-6.57.848-1.461 1.9-2.469 3.165-2.469zm5.755 0c1.293 0 2.36 1.016 3.217 2.497 1.048 1.81 1.673 4.216 1.673 6.53 0 .845-.082 1.607-.238 2.24-.153.62-.382 1.087-.685 1.39-.292.293-.658.458-1.117.458-.683 0-1.349-.384-2.067-1.065-.467-.443-1.034-1.12-1.553-1.85l-.916-1.488 1.094-1.912c.846-1.478 1.664-2.712 2.427-3.5.418-.433.806-.727 1.165-.8z"/></svg></span>
             <h1 id="pageTitle">Digital Marketing Overview</h1>
             <span class="sample-badge">Sample Data — Sources not connected</span>
         </div>
@@ -3879,6 +3874,9 @@ Focus on: channel efficiency, source attribution for bookings vs completions, de
         titleEl.style.color = (pageId === 'marketing' || pageId === 'gads' || pageId === 'metaads') ? 'var(--green-700)' : '';
         const badge = document.querySelector('.sample-badge');
         if (badge) badge.style.display = (pageId === 'marketing' || pageId === 'funnel' || pageId === 'gads' || pageId === 'metaads') ? 'none' : '';
+        // Meta icon toggle in shared header
+        const metaIcon = document.getElementById('metaPageIcon');
+        if (metaIcon) metaIcon.style.display = (pageId === 'metaads') ? 'inline-flex' : 'none';
         // All pages use the shared header
         const mainHeader = document.querySelector('.header');
         if (mainHeader) mainHeader.style.display = '';
@@ -4018,6 +4016,8 @@ Focus on: channel efficiency, source attribution for bookings vs completions, de
             loadMonthlyReport();
         } else if (pageId === 'gads') {
             loadGadsWithDateRange(from, to);
+        } else if (pageId === 'metaads') {
+            loadMetaAdsWithDateRange(from, to);
         }
     }
 
@@ -5347,11 +5347,10 @@ Generate insights covering ALL of these topics:
                 loadGadsWithDateRange(from, to);
             }
             // META ADS
-            if (pageId === 'metaads' && !window._metaAdsInitialized) {
-                window._metaAdsInitialized = true;
-                setTimeout(() => { initMetaAds(); }, 50);
-            } else if (pageId === 'metaads') {
-                // Already initialized, nothing to refresh
+            if (pageId === 'metaads') {
+                const mFrom = currentDateRange.from || new Date(new Date().setDate(new Date().getDate() - 30));
+                const mTo = currentDateRange.to || new Date();
+                loadMetaAdsWithDateRange(mFrom, mTo);
             }
         };
         // Also handle if switchPage is called from inline onclick
@@ -5359,13 +5358,207 @@ Generate insights covering ALL of these topics:
     })();
 
     // ======================== META ADS OVERVIEW JS ========================
-    const META_ADS_CACHE = {"totals":{"spend":9023.26,"clicks":24803,"impressions":1854222,"reach":694964,"ctr":1.33765,"cpc":0.363797,"cpm":4.866332,"bookings":150,"cost_per_booking":60.16,"landing_page_views":12150,"date_start":"2026-03-14","date_stop":"2026-04-12"},"campaigns":[{"name":"2025 | NL | performance | FBIG | Traffic | pros | Lokaal","id":"120229806081210696","spend":600.38,"impressions":62912,"clicks":3621,"ctr":5.76,"cpc":0.17,"cpm":9.54,"reach":41310,"bookings":5,"lpv":1599,"cost_per_booking":120.08},{"name":"2025 | NL | performance | FBIG | conversions | pros/rem | Fundascrape","id":"120236027767880696","spend":1503.63,"impressions":300703,"clicks":3730,"ctr":1.24,"cpc":0.4,"cpm":5.0,"reach":87041,"bookings":0,"lpv":2053,"cost_per_booking":0},{"name":"Ongoing | NL | performance | FBIG | conversions | pros/rem | Locaties | Standaard attr. (H)","id":"120239339487530696","spend":4591.08,"impressions":538060,"clicks":6161,"ctr":1.15,"cpc":0.75,"cpm":8.53,"reach":148943,"bookings":143,"lpv":1242,"cost_per_booking":32.11},{"name":"Ongoing | NL | performance | FBIG | traffic | pros/rem | Locaties - Life Events","id":"120241055316490696","spend":1504.73,"impressions":570835,"clicks":6872,"ctr":1.2,"cpc":0.22,"cpm":2.64,"reach":350879,"bookings":2,"lpv":4497,"cost_per_booking":752.37},{"name":"Ongoing | NL | performance | FBIG | traffic | pros/rem | Locaties - Life Events - Sport & Hobby - Origineel","id":"120242298371570696","spend":408.65,"impressions":196671,"clicks":2276,"ctr":1.16,"cpc":0.18,"cpm":2.08,"reach":148548,"bookings":0,"lpv":1427,"cost_per_booking":0},{"name":"Ongoing | NL | performance | FBIG | traffic | pros/rem | Locaties - Life Events - Sport & Hobby - AI","id":"120242298380990696","spend":414.79,"impressions":185041,"clicks":2143,"ctr":1.16,"cpc":0.19,"cpm":2.24,"reach":131167,"bookings":0,"lpv":1332,"cost_per_booking":0}],"daily":[{"date":"2026-03-14","spend":238.33,"clicks":635,"impressions":49173,"bookings":0,"lpv":248},{"date":"2026-03-15","spend":287.34,"clicks":685,"impressions":41540,"bookings":6,"lpv":228},{"date":"2026-03-16","spend":281.62,"clicks":729,"impressions":54320,"bookings":8,"lpv":311},{"date":"2026-03-17","spend":262.38,"clicks":772,"impressions":47401,"bookings":1,"lpv":285},{"date":"2026-03-18","spend":262.7,"clicks":718,"impressions":48833,"bookings":5,"lpv":291},{"date":"2026-03-19","spend":273.5,"clicks":678,"impressions":49530,"bookings":8,"lpv":313},{"date":"2026-03-20","spend":242.55,"clicks":619,"impressions":35748,"bookings":6,"lpv":244},{"date":"2026-03-21","spend":261.14,"clicks":624,"impressions":43316,"bookings":4,"lpv":316},{"date":"2026-03-22","spend":283.28,"clicks":697,"impressions":49851,"bookings":1,"lpv":364},{"date":"2026-03-23","spend":307.83,"clicks":681,"impressions":52077,"bookings":3,"lpv":339},{"date":"2026-03-24","spend":313.9,"clicks":761,"impressions":52653,"bookings":4,"lpv":382},{"date":"2026-03-25","spend":271.7,"clicks":669,"impressions":48190,"bookings":5,"lpv":320},{"date":"2026-03-26","spend":269.97,"clicks":736,"impressions":48289,"bookings":8,"lpv":351},{"date":"2026-03-27","spend":256.24,"clicks":759,"impressions":55330,"bookings":6,"lpv":340},{"date":"2026-03-28","spend":295.38,"clicks":821,"impressions":64249,"bookings":9,"lpv":429},{"date":"2026-03-29","spend":411.86,"clicks":1260,"impressions":95572,"bookings":7,"lpv":714},{"date":"2026-03-30","spend":310.71,"clicks":926,"impressions":71841,"bookings":6,"lpv":447},{"date":"2026-03-31","spend":330.27,"clicks":889,"impressions":75555,"bookings":9,"lpv":459},{"date":"2026-04-01","spend":286.92,"clicks":793,"impressions":63300,"bookings":4,"lpv":341},{"date":"2026-04-02","spend":306.2,"clicks":910,"impressions":73722,"bookings":6,"lpv":452},{"date":"2026-04-03","spend":313.06,"clicks":984,"impressions":72311,"bookings":8,"lpv":501},{"date":"2026-04-04","spend":318.25,"clicks":929,"impressions":70606,"bookings":5,"lpv":497},{"date":"2026-04-05","spend":374.35,"clicks":1014,"impressions":72963,"bookings":5,"lpv":506},{"date":"2026-04-06","spend":346.98,"clicks":953,"impressions":75515,"bookings":4,"lpv":540},{"date":"2026-04-07","spend":309.96,"clicks":871,"impressions":75676,"bookings":1,"lpv":474},{"date":"2026-04-08","spend":321.34,"clicks":836,"impressions":70579,"bookings":8,"lpv":435},{"date":"2026-04-09","spend":319.61,"clicks":939,"impressions":74437,"bookings":4,"lpv":509},{"date":"2026-04-10","spend":297.67,"clicks":934,"impressions":65623,"bookings":3,"lpv":468},{"date":"2026-04-11","spend":304.5,"clicks":967,"impressions":72258,"bookings":4,"lpv":512},{"date":"2026-04-12","spend":363.72,"clicks":1014,"impressions":83764,"bookings":2,"lpv":534}],"top_ads":[{"name":"24-2-2026 | Image | Barendrecht | V1","id":"120241155397940696","adset":"2025 | NL | performance | FBIG | pros | Barendrecht","campaign":"2025 | NL | performance | FBIG | conversions | pros/rem | Fundascrape","spend":597.31,"clicks":1552,"impressions":113929,"ctr":1.36,"cpc":0.38,"bookings":0,"creative":{"title":"Verhuizing op de planning?","body":"1BOX geeft je de ruimte om rustig te verhuizen, zonder stress of haast. Huur vandaag nog jouw opslagbox.","dest_url":"https://www.1box.nl/opslaglocaties/barendrecht/","image_url":"","thumbnail_url":"https://scontent-sjc3-1.xx.fbcdn.net/v/t45.1600-4/645942929_1713917142920394_8079963955086491810_n.jpg?_nc_cat=100&ccb=1-7&_nc_ohc=Wvx4ymcfP2wQ7kNvwF8a2yE&_nc_oc=Adr2guC_PorhcyQddT6-unR4x8JymcfWlxNtzTtTgNIPkmLEPZf-fcgzNp51mQaGDug&_nc_zt=1&_nc_ht=scontent-sjc3-1.xx&edm=AAT1rw8EAAAA&_nc_gid=dvGmnxx7j3Hq9KOrV2Nb-w&_nc_tpa=Q5bMBQGJL8jONsuocUVqA_hZ0h-4-JjbJ1gCkFZkXTvv4LejB9P1yvDnCmqeftB9C2T2LS_JZf-RSjBr&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_Af2cQl8aSIfERkAq8WXtp8W_0E_kv9KoeMW0hSOsg7igUQ&oe=69E30E48"}},{"name":"24-2-2026 | Image | Den Haag | V1","id":"120241155400560696","adset":"2025 | NL | performance | FBIG | pros | Den Haag","campaign":"2025 | NL | performance | FBIG | conversions | pros/rem | Fundascrape","spend":436.31,"clicks":1053,"impressions":85411,"ctr":1.23,"cpc":0.41,"bookings":0,"creative":{"title":"Verhuizing op de planning?","body":"1BOX geeft je de ruimte om rustig te verhuizen, zonder stress of haast. Huur vandaag nog jouw opslagbox.","dest_url":"https://www.1box.nl/opslaglocaties/den-haag/","image_url":"","thumbnail_url":"https://scontent-sjc6-1.xx.fbcdn.net/v/t45.1600-4/646050674_1713916759587099_1946618910224383022_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=vMuBroWiIM4Q7kNvwEB30DW&_nc_oc=AdpaSLqfDryg-N3LP2p3QqZbZ1ADcubkqq_9M5abKs0v8AHIfZHxwMv4Us8i3RMRses&_nc_zt=1&_nc_ht=scontent-sjc6-1.xx&edm=AAT1rw8EAAAA&_nc_gid=aNn-zU_vJrOhcYxlIlWZWQ&_nc_tpa=Q5bMBQEt3KDttFCtnUQJUJTpTQzLIGvFkaoTASIlaiDhuWWvlHeT0Vsfye_Dnzyf27Q71hTH1-lT_dPX&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_Af2yjiTIgco5B1nq953quMXs4G9fFa3EnOGDhMMWWz2qdQ&oe=69E3088F"}},{"name":"24-2-2026 | Image | Den Haag | V2","id":"120241155444840696","adset":"2025 | NL | performance | FBIG | pros | Den Haag","campaign":"2025 | NL | performance | FBIG | conversions | pros/rem | Fundascrape","spend":200.97,"clicks":466,"impressions":38885,"ctr":1.2,"cpc":0.43,"bookings":0,"creative":{"title":"Verhuizing op de planning?","body":"1BOX geeft je de ruimte om rustig te verhuizen, zonder stress of haast. Huur vandaag nog jouw opslagbox.","dest_url":"https://www.1box.nl/opslaglocaties/den-haag/","image_url":"","thumbnail_url":"https://scontent-sjc3-1.xx.fbcdn.net/v/t45.1600-4/648135663_1713916622920446_2553392377673712953_n.jpg?_nc_cat=105&ccb=1-7&_nc_ohc=L9PS4Z41mt8Q7kNvwFUdjlP&_nc_oc=AdrfSp6FhjJI7nzBAnf-jjSMT9AfaoI8ETLs3Uzvslr-KUZZjel7wsJKguTv-GeY770&_nc_zt=1&_nc_ht=scontent-sjc3-1.xx&edm=AAT1rw8EAAAA&_nc_gid=yNkyWPzeaFfSCxEWt25jAQ&_nc_tpa=Q5bMBQFpKp1GSckhLSAAuj6JukLE4gPv_50i58ZjN9kDxy2SsQHbpFxzlyqHsp4zwc6CPaIIGU6-AcdR&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_Af3zGaQnB5ds0LMSEJVWjNHBehb0Hkne_XYKJxaESfOFGw&oe=69E32909"}},{"name":"21-01-2026 | Image | Boxtel | V1","id":"120241150339780696","adset":"2026 | NL | performance | FBIG | pros/rem | Boxtel","campaign":"Ongoing | NL | performance | FBIG | conversions | pros/rem | Locaties | Standaard attr. (H)","spend":176.29,"clicks":279,"impressions":25387,"ctr":1.1,"cpc":0.63,"bookings":2,"creative":{"title":"Opslagruimte huren in Boxtel","body":"Opslagruimte huren? Bij 1BOX vind je schone, droge en veilige opslag voor al je spullen!","dest_url":"https://www.1box.nl/opslaglocaties/boxtel/","image_url":"","thumbnail_url":"https://scontent-sjc3-1.xx.fbcdn.net/v/t45.1600-4/646759268_1713855139593261_1925841330469140171_n.jpg?_nc_cat=110&ccb=1-7&_nc_ohc=9ELH2ZiJ7FcQ7kNvwGcqpuD&_nc_oc=AdpEgrX90cQO_KYSEGqzHPEpHExMp9pDE5ekDC9N217C81cL4orzShxXiEJEl6hcJgs&_nc_zt=1&_nc_ht=scontent-sjc3-1.xx&edm=AAT1rw8EAAAA&_nc_gid=jQNDCo9q-xPQzU3UtLfxKw&_nc_tpa=Q5bMBQENphJu-PkYWNu-IQ6A-XgeVNYTU7s3lm7C4wB8beqZUQ0EcvxAQEVACkNdrkh7Wh7jrcmyv8Z5&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_Af2w2nbPiw5VKm1XPcr6nJ26nFeIMSK_bLysdpS9BUjFNQ&oe=69E31179"}},{"name":"21-01-2026 | Image | Heerlen Heerlerbaan | V1","id":"120241150494890696","adset":"2026 | NL | performance | FBIG | pros/rem | Heerlen Heerlerbaan","campaign":"Ongoing | NL | performance | FBIG | conversions | pros/rem | Locaties | Standaard attr. (H)","spend":175.58,"clicks":304,"impressions":25487,"ctr":1.19,"cpc":0.58,"bookings":13,"creative":{"title":"Opslagruimte huren in Heerlen Heerlerbaan","body":"Opslagruimte huren? Bij 1BOX vind je schone, droge en veilige opslag voor al je spullen!","dest_url":"https://www.1box.nl/opslaglocaties/heerlen-heerlerbaan/","image_url":"","thumbnail_url":"https://scontent-sjc6-1.xx.fbcdn.net/v/t45.1600-4/645816713_1713855009593274_1316334253914167503_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=qPIFhDttHaoQ7kNvwEEDM2X&_nc_oc=AdrnBqhautHPRFSAcMs0XOp7jqAGKBbhpv7I-exU7wkpxvQxZI3puaoR47nfAlwwd6U&_nc_zt=1&_nc_ht=scontent-sjc6-1.xx&edm=AAT1rw8EAAAA&_nc_gid=DfL7ECThjfT444_2gA-8Ag&_nc_tpa=Q5bMBQE0vQ7YbvKb__ziWpMSFYJ5YUyXjSdTdkvHRGhR1Q7FEHR1q35JzI00Ua3XATbDvYpPfoz0dMKg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_Af2gxpeZi8MHynHjDZQfFQP7KbTzFdrtvkQBzIL96UM7Wg&oe=69E32CB7"}}],"fetched_at":"2026-04-13T16:30:00-03:00"};
+    const META_ADS_CONFIG = {
+        token: 'EAAN0p7M6ZAksBRMknQ2TYcbsOB7KRjCSAgk6FZATDdZBG1ZAF3YzRx8aj3uAMmbWR5gnWBc8JvCdwpq9rICHfWdZBorpq9YWTqQ44y86g97lbxcDiAuwbgPaUzc8LfmaGppLwio8p2q1P1YuW6NZC5SRFbmT04XGvK7jUdMaymZAjus8JzbEgvZBhGP1PXlmZBkDiMUdpj4ZB2',
+        accountId: 'act_1915709141907756',
+        bookingActionId: '1391541132570833', // Transparent Booking
+        apiVersion: 'v21.0'
+    };
+
+    // Local image mapping (full-res, downloaded from Meta)
+    const META_AD_IMAGES = {
+        '120241155397940696': 'meta-ads-img/ad-120241155397940696.jpg',
+        '120241155400560696': 'meta-ads-img/ad-120241155400560696.jpg',
+        '120241155444840696': 'meta-ads-img/ad-120241155444840696.jpg',
+        '120241150339780696': 'meta-ads-img/ad-120241150339780696.jpg',
+        '120241150494890696': 'meta-ads-img/ad-120241150494890696.jpg'
+    };
+
+    let _metaAdsData = null; // current fetched data
+    let _metaAdsFetchedRange = null; // 'YYYY-MM-DD_YYYY-MM-DD'
+
 
     let metaAdsChartInstance = null;
     let metaAdsCarouselIdx = 0;
+    let _metaAdsFetching = false;
 
-    function initMetaAds() {
-        const d = META_ADS_CACHE;
+    // Fetch data from Meta Graph API for a given date range
+    async function fetchMetaAdsData(from, to) {
+        const cfg = META_ADS_CONFIG;
+        const since = from.toISOString().slice(0,10);
+        const until = to.toISOString().slice(0,10);
+        const base = `https://graph.facebook.com/${cfg.apiVersion}`;
+        const tp = `&time_range={"since":"${since}","until":"${until}"}`;
+
+        // Helper
+        async function gql(endpoint) {
+            const r = await fetch(endpoint);
+            if (!r.ok) throw new Error('Meta API error: ' + r.status);
+            return r.json();
+        }
+
+        // 1) Account-level totals
+        const totalsUrl = `${base}/${cfg.accountId}/insights?fields=spend,clicks,impressions,reach,ctr,cpc,cpm,actions,cost_per_action_type&access_token=${cfg.token}${tp}`;
+        const totalsRes = await gql(totalsUrl);
+        const t = (totalsRes.data && totalsRes.data[0]) || {};
+
+        // Parse bookings from actions
+        let bookings = 0, costPerBooking = 0, lpv = 0;
+        (t.actions || []).forEach(a => {
+            if (a.action_type === 'offsite_conversion.custom.' + cfg.bookingActionId) bookings = parseInt(a.value) || 0;
+            if (a.action_type === 'landing_page_view') lpv = parseInt(a.value) || 0;
+        });
+        (t.cost_per_action_type || []).forEach(a => {
+            if (a.action_type === 'offsite_conversion.custom.' + cfg.bookingActionId) costPerBooking = parseFloat(a.value) || 0;
+        });
+
+        const totals = {
+            spend: parseFloat(t.spend) || 0,
+            clicks: parseInt(t.clicks) || 0,
+            impressions: parseInt(t.impressions) || 0,
+            reach: parseInt(t.reach) || 0,
+            ctr: parseFloat(t.ctr) || 0,
+            cpc: parseFloat(t.cpc) || 0,
+            cpm: parseFloat(t.cpm) || 0,
+            bookings: bookings,
+            cost_per_booking: costPerBooking,
+            landing_page_views: lpv,
+            date_start: since,
+            date_stop: until
+        };
+
+        // 2) Campaign breakdown
+        const campUrl = `${base}/${cfg.accountId}/insights?fields=campaign_name,campaign_id,spend,clicks,impressions,reach,ctr,cpc,cpm,actions,cost_per_action_type&level=campaign&limit=50&access_token=${cfg.token}${tp}`;
+        const campRes = await gql(campUrl);
+        const campaigns = (campRes.data || []).map(c => {
+            let cb = 0, clpv = 0, ccpb = 0;
+            (c.actions || []).forEach(a => {
+                if (a.action_type === 'offsite_conversion.custom.' + cfg.bookingActionId) cb = parseInt(a.value) || 0;
+                if (a.action_type === 'landing_page_view') clpv = parseInt(a.value) || 0;
+            });
+            (c.cost_per_action_type || []).forEach(a => {
+                if (a.action_type === 'offsite_conversion.custom.' + cfg.bookingActionId) ccpb = parseFloat(a.value) || 0;
+            });
+            return {
+                name: c.campaign_name,
+                id: c.campaign_id,
+                spend: parseFloat(c.spend) || 0,
+                impressions: parseInt(c.impressions) || 0,
+                clicks: parseInt(c.clicks) || 0,
+                ctr: parseFloat(c.ctr) || 0,
+                cpc: parseFloat(c.cpc) || 0,
+                cpm: parseFloat(c.cpm) || 0,
+                reach: parseInt(c.reach) || 0,
+                bookings: cb,
+                lpv: clpv,
+                cost_per_booking: ccpb
+            };
+        });
+
+        // 3) Daily breakdown
+        const dailyUrl = `${base}/${cfg.accountId}/insights?fields=spend,clicks,impressions,actions&time_increment=1&limit=200&access_token=${cfg.token}${tp}`;
+        const dailyRes = await gql(dailyUrl);
+        const daily = (dailyRes.data || []).map(d => {
+            let db = 0, dlpv = 0;
+            (d.actions || []).forEach(a => {
+                if (a.action_type === 'offsite_conversion.custom.' + cfg.bookingActionId) db = parseInt(a.value) || 0;
+                if (a.action_type === 'landing_page_view') dlpv = parseInt(a.value) || 0;
+            });
+            return {
+                date: d.date_start,
+                spend: parseFloat(d.spend) || 0,
+                clicks: parseInt(d.clicks) || 0,
+                impressions: parseInt(d.impressions) || 0,
+                bookings: db,
+                lpv: dlpv
+            };
+        });
+
+        // 4) Top 5 ads by spend
+        const adsUrl = `${base}/${cfg.accountId}/insights?fields=ad_name,ad_id,adset_name,campaign_name,spend,clicks,impressions,ctr,cpc,actions&level=ad&sort=spend_descending&limit=5&access_token=${cfg.token}${tp}`;
+        const adsRes = await gql(adsUrl);
+        const topAdsRaw = adsRes.data || [];
+
+        // For each top ad, fetch creative details
+        const top_ads = [];
+        for (const a of topAdsRaw) {
+            let ab = 0;
+            (a.actions || []).forEach(act => {
+                if (act.action_type === 'offsite_conversion.custom.' + cfg.bookingActionId) ab = parseInt(act.value) || 0;
+            });
+
+            // Fetch creative info
+            let creative = { title: '', body: '', dest_url: '', image_url: '' };
+            try {
+                const adDetail = await gql(`${base}/${a.ad_id}?fields=creative%7Btitle,body,thumbnail_url,asset_feed_spec,link_url%7D&access_token=${cfg.token}`);
+                const cr = adDetail.creative || {};
+                const afs = cr.asset_feed_spec || {};
+                creative.title = (afs.titles && afs.titles[0] && afs.titles[0].text) || cr.title || '';
+                creative.body = (afs.bodies && afs.bodies[0] && afs.bodies[0].text) || cr.body || '';
+                creative.dest_url = (afs.link_urls && afs.link_urls[0] && afs.link_urls[0].website_url) || cr.link_url || '';
+                // Use local image if available, otherwise try thumbnail
+                creative.image_url = META_AD_IMAGES[a.ad_id] || cr.thumbnail_url || '';
+            } catch(e) {
+                console.warn('[META ADS] Could not fetch creative for ad', a.ad_id, e);
+                creative.image_url = META_AD_IMAGES[a.ad_id] || '';
+            }
+
+            top_ads.push({
+                name: a.ad_name,
+                id: a.ad_id,
+                adset: a.adset_name,
+                campaign: a.campaign_name,
+                spend: parseFloat(a.spend) || 0,
+                clicks: parseInt(a.clicks) || 0,
+                impressions: parseInt(a.impressions) || 0,
+                ctr: parseFloat(a.ctr) || 0,
+                cpc: parseFloat(a.cpc) || 0,
+                bookings: ab,
+                creative: creative
+            });
+        }
+
+        return { totals, campaigns, daily, top_ads, fetched_at: new Date().toISOString() };
+    }
+
+    // Main entry: load Meta Ads for a date range
+    async function loadMetaAdsWithDateRange(from, to) {
+        const rangeKey = from.toISOString().slice(0,10) + '_' + to.toISOString().slice(0,10);
+
+        // Skip if already fetching or same range
+        if (_metaAdsFetching) return;
+        if (_metaAdsFetchedRange === rangeKey && _metaAdsData) {
+            renderMetaAdsPage(_metaAdsData);
+            return;
+        }
+
+        _metaAdsFetching = true;
+        console.log('[META ADS] Fetching data for range:', rangeKey);
+
+        // Show loading state
+        ['metaKpiCost','metaKpiClicks','metaKpiImpressions','metaKpiIntent','metaKpiCPI'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = '...';
+        });
+
+        try {
+            _metaAdsData = await fetchMetaAdsData(from, to);
+            _metaAdsFetchedRange = rangeKey;
+            renderMetaAdsPage(_metaAdsData);
+            console.log('[META ADS] Data loaded successfully');
+        } catch (err) {
+            console.error('[META ADS] Fetch failed:', err);
+            ['metaKpiCost','metaKpiClicks','metaKpiImpressions','metaKpiIntent','metaKpiCPI'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = 'Error';
+            });
+        } finally {
+            _metaAdsFetching = false;
+        }
+    }
+
+    // Render all page components from fetched data
+    function renderMetaAdsPage(d) {
         const t = d.totals;
 
         // KPIs
@@ -5373,29 +5566,28 @@ Generate insights covering ALL of these topics:
         document.getElementById('metaKpiClicks').textContent = t.clicks.toLocaleString('nl-NL');
         document.getElementById('metaKpiImpressions').textContent = t.impressions.toLocaleString('nl-NL');
         document.getElementById('metaKpiIntent').textContent = t.bookings.toLocaleString('nl-NL');
-        document.getElementById('metaKpiCPI').textContent = t.bookings > 0 ? ('\u20AC' + t.cost_per_booking.toFixed(2)) : '—';
+        document.getElementById('metaKpiCPI').textContent = t.bookings > 0 ? ('\u20AC' + t.cost_per_booking.toFixed(2)) : '\u2014';
 
         // Period label
-        const ds = new Date(t.date_start), de = new Date(t.date_stop);
+        const ds = new Date(t.date_start + 'T00:00:00'), de = new Date(t.date_stop + 'T00:00:00');
         const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        document.getElementById('metaadsPeriod').textContent = mo[ds.getMonth()] + ' ' + ds.getDate() + ' — ' + mo[de.getMonth()] + ' ' + de.getDate() + ', ' + de.getFullYear();
+        const periodEl = document.getElementById('metaadsPeriod');
+        if (periodEl) periodEl.textContent = mo[ds.getMonth()] + ' ' + ds.getDate() + ' \u2014 ' + mo[de.getMonth()] + ' ' + de.getDate() + ', ' + de.getFullYear();
 
         // Funnel
         const funnelClicks = t.clicks;
         const funnelBooking = t.bookings;
-        // Rental: placeholder — needs GA4 Paid Social data (bm_transparent_booking_complete)
-        // For now, use 0 as we don't have that cross-channel data in this cache
-        const funnelRental = 0;
+        const funnelRental = 0; // Needs GA4 Paid Social data
         document.getElementById('metaFunnelClicks').textContent = funnelClicks.toLocaleString('nl-NL');
         document.getElementById('metaFunnelBooking').textContent = funnelBooking.toLocaleString('nl-NL');
         document.getElementById('metaFunnelRental').textContent = funnelRental > 0 ? funnelRental.toLocaleString('nl-NL') : 'N/A';
 
-        const rateCB = funnelClicks > 0 ? ((funnelBooking / funnelClicks) * 100).toFixed(2) + '%' : '—';
-        const rateBR = funnelBooking > 0 && funnelRental > 0 ? ((funnelRental / funnelBooking) * 100).toFixed(2) + '%' : '—';
+        const rateCB = funnelClicks > 0 ? ((funnelBooking / funnelClicks) * 100).toFixed(2) + '%' : '\u2014';
+        const rateBR = funnelBooking > 0 && funnelRental > 0 ? ((funnelRental / funnelBooking) * 100).toFixed(2) + '%' : '\u2014';
         document.getElementById('metaRateCB').textContent = rateCB;
         document.getElementById('metaRateBR').textContent = rateBR;
 
-        // Chart: Spend & Intent Events (bookings) daily
+        // Chart
         initMetaAdsChart(d.daily);
 
         // Top Ads Carousel
@@ -5404,8 +5596,6 @@ Generate insights covering ALL of these topics:
 
         // Campaigns Table
         renderMetaCampaignsTable(d.campaigns, t);
-
-        console.log('[META ADS] Initialized');
     }
 
     function initMetaAdsChart(daily) {
@@ -5414,7 +5604,7 @@ Generate insights covering ALL of these topics:
         if (metaAdsChartInstance) { metaAdsChartInstance.destroy(); }
 
         const labels = daily.map(d => {
-            const dt = new Date(d.date);
+            const dt = new Date(d.date + 'T00:00:00');
             return dt.getDate() + '/' + (dt.getMonth()+1);
         });
         const spendData = daily.map(d => d.spend);
@@ -5491,8 +5681,9 @@ Generate insights covering ALL of these topics:
 
     // Top Ads Carousel
     function renderMetaAdCard(idx) {
-        const ads = META_ADS_CACHE.top_ads;
-        if (!ads || ads.length === 0) return;
+        if (!_metaAdsData || !_metaAdsData.top_ads) return;
+        const ads = _metaAdsData.top_ads;
+        if (ads.length === 0) return;
         const ad = ads[idx];
         const c = ad.creative || {};
 
@@ -5503,23 +5694,23 @@ Generate insights covering ALL of these topics:
         document.getElementById('metaAdBookings').textContent = ad.bookings.toLocaleString('nl-NL');
         document.getElementById('metaAdIdx').textContent = (idx+1) + ' / ' + ads.length;
 
-        // Image
+        // Image: prefer local file, fallback to API thumbnail
         const imgContainer = document.getElementById('metaAdImage');
-        const thumbUrl = c.thumbnail_url || c.image_url || '';
-        if (thumbUrl) {
-            imgContainer.innerHTML = '<img src="' + thumbUrl + '" alt="Ad creative" onerror="this.parentElement.innerHTML=\'<div class=metaads-ad-placeholder><svg viewBox=0\\ 0\\ 24\\ 24 fill=none stroke=rgba(0,0,0,0.2) stroke-width=1.5 width=48 height=48><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=8.5 cy=8.5 r=1.5/><polyline points=21\\ 15\\ 16\\ 10\\ 5\\ 21/></svg></div>\'">';
+        const imgUrl = META_AD_IMAGES[ad.id] || c.image_url || '';
+        if (imgUrl) {
+            imgContainer.innerHTML = '<img src="' + imgUrl + '" alt="Ad creative" onerror="this.style.display=\'none\'; this.parentElement.querySelector(\'.metaads-ad-placeholder\')&&(this.parentElement.querySelector(\'.metaads-ad-placeholder\').style.display=\'flex\')">';
         } else {
             imgContainer.innerHTML = '<div class="metaads-ad-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1.5" width="48" height="48"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>';
         }
 
-        // Title in header
         const pageEl = document.querySelector('.metaads-ad-page');
         if (pageEl) pageEl.textContent = '1BOX Self-Storage';
     }
 
     function metaAdsCarouselNav(dir) {
-        const ads = META_ADS_CACHE.top_ads;
-        if (!ads || ads.length === 0) return;
+        if (!_metaAdsData || !_metaAdsData.top_ads) return;
+        const ads = _metaAdsData.top_ads;
+        if (ads.length === 0) return;
         metaAdsCarouselIdx = (metaAdsCarouselIdx + dir + ads.length) % ads.length;
         renderMetaAdCard(metaAdsCarouselIdx);
     }
@@ -5530,14 +5721,12 @@ Generate insights covering ALL of these topics:
         if (!tbody) return;
         let html = '';
 
-        // Sort by spend descending
         const sorted = [...campaigns].sort((a,b) => b.spend - a.spend);
 
         sorted.forEach(c => {
-            // Extract short name: last meaningful segment
             const parts = c.name.split('|').map(s => s.trim());
             const shortName = parts.length > 3 ? parts.slice(3).join(' | ') : c.name;
-            const cpb = c.cost_per_booking > 0 ? ('\u20AC' + c.cost_per_booking.toFixed(2)) : '—';
+            const cpb = c.cost_per_booking > 0 ? ('\u20AC' + c.cost_per_booking.toFixed(2)) : '\u2014';
             const cpbClass = c.cost_per_booking > 100 ? ' class="cell-red"' : '';
 
             html += '<tr>'
@@ -5553,9 +5742,9 @@ Generate insights covering ALL of these topics:
         });
 
         // Totals row
-        const tCpb = totals.cost_per_booking > 0 ? ('\u20AC' + totals.cost_per_booking.toFixed(2)) : '—';
-        const avgCtr = totals.impressions > 0 ? ((totals.clicks / totals.impressions) * 100).toFixed(2) + '%' : '—';
-        const avgCpc = totals.clicks > 0 ? ('\u20AC' + (totals.spend / totals.clicks).toFixed(2)) : '—';
+        const tCpb = totals.cost_per_booking > 0 ? ('\u20AC' + totals.cost_per_booking.toFixed(2)) : '\u2014';
+        const avgCtr = totals.impressions > 0 ? ((totals.clicks / totals.impressions) * 100).toFixed(2) + '%' : '\u2014';
+        const avgCpc = totals.clicks > 0 ? ('\u20AC' + (totals.spend / totals.clicks).toFixed(2)) : '\u2014';
         html += '<tr class="totals-row">'
             + '<td>Total</td>'
             + '<td>\u20AC' + totals.spend.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) + '</td>'
@@ -5569,6 +5758,7 @@ Generate insights covering ALL of these topics:
 
         tbody.innerHTML = html;
     }
+
 
 </script>
 
