@@ -182,6 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            min-width: 0;
+            max-width: calc(100vw - 68px);
         }
 
         /* ===== HEADER ===== */
@@ -407,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /* ===== PAGES ===== */
         .page { display: none; }
-        .page.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+        .page.active { display: flex; flex-direction: column; flex: 1; min-height: 0; min-width: 0; width: 100%; overflow-y: auto; }
 
         /* ===== DATE RANGE PICKER ===== */
         .date-range-wrap { position: relative; }
@@ -911,6 +913,270 @@ document.addEventListener('DOMContentLoaded', () => {
         .facility-filter-actions .apply-btn:hover { background: var(--green-600); }
 
 
+        /* ===== GOOGLE ADS OVERVIEW ===== */
+        #page-gads {
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+        .gads-page {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .gads-header {
+            background: #0f1b2d;
+            color: #fff;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            gap: 16px;
+        }
+        .gads-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .gads-logo {
+            width: 44px;
+            height: 44px;
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .gads-logo img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+        .gads-header-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            line-height: 1;
+            color: #fff;
+        }
+        .gads-date-select {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px;
+        }
+        .gads-date-select:hover {
+            border-color: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.12);
+        }
+        .gads-date-select option {
+            background: #0f1b2d;
+            color: #fff;
+        }
+        .gads-body {
+            padding: 20px 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+            background: #f5f5f5;
+            overflow-y: auto;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* KPI Cards */
+        .gads-kpis {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .gads-kpi {
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px 14px;
+            border-left: 3px solid #c62828;
+            min-width: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            transition: box-shadow 0.2s, transform 0.15s;
+            animation: slideIn 0.5s ease both;
+        }
+        .gads-kpi:nth-child(1){animation-delay:0s}
+        .gads-kpi:nth-child(2){animation-delay:.04s}
+        .gads-kpi:nth-child(3){animation-delay:.08s}
+        .gads-kpi:nth-child(4){animation-delay:.12s}
+        .gads-kpi:nth-child(5){animation-delay:.16s}
+        .gads-kpi:nth-child(6){animation-delay:.2s}
+        .gads-kpi:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+        .gads-kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: rgba(51,51,51,0.5);
+            margin-bottom: 8px;
+        }
+        .gads-kpi-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            line-height: 1;
+            color: #1a1a1a;
+            letter-spacing: 0.02em;
+            font-variant-numeric: tabular-nums lining-nums;
+        }
+        .gads-kpi-delta {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .gads-kpi-delta.up { color: #2e7d32; }
+        .gads-kpi-delta.down { color: #c62828; }
+        .gads-kpi-delta svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Chart Panel */
+        .gads-chart-panel {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+        .gads-chart-panel .chart-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        .gads-chart-body {
+            position: relative;
+            height: 320px;
+        }
+
+        /* Campaign Table */
+        .gads-table-wrap {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .gads-table-header {
+            padding: 16px 24px 12px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+        }
+        .gads-table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .gads-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-variant-numeric: tabular-nums lining-nums;
+            font-size: 13px;
+            min-width: 1600px;
+        }
+        .gads-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .gads-table thead th {
+            background: #0f1b2d;
+            color: rgba(255,255,255,0.85);
+            padding: 10px 14px;
+            text-align: right;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            border-bottom: none;
+        }
+        .gads-table thead th:first-child {
+            text-align: left;
+            padding-left: 24px;
+        }
+        .gads-table thead th:hover {
+            background: #162640;
+        }
+        .gads-table thead th .sort-icon {
+            display: inline-block;
+            margin-left: 4px;
+            opacity: 0.4;
+            font-size: 10px;
+            transition: opacity 0.15s;
+        }
+        .gads-table thead th.sorted .sort-icon {
+            opacity: 1;
+        }
+        .gads-table tbody tr {
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: background 0.15s;
+        }
+        .gads-table tbody tr:hover {
+            background: #f9fafb;
+        }
+        .gads-table tbody td {
+            padding: 10px 14px;
+            text-align: right;
+            color: #333;
+        }
+        .gads-table tbody td:first-child {
+            text-align: left;
+            padding-left: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .gads-table tbody tr.totals-row {
+            background: #f0f2f5;
+            font-weight: 700;
+            border-top: 2px solid #0f1b2d;
+        }
+        .gads-table tbody tr.totals-row td {
+            color: #0f1b2d;
+        }
+        .gads-table .cell-red {
+            color: #c62828;
+            font-weight: 600;
+        }
+
         /* ===== RESPONSIVE: TABLET (max-width: 1200px) ===== */
         @media (max-width: 1200px) {
             .funnel-content { grid-template-columns: 1fr; }
@@ -922,6 +1188,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .mkt-events-row { grid-template-columns: repeat(2, 1fr); }
             .pace-bars { grid-template-columns: 1fr; }
             .monthly-pace-grid { grid-template-columns: 1fr; }
+            .gads-kpis { grid-template-columns: repeat(3, 1fr); }
+            .gads-chart-body { height: 260px; }
         }
 
         /* ===== RESPONSIVE: SMALL TABLET (max-width: 900px) ===== */
@@ -995,6 +1263,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             .monthly-kpi-row { flex-wrap: wrap; }
             .monthly-kpi { min-width: calc(50% - 8px); }
+            .gads-header { padding: 14px 16px; }
+            .gads-header-title { font-size: 1.3rem; }
+            .gads-body { padding: 14px 16px 24px; gap: 14px; }
+            .gads-kpis { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .gads-kpi { padding: 14px 16px; }
+            .gads-kpi-value { font-size: 1.8rem; }
+            .gads-chart-body { height: 240px; }
         }
 
         /* ===== RESPONSIVE: MOBILE (max-width: 600px) ===== */
@@ -1091,6 +1366,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 margin: 0 auto;
             }
             .date-range-inputs { flex-direction: column; }
+            /* Google Ads mobile */
+            .gads-header { flex-direction: column; align-items: flex-start; gap: 10px; padding: 12px 14px; }
+            .gads-header-title { font-size: 1.1rem; }
+            .gads-date-select { width: 100%; }
+            .gads-body { padding: 10px 12px 70px; gap: 10px; }
+            .gads-kpis { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .gads-kpi { padding: 12px 14px; }
+            .gads-kpi-value { font-size: 1.5rem; }
+            .gads-kpi-label { font-size: 10px; }
+            .gads-chart-body { height: 200px; }
+            .gads-chart-panel { padding: 14px 12px; }
             /* Page content overflow */
             .page.active { overflow-y: auto; overflow-x: hidden; }
             /* NL Map */
@@ -1730,6 +2016,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <button class="nav-btn" title="Monthly Report" onclick="switchPage('monthly',this)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         </button>
+        <div class="nav-spacer"></div>
+        <button class="nav-btn" title="Google Ads Overview" onclick="switchPage('gads',this)">
+            <!-- Google Ads / megaphone icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="12" y1="6" x2="12" y2="12"/></svg>
+        </button>
 
     </div>
 
@@ -2336,6 +2627,120 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     </div><!-- /page-monthly -->
 
+    <!-- ===== PAGE: GOOGLE ADS OVERVIEW ===== -->
+    <div class="page" id="page-gads">
+        <div class="gads-page">
+            <!-- Dark navy header -->
+            <div class="gads-header">
+                <div class="gads-header-left">
+                    <div class="gads-logo">
+                        <img src="1box brand guideline/1box logo.webp" alt="1BOX">
+                    </div>
+                    <div class="gads-header-title">Google Ads Overview</div>
+                </div>
+                <select class="gads-date-select" id="gadsDateRange" onchange="updateGadsData()">
+                    <option value="mar26">Mar 1 – Mar 31, 2026</option>
+                    <option value="feb26">Feb 1 – Feb 28, 2026</option>
+                    <option value="jan26">Jan 1 – Jan 31, 2026</option>
+                    <option value="q1">Q1 2026 (Jan – Mar)</option>
+                    <option value="last6m">Last 6 Months</option>
+                </select>
+            </div>
+
+            <!-- Body -->
+            <div class="gads-body">
+
+                <!-- KPI Cards -->
+                <div class="gads-kpis">
+                    <div class="gads-kpi">
+                        <div class="gads-kpi-label">Total Cost</div>
+                        <div class="gads-kpi-value" id="gadsKpiCost">€38,420</div>
+                        <div class="gads-kpi-delta up" id="gadsKpiCostDelta">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                            +8.2%
+                        </div>
+                    </div>
+                    <div class="gads-kpi">
+                        <div class="gads-kpi-label">Clicks</div>
+                        <div class="gads-kpi-value" id="gadsKpiClicks">14,832</div>
+                        <div class="gads-kpi-delta up" id="gadsKpiClicksDelta">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                            +12.4%
+                        </div>
+                    </div>
+                    <div class="gads-kpi">
+                        <div class="gads-kpi-label">Reservations</div>
+                        <div class="gads-kpi-value" id="gadsKpiRes">734</div>
+                        <div class="gads-kpi-delta up" id="gadsKpiResDelta">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                            +18.7%
+                        </div>
+                    </div>
+                    <div class="gads-kpi">
+                        <div class="gads-kpi-label">Cost per Reservation</div>
+                        <div class="gads-kpi-value" id="gadsKpiCPR">€52.34</div>
+                        <div class="gads-kpi-delta down" id="gadsKpiCPRDelta">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            -8.9%
+                        </div>
+                    </div>
+                    <div class="gads-kpi">
+                        <div class="gads-kpi-label">Rents / Move-ins</div>
+                        <div class="gads-kpi-value" id="gadsKpiRents">183</div>
+                        <div class="gads-kpi-delta up" id="gadsKpiRentsDelta">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                            +22.1%
+                        </div>
+                    </div>
+                    <div class="gads-kpi">
+                        <div class="gads-kpi-label">Cost per Rent</div>
+                        <div class="gads-kpi-value" id="gadsKpiCPRent">€209.95</div>
+                        <div class="gads-kpi-delta down" id="gadsKpiCPRentDelta">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            -11.4%
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dual-axis chart -->
+                <div class="gads-chart-panel">
+                    <div class="chart-title">Conversions vs. Cost Over Time</div>
+                    <div class="gads-chart-body">
+                        <canvas id="gadsLineChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Campaign Performance Table -->
+                <div class="gads-table-wrap">
+                    <div class="gads-table-header">Campaign Performance</div>
+                    <div class="gads-table-scroll">
+                        <table class="gads-table" id="gadsCampaignTable">
+                            <thead>
+                                <tr>
+                                    <th data-col="name" data-type="string">Campaign <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="cost" data-type="number">Cost <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="avgCpc" data-type="number">Avg CPC <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="clicks" data-type="number">Clicks <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="conversions" data-type="number">Conversions <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="keyEvents" data-type="number">Key Events <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="intentConv" data-type="number">Intent Conv. <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="convRate" data-type="number">Conv. Rate <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="cpl" data-type="number">Cost/Lead <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="cpc2" data-type="number">Cost/Call <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="cpIntent" data-type="number">Cost/Intent <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="cpRes" data-type="number">Cost/Reserv. <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="cpMoveIn" data-type="number">Cost/Move-in <span class="sort-icon">▲▼</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="gadsCampaignBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div><!-- /page-gads -->
+
 </div>
 
 <script>
@@ -2914,7 +3319,7 @@ Focus on: channel efficiency, device conversion gap, demographic opportunities, 
     }
 
     // ===== PAGE NAVIGATION =====
-    const pageTitles = { mym: 'MYM Results', marketing: 'Digital Marketing Overview', funnel: 'Events & Conversion Rates', monthly: 'Monthly Report' };
+    const pageTitles = { mym: 'MYM Results', marketing: 'Digital Marketing Overview', funnel: 'Events & Conversion Rates', monthly: 'Monthly Report', gads: 'Google Ads Overview' };
 
     function switchPage(pageId, btn) {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -2923,7 +3328,10 @@ Focus on: channel efficiency, device conversion gap, demographic opportunities, 
         document.getElementById('page-' + pageId).classList.add('active');
         document.getElementById('pageTitle').textContent = pageTitles[pageId] || pageId;
         const badge = document.querySelector('.sample-badge');
-        if (badge) badge.style.display = (pageId === 'marketing' || pageId === 'funnel') ? 'none' : '';
+        if (badge) badge.style.display = (pageId === 'marketing' || pageId === 'funnel' || pageId === 'gads') ? 'none' : '';
+        // Google Ads has its own header — hide the main header
+        const mainHeader = document.querySelector('.header');
+        if (mainHeader) mainHeader.style.display = (pageId === 'gads') ? 'none' : '';
         if (pageId === 'marketing' && !window._mktLoaded) {
             window._mktLoaded = true;
             loadMarketingData();
@@ -3994,6 +4402,255 @@ Generate insights covering ALL of these topics:
             document.getElementById('wkTotalUsers').textContent = '—';
         }
     }
+
+    // ===== GOOGLE ADS OVERVIEW =====
+    const GADS_CAMPAIGNS = [
+        { name: '1BOX | Search | Brand', cost: 2810, avgCpc: 0.42, clicks: 6690, conversions: 312, keyEvents: 189, intentConv: 145, convRate: 4.66, cpl: 14.87, cpc2: 22.15, cpIntent: 19.38, cpRes: 38.12, cpMoveIn: 140.50 },
+        { name: '1BOX | Search | Generic Storage', cost: 8940, avgCpc: 1.85, clicks: 4832, conversions: 168, keyEvents: 102, intentConv: 78, convRate: 3.48, cpl: 53.21, cpc2: 68.00, cpIntent: 114.62, cpRes: 89.40, cpMoveIn: 298.00 },
+        { name: '1BOX | Search | Location', cost: 6320, avgCpc: 1.24, clicks: 5097, conversions: 198, keyEvents: 134, intentConv: 96, convRate: 3.88, cpl: 31.92, cpc2: 42.13, cpIntent: 65.83, cpRes: 56.07, cpMoveIn: 210.67 },
+        { name: '1BOX | Search | Competitor', cost: 3450, avgCpc: 2.12, clicks: 1628, conversions: 52, keyEvents: 31, intentConv: 24, convRate: 3.19, cpl: 66.35, cpc2: 86.25, cpIntent: 143.75, cpRes: 115.00, cpMoveIn: 345.00 },
+        { name: '1BOX | PMax | Conversions', cost: 7200, avgCpc: 0.95, clicks: 7579, conversions: 245, keyEvents: 162, intentConv: 118, convRate: 3.23, cpl: 29.39, cpc2: 38.30, cpIntent: 61.02, cpRes: 48.00, cpMoveIn: 180.00 },
+        { name: '1BOX | Display | Retargeting', cost: 1890, avgCpc: 0.38, clicks: 4974, conversions: 89, keyEvents: 56, intentConv: 42, convRate: 1.79, cpl: 21.24, cpc2: 31.50, cpIntent: 45.00, cpRes: 94.50, cpMoveIn: 315.00 },
+        { name: '1BOX | Search | Move-in Promo', cost: 4210, avgCpc: 1.56, clicks: 2699, conversions: 112, keyEvents: 78, intentConv: 58, convRate: 4.15, cpl: 37.59, cpc2: 46.81, cpIntent: 72.59, cpRes: 60.14, cpMoveIn: 175.42 },
+        { name: '1BOX | YouTube | Awareness', cost: 2100, avgCpc: 0.28, clicks: 7500, conversions: 34, keyEvents: 22, intentConv: 15, convRate: 0.45, cpl: 61.76, cpc2: 105.00, cpIntent: 140.00, cpRes: 175.00, cpMoveIn: 525.00 },
+        { name: '1BOX | Search | Student Storage', cost: 1500, avgCpc: 1.08, clicks: 1389, conversions: 64, keyEvents: 42, intentConv: 32, convRate: 4.61, cpl: 23.44, cpc2: 35.71, cpIntent: 46.88, cpRes: 50.00, cpMoveIn: 187.50 }
+    ];
+
+    const GADS_CHART_DATA = {
+        labels: ['Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26', 'Feb 26', 'Mar 26'],
+        conversions: [182, 210, 245, 228, 195, 268, 302, 312],
+        cost: [28500, 31200, 34800, 32100, 29400, 35600, 37100, 38420]
+    };
+
+    let gadsChart = null;
+    let gadsSortCol = 'cost';
+    let gadsSortDir = -1; // -1 = desc
+
+    function initGadsChart() {
+        const ctx = document.getElementById('gadsLineChart');
+        if (!ctx) return;
+        if (gadsChart) { gadsChart.destroy(); gadsChart = null; }
+
+        gadsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: GADS_CHART_DATA.labels,
+                datasets: [
+                    {
+                        label: 'Conversions',
+                        data: GADS_CHART_DATA.conversions,
+                        borderColor: '#0f1b2d',
+                        backgroundColor: 'rgba(15,27,45,0.08)',
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#0f1b2d',
+                        borderWidth: 2.5,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Cost (€)',
+                        data: GADS_CHART_DATA.cost,
+                        borderColor: '#c62828',
+                        backgroundColor: 'rgba(198,40,40,0.06)',
+                        fill: true,
+                        tension: 0.35,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: '#c62828',
+                        borderWidth: 2.5,
+                        borderDash: [6, 3],
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    datalabels: { display: false },
+                    legend: {
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            padding: 16,
+                            font: { family: "'DM Sans'", size: 12, weight: '600' },
+                            color: '#555'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255,255,255,0.97)',
+                        titleColor: '#333',
+                        bodyColor: '#555',
+                        borderColor: 'rgba(0,0,0,0.08)',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        padding: 12,
+                        titleFont: { family: "'DM Sans'", size: 13, weight: '700' },
+                        bodyFont: { family: "'DM Sans'", size: 12 },
+                        callbacks: {
+                            label: function(ctx) {
+                                if (ctx.dataset.yAxisID === 'y1') return ' Cost: €' + ctx.parsed.y.toLocaleString('de-DE');
+                                return ' Conversions: ' + ctx.parsed.y;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11 }, color: 'rgba(51,51,51,0.5)' }
+                    },
+                    y: {
+                        position: 'left',
+                        title: { display: true, text: 'Conversions', font: { size: 11, weight: '600' }, color: '#0f1b2d' },
+                        grid: { color: 'rgba(0,0,0,0.04)' },
+                        ticks: { font: { size: 11 }, color: 'rgba(51,51,51,0.5)' },
+                        beginAtZero: true
+                    },
+                    y1: {
+                        position: 'right',
+                        title: { display: true, text: 'Cost (€)', font: { size: 11, weight: '600' }, color: '#c62828' },
+                        grid: { drawOnChartArea: false },
+                        ticks: {
+                            font: { size: 11 },
+                            color: 'rgba(198,40,40,0.6)',
+                            callback: v => '€' + (v/1000).toFixed(0) + 'k'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    function renderGadsTable() {
+        const tbody = document.getElementById('gadsCampaignBody');
+        if (!tbody) return;
+
+        const sorted = [...GADS_CAMPAIGNS].sort((a, b) => {
+            const va = a[gadsSortCol], vb = b[gadsSortCol];
+            if (typeof va === 'string') return gadsSortDir * va.localeCompare(vb);
+            return gadsSortDir * (va - vb);
+        });
+
+        // Compute totals
+        const totals = {
+            cost: 0, clicks: 0, conversions: 0, keyEvents: 0, intentConv: 0
+        };
+        sorted.forEach(c => {
+            totals.cost += c.cost;
+            totals.clicks += c.clicks;
+            totals.conversions += c.conversions;
+            totals.keyEvents += c.keyEvents;
+            totals.intentConv += c.intentConv;
+        });
+        totals.avgCpc = totals.clicks > 0 ? totals.cost / totals.clicks : 0;
+        totals.convRate = totals.clicks > 0 ? (totals.conversions / totals.clicks * 100) : 0;
+        totals.cpl = totals.conversions > 0 ? totals.cost / totals.conversions : 0;
+        totals.cpc2 = totals.keyEvents > 0 ? totals.cost / totals.keyEvents : 0;
+        totals.cpIntent = totals.intentConv > 0 ? totals.cost / totals.intentConv : 0;
+
+        const CPR_THRESHOLD = 100;
+        const CPMOVEIN_THRESHOLD = 350;
+
+        const fmt = (v, prefix='', suffix='') => prefix + v.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + suffix;
+        const fmtInt = v => v.toLocaleString('de-DE');
+        const fmtPct = v => v.toFixed(2) + '%';
+
+        let html = '';
+        sorted.forEach(c => {
+            const cpResClass = c.cpRes > CPR_THRESHOLD ? ' cell-red' : '';
+            const cpMoveClass = c.cpMoveIn > CPMOVEIN_THRESHOLD ? ' cell-red' : '';
+            html += `<tr>
+                <td>${c.name}</td>
+                <td>${fmt(c.cost, '€')}</td>
+                <td>${fmt(c.avgCpc, '€')}</td>
+                <td>${fmtInt(c.clicks)}</td>
+                <td>${fmtInt(c.conversions)}</td>
+                <td>${fmtInt(c.keyEvents)}</td>
+                <td>${fmtInt(c.intentConv)}</td>
+                <td>${fmtPct(c.convRate)}</td>
+                <td>${fmt(c.cpl, '€')}</td>
+                <td>${fmt(c.cpc2, '€')}</td>
+                <td>${fmt(c.cpIntent, '€')}</td>
+                <td class="${cpResClass}">${fmt(c.cpRes, '€')}</td>
+                <td class="${cpMoveClass}">${fmt(c.cpMoveIn, '€')}</td>
+            </tr>`;
+        });
+
+        // Totals row
+        html += `<tr class="totals-row">
+            <td>Total / Average</td>
+            <td>${fmt(totals.cost, '€')}</td>
+            <td>${fmt(totals.avgCpc, '€')}</td>
+            <td>${fmtInt(totals.clicks)}</td>
+            <td>${fmtInt(totals.conversions)}</td>
+            <td>${fmtInt(totals.keyEvents)}</td>
+            <td>${fmtInt(totals.intentConv)}</td>
+            <td>${fmtPct(totals.convRate)}</td>
+            <td>${fmt(totals.cpl, '€')}</td>
+            <td>${fmt(totals.cpc2, '€')}</td>
+            <td>${fmt(totals.cpIntent, '€')}</td>
+            <td>—</td>
+            <td>—</td>
+        </tr>`;
+
+        tbody.innerHTML = html;
+    }
+
+    // Sorting
+    document.addEventListener('DOMContentLoaded', () => {
+        const table = document.getElementById('gadsCampaignTable');
+        if (!table) return;
+        table.querySelectorAll('thead th').forEach(th => {
+            th.addEventListener('click', () => {
+                const col = th.dataset.col;
+                if (gadsSortCol === col) {
+                    gadsSortDir *= -1;
+                } else {
+                    gadsSortCol = col;
+                    gadsSortDir = th.dataset.type === 'string' ? 1 : -1;
+                }
+                // Update sorted visual
+                table.querySelectorAll('thead th').forEach(h => h.classList.remove('sorted'));
+                th.classList.add('sorted');
+                th.querySelector('.sort-icon').textContent = gadsSortDir === 1 ? '▲' : '▼';
+                renderGadsTable();
+            });
+        });
+    });
+
+    function updateGadsData() {
+        // Placeholder for date range switching — re-render with same data
+        renderGadsTable();
+    }
+
+    // Initialize when page is shown
+    const origSwitchPage = switchPage;
+    window._gadsInitialized = false;
+    const _origSwitchPage = window.switchPage || switchPage;
+    // Patch switchPage to init gads chart on first visit
+    (function() {
+        const oldSwitch = switchPage;
+        window.switchPage = function(pageId, btn) {
+            oldSwitch(pageId, btn);
+            if (pageId === 'gads' && !window._gadsInitialized) {
+                window._gadsInitialized = true;
+                setTimeout(() => {
+                    initGadsChart();
+                    renderGadsTable();
+                }, 50);
+            }
+        };
+        // Also handle if switchPage is called from inline onclick
+        switchPage = window.switchPage;
+    })();
+
 </script>
 
 </body>
