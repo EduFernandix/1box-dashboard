@@ -3256,13 +3256,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===== OPENAI DIRECT CALL HELPER =====
     const _dk = 'c2stcHJvai0zZlBkUzNtdEM5R29QcEVxdm5iYUZleWVDUHBkYWYwenJoSk8xR2N6NGZIUTRad2pPdlZQR0dVeEZnTlZqUzJXMDFLRjhmakJNVFQzQmxia0ZKWkJSQ04xX19WU0tOMkN1LXhUemVlV19nR3A3S2prQ2ZTSmZja3RuNjhXOTZhZmI1cV9FU05PU3hRcFhiWGRNcXF2Y3pnVjhEY0E=';
+    var _openai_key_mem = '';
     function getOpenAIKey() {
-        const stored = localStorage.getItem('1box_openai_key');
-        if (stored) return stored;
+        if (_openai_key_mem) return _openai_key_mem;
         try { return atob(_dk); } catch(e) { return ''; }
     }
     function setOpenAIKey(key) {
-        localStorage.setItem('1box_openai_key', key);
+        _openai_key_mem = key;
     }
     function promptOpenAIKey() {
         const current = getOpenAIKey();
