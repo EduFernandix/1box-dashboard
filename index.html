@@ -2152,8 +2152,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
 
-            <!-- ROW 2: Line chart full width -->
-            <div class="marketing-row" style="grid-template-columns:1fr;">
+            <!-- ROW 2: Line chart + Source Pie Charts -->
+            <div class="marketing-row marketing-row-mid">
+                <!-- Line: Rentals & Reservations -->
                 <div class="mkt-panel" style="animation-delay:.2s">
                     <div class="chart-top">
                         <div class="chart-title" style="display:flex;align-items:center;gap:16px;">
@@ -2166,17 +2167,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="chart-body" style="position:relative;"><canvas id="mktTrendChart"></canvas></div>
                 </div>
-            </div>
-
-            <!-- ROW 2b: Source Pie Charts side by side -->
-            <div class="marketing-row marketing-row-mid">
-                <div class="mkt-panel" style="animation-delay:.24s;padding:14px 18px 10px;display:flex;flex-direction:column;">
-                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title" style="font-size:0.85rem;">Transparent Booking by Source</div></div>
-                    <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:200px;"><canvas id="pieTransparentBooking"></canvas></div>
-                </div>
-                <div class="mkt-panel" style="animation-delay:.28s;padding:14px 18px 10px;display:flex;flex-direction:column;">
-                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title" style="font-size:0.85rem;">Booking Complete by Source</div></div>
-                    <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:200px;"><canvas id="pieBookingComplete"></canvas></div>
+                <!-- Source Pie Charts stacked -->
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div class="mkt-panel" style="animation-delay:.24s;flex:1;padding:12px 14px 8px;display:flex;flex-direction:column;">
+                        <div class="chart-top" style="margin-bottom:4px;"><div class="chart-title" style="font-size:0.8rem;">Transparent Booking by Source</div></div>
+                        <div style="flex:1;position:relative;min-height:0;"><canvas id="pieTransparentBooking"></canvas></div>
+                    </div>
+                    <div class="mkt-panel" style="animation-delay:.28s;flex:1;padding:12px 14px 8px;display:flex;flex-direction:column;">
+                        <div class="chart-top" style="margin-bottom:4px;"><div class="chart-title" style="font-size:0.8rem;">Booking Complete by Source</div></div>
+                        <div style="flex:1;position:relative;min-height:0;"><canvas id="pieBookingComplete"></canvas></div>
+                    </div>
                 </div>
             </div>
 
@@ -2869,46 +2869,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     data: values,
                     backgroundColor: colors,
-                    borderWidth: 2,
+                    borderWidth: 1.5,
                     borderColor: '#fff',
-                    hoverBorderWidth: 3,
+                    hoverBorderWidth: 2,
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '55%',
-                layout: { padding: { right: 0 } },
+                cutout: '50%',
+                layout: { padding: 2 },
                 plugins: {
                     legend: {
-                        position: 'right',
+                        position: 'bottom',
                         labels: {
-                            boxWidth: 10,
-                            boxHeight: 10,
-                            padding: 6,
-                            font: { family: 'DM Sans', size: 10, weight: '500' },
-                            color: '#2d2d2d',
-                            generateLabels: function(chart) {
-                                const ds = chart.data.datasets[0];
-                                return chart.data.labels.map((label, i) => {
-                                    const pct = total > 0 ? ((ds.data[i] / total) * 100).toFixed(1) : '0';
-                                    return {
-                                        text: label + ' · ' + pct + '%',
-                                        fillStyle: ds.backgroundColor[i],
-                                        strokeStyle: '#fff',
-                                        lineWidth: 1,
-                                        index: i,
-                                        hidden: false
-                                    };
-                                });
-                            }
+                            boxWidth: 8,
+                            boxHeight: 8,
+                            padding: 4,
+                            font: { family: 'DM Sans', size: 9 },
+                            color: '#555',
+                            usePointStyle: true,
+                            pointStyle: 'circle',
                         }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(0,0,0,.82)',
-                        titleFont: { family: 'DM Sans', size: 12, weight: '600' },
-                        bodyFont: { family: 'DM Sans', size: 11 },
-                        padding: 10,
+                        titleFont: { family: 'DM Sans', size: 11, weight: '600' },
+                        bodyFont: { family: 'DM Sans', size: 10 },
+                        padding: 8,
                         cornerRadius: 6,
                         callbacks: {
                             label: function(ctx) {
