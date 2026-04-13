@@ -2017,6 +2017,458 @@ document.addEventListener('DOMContentLoaded', () => {
                 margin: 0;
             }
         }
+
+        /* ======================== META ADS OVERVIEW ======================== */
+        .metaads-page {
+            padding: 0;
+            max-width: 100%;
+        }
+        .metaads-header {
+            background: #1a1f36;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 12px;
+            margin: 0 0 20px;
+        }
+        .metaads-header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .metaads-logo {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .metaads-title-block h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            color: var(--green-500);
+            letter-spacing: 0.06em;
+            margin: 0;
+            line-height: 1;
+        }
+        .metaads-subtitle {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.55);
+            font-weight: 400;
+        }
+        .metaads-header-right {
+            display: flex;
+            align-items: center;
+        }
+        .metaads-period {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.08);
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        /* KPI Cards */
+        .metaads-kpis {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin: 0 0 20px;
+            padding: 0 24px;
+        }
+        .metaads-kpi {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 18px 20px;
+            border-left: 3px solid var(--green-500);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            animation: slideIn 0.5s ease both;
+        }
+        .metaads-kpi:nth-child(1){animation-delay:0s}
+        .metaads-kpi:nth-child(2){animation-delay:.04s}
+        .metaads-kpi:nth-child(3){animation-delay:.08s}
+        .metaads-kpi:nth-child(4){animation-delay:.12s}
+        .metaads-kpi:nth-child(5){animation-delay:.16s}
+        .metaads-kpi:hover {
+            background: var(--bg-card-hover);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .metaads-kpi-icon {
+            width: 28px;
+            height: 28px;
+            color: var(--green-700);
+        }
+        .metaads-kpi-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        .metaads-kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--green-700);
+        }
+        .metaads-kpi-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.4rem;
+            line-height: 1;
+            color: var(--text-card);
+            letter-spacing: 0.02em;
+            font-variant-numeric: tabular-nums lining-nums;
+        }
+
+        /* Middle Row: 3 panels */
+        .metaads-middle {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr 1fr;
+            gap: 16px;
+            padding: 0 24px;
+            margin-bottom: 20px;
+        }
+        .metaads-panel {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 18px 22px 14px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .metaads-panel h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 0.05em;
+            color: var(--green-700);
+            margin: 0 0 14px;
+        }
+
+        /* Funnel Panel */
+        .metaads-funnel-panel {
+            display: flex;
+            flex-direction: column;
+        }
+        .metaads-funnel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            padding: 8px 0;
+        }
+        .metaads-funnel-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            color: #fff;
+            letter-spacing: 0.04em;
+            position: relative;
+        }
+        .metaads-funnel-clicks {
+            width: 100%;
+            height: 68px;
+            background: #c62828;
+            clip-path: polygon(0% 0%, 100% 0%, 92% 100%, 8% 100%);
+        }
+        .metaads-funnel-booking {
+            width: 84%;
+            height: 62px;
+            background: #1565c0;
+            clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 10% 100%);
+        }
+        .metaads-funnel-rental {
+            width: 68%;
+            height: 56px;
+            background: #e8a0bf;
+            clip-path: polygon(0% 0%, 100% 0%, 88% 100%, 12% 100%);
+        }
+        .metaads-funnel-label {
+            font-size: 0.78rem;
+            opacity: 0.9;
+            line-height: 1;
+        }
+        .metaads-funnel-value {
+            font-size: 1.6rem;
+            line-height: 1.1;
+        }
+        .metaads-funnel-rates {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+        .metaads-funnel-rates > div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .metaads-rate-label {
+            font-size: 0.75rem;
+            color: #888;
+            font-weight: 500;
+        }
+        .metaads-rate-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            color: var(--text-card);
+        }
+
+        /* Chart Panel */
+        .metaads-chart-panel {
+            display: flex;
+            flex-direction: column;
+        }
+        .metaads-chart-container {
+            flex: 1;
+            position: relative;
+            min-height: 280px;
+        }
+
+        /* Top Ads Carousel */
+        .metaads-topads-panel {
+            display: flex;
+            flex-direction: column;
+        }
+        .metaads-carousel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .metaads-ad-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .metaads-ad-preview {
+            flex: 1;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .metaads-ad-header-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+        }
+        .metaads-ad-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #e0e0e0;
+        }
+        .metaads-ad-page {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: #1a1a1a;
+        }
+        .metaads-ad-type {
+            font-size: 0.7rem;
+            color: #999;
+        }
+        .metaads-ad-body {
+            padding: 0 12px 10px;
+            font-size: 0.8rem;
+            color: #444;
+            line-height: 1.4;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .metaads-ad-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .metaads-ad-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .metaads-ad-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .metaads-ad-cta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border-top: 1px solid #e0e0e0;
+        }
+        .metaads-ad-dest {
+            font-size: 0.72rem;
+            color: #888;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 60%;
+        }
+        .metaads-ad-btn {
+            background: #e0e0e0;
+            color: #333;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 5px 14px;
+            border-radius: 4px;
+        }
+        .metaads-ad-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 10px 0 6px;
+        }
+        .metaads-ad-metrics > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .metaads-ad-metric-label {
+            font-size: 0.68rem;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+        .metaads-ad-metric-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            color: var(--text-card);
+        }
+        .metaads-carousel-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 8px 0 0;
+        }
+        .metaads-carousel-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-card);
+            transition: background 0.15s;
+        }
+        .metaads-carousel-btn:hover {
+            background: var(--bg-card-hover);
+        }
+        .metaads-carousel-idx {
+            font-size: 0.78rem;
+            color: #888;
+            font-weight: 500;
+        }
+
+        /* Campaigns Table */
+        .metaads-campaigns-panel {
+            margin: 0 24px 24px;
+        }
+        .metaads-table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 4px;
+        }
+        .metaads-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-variant-numeric: tabular-nums lining-nums;
+            font-size: 13px;
+        }
+        .metaads-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .metaads-table thead th {
+            background: var(--bg-card);
+            color: var(--text-dim);
+            padding: 10px 14px;
+            text-align: right;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            border-bottom: 1px solid var(--border);
+        }
+        .metaads-table thead th:first-child {
+            text-align: left;
+            padding-left: 24px;
+        }
+        .metaads-table thead th:hover {
+            background: var(--bg-card-hover);
+        }
+        .metaads-table tbody tr {
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: background 0.15s;
+        }
+        .metaads-table tbody tr:hover {
+            background: #f9fafb;
+        }
+        .metaads-table tbody td {
+            padding: 10px 14px;
+            text-align: right;
+            color: #333;
+        }
+        .metaads-table tbody td:first-child {
+            text-align: left;
+            padding-left: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+            max-width: 340px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .metaads-table tbody tr.totals-row {
+            background: #f0f2f5;
+            font-weight: 700;
+            border-top: 2px solid var(--text-card);
+        }
+        .metaads-table tbody tr.totals-row td {
+            color: var(--text-card);
+        }
+        .metaads-table .cell-red {
+            color: #c62828;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .metaads-kpis { grid-template-columns: repeat(3, 1fr); }
+            .metaads-middle { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .metaads-kpis { grid-template-columns: repeat(2, 1fr); }
+            .metaads-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+        }
     </style>
 </head>
 <body>
@@ -2041,6 +2493,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <button class="nav-btn" title="Google Ads Overview" onclick="switchPage('gads',this)">
             <!-- Google Ads icon (Simple Icons) -->
             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" stroke="none"><path d="M3.9998 22.9291C1.7908 22.9291 0 21.1383 0 18.9293s1.7908-3.9998 3.9998-3.9998 3.9998 1.7908 3.9998 3.9998-1.7908 3.9998-3.9998 3.9998zm19.4643-6.0004L15.4632 3.072C14.3586 1.1587 11.9121.5028 9.9988 1.6074S7.4295 5.1585 8.5341 7.0718l8.0009 13.8567c1.1046 1.9133 3.5511 2.5679 5.4644 1.4646 1.9134-1.1046 2.568-3.5511 1.4647-5.4644zM7.5137 4.8438L1.5645 15.1484A4.5 4.5 0 0 1 4 14.4297c2.5597-.0075 4.6248 2.1585 4.4941 4.7148l3.2168-5.5723-3.6094-6.25c-.4499-.7793-.6322-1.6394-.5878-2.4784z"/></svg>
+        </button>
+        <button class="nav-btn" title="Meta Ads Overview" onclick="switchPage('metaads',this)">
+            <!-- Meta icon -->
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" stroke="none"><path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a4.892 4.892 0 0 0 1.116 2.23c.506.546 1.168.898 1.947.898 1.07 0 1.953-.463 2.852-1.382.882-.901 1.756-2.198 2.677-3.81l.89-1.556.842 1.372c.874 1.424 1.673 2.57 2.517 3.372.858.815 1.788 1.286 2.899 1.286.834 0 1.544-.328 2.087-.87.53-.529.88-1.232 1.078-2.03.204-.82.3-1.73.3-2.697 0-2.46-.682-5.04-1.93-7.048C16.276 5.307 14.56 4.03 12.6 4.03c-1.17 0-2.152.458-3.073 1.337-.558.532-1.09 1.208-1.612 2.043l-.296.473-.29-.47c-.465-.752-.934-1.373-1.434-1.878-.883-.896-1.81-1.505-2.98-1.505zm-.07 1.782c.686 0 1.347.376 2.058 1.1.37.376.745.855 1.132 1.445l1.145 1.745-1.116 1.95c-.88 1.538-1.706 2.764-2.478 3.552-.78.796-1.504 1.18-2.313 1.18-.544 0-.975-.2-1.336-.59-.347-.381-.613-.926-.767-1.586a8.497 8.497 0 0 1-.172-1.757c0-2.341.627-4.752 1.682-6.57.848-1.461 1.9-2.469 3.165-2.469zm5.755 0c1.293 0 2.36 1.016 3.217 2.497 1.048 1.81 1.673 4.216 1.673 6.53 0 .845-.082 1.607-.238 2.24-.153.62-.382 1.087-.685 1.39-.292.293-.658.458-1.117.458-.683 0-1.349-.384-2.067-1.065-.467-.443-1.034-1.12-1.553-1.85l-.916-1.488 1.094-1.912c.846-1.478 1.664-2.712 2.427-3.5.418-.433.806-.727 1.165-.8z"/></svg>
         </button>
 
     </div>
@@ -2613,6 +3069,151 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </div>
     </div><!-- /page-gads -->
+
+    <!-- ======================== META ADS OVERVIEW ======================== -->
+    <div class="page" id="page-metaads">
+        <div class="metaads-page">
+            <!-- Dark header -->
+            <div class="metaads-header">
+                <div class="metaads-header-left">
+                    <div class="metaads-logo">
+                        <svg viewBox="0 0 24 24" width="36" height="36" fill="white" stroke="none"><path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a4.892 4.892 0 0 0 1.116 2.23c.506.546 1.168.898 1.947.898 1.07 0 1.953-.463 2.852-1.382.882-.901 1.756-2.198 2.677-3.81l.89-1.556.842 1.372c.874 1.424 1.673 2.57 2.517 3.372.858.815 1.788 1.286 2.899 1.286.834 0 1.544-.328 2.087-.87.53-.529.88-1.232 1.078-2.03.204-.82.3-1.73.3-2.697 0-2.46-.682-5.04-1.93-7.048C16.276 5.307 14.56 4.03 12.6 4.03c-1.17 0-2.152.458-3.073 1.337-.558.532-1.09 1.208-1.612 2.043l-.296.473-.29-.47c-.465-.752-.934-1.373-1.434-1.878-.883-.896-1.81-1.505-2.98-1.505zm-.07 1.782c.686 0 1.347.376 2.058 1.1.37.376.745.855 1.132 1.445l1.145 1.745-1.116 1.95c-.88 1.538-1.706 2.764-2.478 3.552-.78.796-1.504 1.18-2.313 1.18-.544 0-.975-.2-1.336-.59-.347-.381-.613-.926-.767-1.586a8.497 8.497 0 0 1-.172-1.757c0-2.341.627-4.752 1.682-6.57.848-1.461 1.9-2.469 3.165-2.469zm5.755 0c1.293 0 2.36 1.016 3.217 2.497 1.048 1.81 1.673 4.216 1.673 6.53 0 .845-.082 1.607-.238 2.24-.153.62-.382 1.087-.685 1.39-.292.293-.658.458-1.117.458-.683 0-1.349-.384-2.067-1.065-.467-.443-1.034-1.12-1.553-1.85l-.916-1.488 1.094-1.912c.846-1.478 1.664-2.712 2.427-3.5.418-.433.806-.727 1.165-.8z"/></svg>
+                    </div>
+                    <div class="metaads-title-block">
+                        <h2>Meta Ads Overview</h2>
+                        <span class="metaads-subtitle">Facebook & Instagram — Paid Social Performance</span>
+                    </div>
+                </div>
+                <div class="metaads-header-right">
+                    <span class="metaads-period" id="metaadsPeriod">Last 30 Days</span>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="metaads-kpis">
+                <div class="metaads-kpi">
+                    <div class="metaads-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                    <div class="metaads-kpi-label">Total Cost</div>
+                    <div class="metaads-kpi-value" id="metaKpiCost">—</div>
+                </div>
+                <div class="metaads-kpi">
+                    <div class="metaads-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div>
+                    <div class="metaads-kpi-label">Clicks</div>
+                    <div class="metaads-kpi-value" id="metaKpiClicks">—</div>
+                </div>
+                <div class="metaads-kpi">
+                    <div class="metaads-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="metaads-kpi-label">Impressions</div>
+                    <div class="metaads-kpi-value" id="metaKpiImpressions">—</div>
+                </div>
+                <div class="metaads-kpi">
+                    <div class="metaads-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+                    <div class="metaads-kpi-label">Intent Events</div>
+                    <div class="metaads-kpi-value" id="metaKpiIntent">—</div>
+                </div>
+                <div class="metaads-kpi">
+                    <div class="metaads-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                    <div class="metaads-kpi-label">Cost / Intent</div>
+                    <div class="metaads-kpi-value" id="metaKpiCPI">—</div>
+                </div>
+            </div>
+
+            <!-- Middle row: Funnel + Chart + Top Ads -->
+            <div class="metaads-middle">
+                <!-- Funnel -->
+                <div class="metaads-panel metaads-funnel-panel">
+                    <h3>Booking Funnel</h3>
+                    <div class="metaads-funnel">
+                        <div class="metaads-funnel-step metaads-funnel-clicks">
+                            <span class="metaads-funnel-label">Clicks</span>
+                            <span class="metaads-funnel-value" id="metaFunnelClicks">—</span>
+                        </div>
+                        <div class="metaads-funnel-step metaads-funnel-booking">
+                            <span class="metaads-funnel-label">Booking</span>
+                            <span class="metaads-funnel-value" id="metaFunnelBooking">—</span>
+                        </div>
+                        <div class="metaads-funnel-step metaads-funnel-rental">
+                            <span class="metaads-funnel-label">Rental</span>
+                            <span class="metaads-funnel-value" id="metaFunnelRental">—</span>
+                        </div>
+                    </div>
+                    <div class="metaads-funnel-rates">
+                        <div><span class="metaads-rate-label">Click → Booking</span><span class="metaads-rate-value" id="metaRateCB">—</span></div>
+                        <div><span class="metaads-rate-label">Booking → Rental</span><span class="metaads-rate-value" id="metaRateBR">—</span></div>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="metaads-panel metaads-chart-panel">
+                    <h3>Spend & Intent Events</h3>
+                    <div class="metaads-chart-container">
+                        <canvas id="metaAdsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Ads Carousel -->
+                <div class="metaads-panel metaads-topads-panel">
+                    <h3>Most Spend Ads</h3>
+                    <div class="metaads-carousel">
+                        <div class="metaads-ad-card" id="metaAdCard">
+                            <div class="metaads-ad-preview">
+                                <div class="metaads-ad-header-row">
+                                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAhklEQVRIS2NkGGDAOMDWMwz4BRj/MzD8Z2BgYGFkYHzPwMDAysDI+J+RkfE/AwMDIwMDA8N/BgYGBkYGBgZGRkYGRiYmJgYmZmYGJhYWBiZWVgYmNjYGJnZ2BiYODgYmTk4GJi4uBiZubgYmHh4GZh5eRmY+PgZmAUEGJiFhBiYRUQGPIkGABRwGxlC3hxUAAAAAElFTkSuQmCC" alt="1BOX" class="metaads-ad-avatar">
+                                    <div>
+                                        <div class="metaads-ad-page">1BOX Self-Storage</div>
+                                        <div class="metaads-ad-type">Sponsored</div>
+                                    </div>
+                                </div>
+                                <p class="metaads-ad-body" id="metaAdBody"></p>
+                                <div class="metaads-ad-image" id="metaAdImage">
+                                    <div class="metaads-ad-placeholder">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1.5" width="48" height="48"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                    </div>
+                                </div>
+                                <div class="metaads-ad-cta">
+                                    <span class="metaads-ad-dest" id="metaAdDest"></span>
+                                    <span class="metaads-ad-btn">Learn More</span>
+                                </div>
+                            </div>
+                            <div class="metaads-ad-metrics">
+                                <div><span class="metaads-ad-metric-label">Spent</span><span class="metaads-ad-metric-value" id="metaAdSpent">—</span></div>
+                                <div><span class="metaads-ad-metric-label">Clicks</span><span class="metaads-ad-metric-value" id="metaAdClicks">—</span></div>
+                                <div><span class="metaads-ad-metric-label">Bookings</span><span class="metaads-ad-metric-value" id="metaAdBookings">—</span></div>
+                            </div>
+                        </div>
+                        <div class="metaads-carousel-nav">
+                            <button class="metaads-carousel-btn" id="metaAdPrev" onclick="metaAdsCarouselNav(-1)">‹</button>
+                            <span class="metaads-carousel-idx" id="metaAdIdx">1 / 5</span>
+                            <button class="metaads-carousel-btn" id="metaAdNext" onclick="metaAdsCarouselNav(1)">›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campaigns Table -->
+            <div class="metaads-panel metaads-campaigns-panel">
+                <h3>Campaigns</h3>
+                <div class="metaads-table-wrap">
+                    <table class="metaads-table" id="metaCampaignsTable">
+                        <thead>
+                            <tr>
+                                <th>Campaign</th>
+                                <th>Spend</th>
+                                <th>Clicks</th>
+                                <th>CTR</th>
+                                <th>CPC</th>
+                                <th>LPV</th>
+                                <th>Bookings</th>
+                                <th>Cost/Booking</th>
+                            </tr>
+                        </thead>
+                        <tbody id="metaCampaignsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div><!-- /page-metaads -->
 
 </div>
 
@@ -3266,7 +3867,7 @@ Focus on: channel efficiency, source attribution for bookings vs completions, de
     }
 
     // ===== PAGE NAVIGATION =====
-    const pageTitles = { marketing: 'Digital Marketing Overview', funnel: 'Events & Conversion Rates', monthly: 'Monthly Report', gads: 'Google Ads Overview' };
+    const pageTitles = { marketing: 'Digital Marketing Overview', funnel: 'Events & Conversion Rates', monthly: 'Monthly Report', gads: 'Google Ads Overview', metaads: 'Meta Ads Overview' };
 
     function switchPage(pageId, btn) {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -3275,9 +3876,9 @@ Focus on: channel efficiency, source attribution for bookings vs completions, de
         document.getElementById('page-' + pageId).classList.add('active');
         const titleEl = document.getElementById('pageTitle');
         titleEl.textContent = pageTitles[pageId] || pageId;
-        titleEl.style.color = (pageId === 'marketing' || pageId === 'gads') ? 'var(--green-700)' : '';
+        titleEl.style.color = (pageId === 'marketing' || pageId === 'gads' || pageId === 'metaads') ? 'var(--green-700)' : '';
         const badge = document.querySelector('.sample-badge');
-        if (badge) badge.style.display = (pageId === 'marketing' || pageId === 'funnel' || pageId === 'gads') ? 'none' : '';
+        if (badge) badge.style.display = (pageId === 'marketing' || pageId === 'funnel' || pageId === 'gads' || pageId === 'metaads') ? 'none' : '';
         // All pages use the shared header
         const mainHeader = document.querySelector('.header');
         if (mainHeader) mainHeader.style.display = '';
@@ -4745,10 +5346,229 @@ Generate insights covering ALL of these topics:
                 const to = currentDateRange.to || new Date();
                 loadGadsWithDateRange(from, to);
             }
+            // META ADS
+            if (pageId === 'metaads' && !window._metaAdsInitialized) {
+                window._metaAdsInitialized = true;
+                setTimeout(() => { initMetaAds(); }, 50);
+            } else if (pageId === 'metaads') {
+                // Already initialized, nothing to refresh
+            }
         };
         // Also handle if switchPage is called from inline onclick
         switchPage = window.switchPage;
     })();
+
+    // ======================== META ADS OVERVIEW JS ========================
+    const META_ADS_CACHE = {"totals":{"spend":9023.26,"clicks":24803,"impressions":1854222,"reach":694964,"ctr":1.33765,"cpc":0.363797,"cpm":4.866332,"bookings":150,"cost_per_booking":60.16,"landing_page_views":12150,"date_start":"2026-03-14","date_stop":"2026-04-12"},"campaigns":[{"name":"2025 | NL | performance | FBIG | Traffic | pros | Lokaal","id":"120229806081210696","spend":600.38,"impressions":62912,"clicks":3621,"ctr":5.76,"cpc":0.17,"cpm":9.54,"reach":41310,"bookings":5,"lpv":1599,"cost_per_booking":120.08},{"name":"2025 | NL | performance | FBIG | conversions | pros/rem | Fundascrape","id":"120236027767880696","spend":1503.63,"impressions":300703,"clicks":3730,"ctr":1.24,"cpc":0.4,"cpm":5.0,"reach":87041,"bookings":0,"lpv":2053,"cost_per_booking":0},{"name":"Ongoing | NL | performance | FBIG | conversions | pros/rem | Locaties | Standaard attr. (H)","id":"120239339487530696","spend":4591.08,"impressions":538060,"clicks":6161,"ctr":1.15,"cpc":0.75,"cpm":8.53,"reach":148943,"bookings":143,"lpv":1242,"cost_per_booking":32.11},{"name":"Ongoing | NL | performance | FBIG | traffic | pros/rem | Locaties - Life Events","id":"120241055316490696","spend":1504.73,"impressions":570835,"clicks":6872,"ctr":1.2,"cpc":0.22,"cpm":2.64,"reach":350879,"bookings":2,"lpv":4497,"cost_per_booking":752.37},{"name":"Ongoing | NL | performance | FBIG | traffic | pros/rem | Locaties - Life Events - Sport & Hobby - Origineel","id":"120242298371570696","spend":408.65,"impressions":196671,"clicks":2276,"ctr":1.16,"cpc":0.18,"cpm":2.08,"reach":148548,"bookings":0,"lpv":1427,"cost_per_booking":0},{"name":"Ongoing | NL | performance | FBIG | traffic | pros/rem | Locaties - Life Events - Sport & Hobby - AI","id":"120242298380990696","spend":414.79,"impressions":185041,"clicks":2143,"ctr":1.16,"cpc":0.19,"cpm":2.24,"reach":131167,"bookings":0,"lpv":1332,"cost_per_booking":0}],"daily":[{"date":"2026-03-14","spend":238.33,"clicks":635,"impressions":49173,"bookings":0,"lpv":248},{"date":"2026-03-15","spend":287.34,"clicks":685,"impressions":41540,"bookings":6,"lpv":228},{"date":"2026-03-16","spend":281.62,"clicks":729,"impressions":54320,"bookings":8,"lpv":311},{"date":"2026-03-17","spend":262.38,"clicks":772,"impressions":47401,"bookings":1,"lpv":285},{"date":"2026-03-18","spend":262.7,"clicks":718,"impressions":48833,"bookings":5,"lpv":291},{"date":"2026-03-19","spend":273.5,"clicks":678,"impressions":49530,"bookings":8,"lpv":313},{"date":"2026-03-20","spend":242.55,"clicks":619,"impressions":35748,"bookings":6,"lpv":244},{"date":"2026-03-21","spend":261.14,"clicks":624,"impressions":43316,"bookings":4,"lpv":316},{"date":"2026-03-22","spend":283.28,"clicks":697,"impressions":49851,"bookings":1,"lpv":364},{"date":"2026-03-23","spend":307.83,"clicks":681,"impressions":52077,"bookings":3,"lpv":339},{"date":"2026-03-24","spend":313.9,"clicks":761,"impressions":52653,"bookings":4,"lpv":382},{"date":"2026-03-25","spend":271.7,"clicks":669,"impressions":48190,"bookings":5,"lpv":320},{"date":"2026-03-26","spend":269.97,"clicks":736,"impressions":48289,"bookings":8,"lpv":351},{"date":"2026-03-27","spend":256.24,"clicks":759,"impressions":55330,"bookings":6,"lpv":340},{"date":"2026-03-28","spend":295.38,"clicks":821,"impressions":64249,"bookings":9,"lpv":429},{"date":"2026-03-29","spend":411.86,"clicks":1260,"impressions":95572,"bookings":7,"lpv":714},{"date":"2026-03-30","spend":310.71,"clicks":926,"impressions":71841,"bookings":6,"lpv":447},{"date":"2026-03-31","spend":330.27,"clicks":889,"impressions":75555,"bookings":9,"lpv":459},{"date":"2026-04-01","spend":286.92,"clicks":793,"impressions":63300,"bookings":4,"lpv":341},{"date":"2026-04-02","spend":306.2,"clicks":910,"impressions":73722,"bookings":6,"lpv":452},{"date":"2026-04-03","spend":313.06,"clicks":984,"impressions":72311,"bookings":8,"lpv":501},{"date":"2026-04-04","spend":318.25,"clicks":929,"impressions":70606,"bookings":5,"lpv":497},{"date":"2026-04-05","spend":374.35,"clicks":1014,"impressions":72963,"bookings":5,"lpv":506},{"date":"2026-04-06","spend":346.98,"clicks":953,"impressions":75515,"bookings":4,"lpv":540},{"date":"2026-04-07","spend":309.96,"clicks":871,"impressions":75676,"bookings":1,"lpv":474},{"date":"2026-04-08","spend":321.34,"clicks":836,"impressions":70579,"bookings":8,"lpv":435},{"date":"2026-04-09","spend":319.61,"clicks":939,"impressions":74437,"bookings":4,"lpv":509},{"date":"2026-04-10","spend":297.67,"clicks":934,"impressions":65623,"bookings":3,"lpv":468},{"date":"2026-04-11","spend":304.5,"clicks":967,"impressions":72258,"bookings":4,"lpv":512},{"date":"2026-04-12","spend":363.72,"clicks":1014,"impressions":83764,"bookings":2,"lpv":534}],"top_ads":[{"name":"24-2-2026 | Image | Barendrecht | V1","id":"120241155397940696","adset":"2025 | NL | performance | FBIG | pros | Barendrecht","campaign":"2025 | NL | performance | FBIG | conversions | pros/rem | Fundascrape","spend":597.31,"clicks":1552,"impressions":113929,"ctr":1.36,"cpc":0.38,"bookings":0,"creative":{"title":"Verhuizing op de planning?","body":"1BOX geeft je de ruimte om rustig te verhuizen, zonder stress of haast. Huur vandaag nog jouw opslagbox.","dest_url":"https://www.1box.nl/opslaglocaties/barendrecht/","image_url":"","thumbnail_url":"https://scontent-sjc3-1.xx.fbcdn.net/v/t45.1600-4/645942929_1713917142920394_8079963955086491810_n.jpg?_nc_cat=100&ccb=1-7&_nc_ohc=Wvx4ymcfP2wQ7kNvwF8a2yE&_nc_oc=Adr2guC_PorhcyQddT6-unR4x8JymcfWlxNtzTtTgNIPkmLEPZf-fcgzNp51mQaGDug&_nc_zt=1&_nc_ht=scontent-sjc3-1.xx&edm=AAT1rw8EAAAA&_nc_gid=dvGmnxx7j3Hq9KOrV2Nb-w&_nc_tpa=Q5bMBQGJL8jONsuocUVqA_hZ0h-4-JjbJ1gCkFZkXTvv4LejB9P1yvDnCmqeftB9C2T2LS_JZf-RSjBr&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_Af2cQl8aSIfERkAq8WXtp8W_0E_kv9KoeMW0hSOsg7igUQ&oe=69E30E48"}},{"name":"24-2-2026 | Image | Den Haag | V1","id":"120241155400560696","adset":"2025 | NL | performance | FBIG | pros | Den Haag","campaign":"2025 | NL | performance | FBIG | conversions | pros/rem | Fundascrape","spend":436.31,"clicks":1053,"impressions":85411,"ctr":1.23,"cpc":0.41,"bookings":0,"creative":{"title":"Verhuizing op de planning?","body":"1BOX geeft je de ruimte om rustig te verhuizen, zonder stress of haast. Huur vandaag nog jouw opslagbox.","dest_url":"https://www.1box.nl/opslaglocaties/den-haag/","image_url":"","thumbnail_url":"https://scontent-sjc6-1.xx.fbcdn.net/v/t45.1600-4/646050674_1713916759587099_1946618910224383022_n.jpg?_nc_cat=108&ccb=1-7&_nc_ohc=vMuBroWiIM4Q7kNvwEB30DW&_nc_oc=AdpaSLqfDryg-N3LP2p3QqZbZ1ADcubkqq_9M5abKs0v8AHIfZHxwMv4Us8i3RMRses&_nc_zt=1&_nc_ht=scontent-sjc6-1.xx&edm=AAT1rw8EAAAA&_nc_gid=aNn-zU_vJrOhcYxlIlWZWQ&_nc_tpa=Q5bMBQEt3KDttFCtnUQJUJTpTQzLIGvFkaoTASIlaiDhuWWvlHeT0Vsfye_Dnzyf27Q71hTH1-lT_dPX&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_Af2yjiTIgco5B1nq953quMXs4G9fFa3EnOGDhMMWWz2qdQ&oe=69E3088F"}},{"name":"24-2-2026 | Image | Den Haag | V2","id":"120241155444840696","adset":"2025 | NL | performance | FBIG | pros | Den Haag","campaign":"2025 | NL | performance | FBIG | conversions | pros/rem | Fundascrape","spend":200.97,"clicks":466,"impressions":38885,"ctr":1.2,"cpc":0.43,"bookings":0,"creative":{"title":"Verhuizing op de planning?","body":"1BOX geeft je de ruimte om rustig te verhuizen, zonder stress of haast. Huur vandaag nog jouw opslagbox.","dest_url":"https://www.1box.nl/opslaglocaties/den-haag/","image_url":"","thumbnail_url":"https://scontent-sjc3-1.xx.fbcdn.net/v/t45.1600-4/648135663_1713916622920446_2553392377673712953_n.jpg?_nc_cat=105&ccb=1-7&_nc_ohc=L9PS4Z41mt8Q7kNvwFUdjlP&_nc_oc=AdrfSp6FhjJI7nzBAnf-jjSMT9AfaoI8ETLs3Uzvslr-KUZZjel7wsJKguTv-GeY770&_nc_zt=1&_nc_ht=scontent-sjc3-1.xx&edm=AAT1rw8EAAAA&_nc_gid=yNkyWPzeaFfSCxEWt25jAQ&_nc_tpa=Q5bMBQFpKp1GSckhLSAAuj6JukLE4gPv_50i58ZjN9kDxy2SsQHbpFxzlyqHsp4zwc6CPaIIGU6-AcdR&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_Af3zGaQnB5ds0LMSEJVWjNHBehb0Hkne_XYKJxaESfOFGw&oe=69E32909"}},{"name":"21-01-2026 | Image | Boxtel | V1","id":"120241150339780696","adset":"2026 | NL | performance | FBIG | pros/rem | Boxtel","campaign":"Ongoing | NL | performance | FBIG | conversions | pros/rem | Locaties | Standaard attr. (H)","spend":176.29,"clicks":279,"impressions":25387,"ctr":1.1,"cpc":0.63,"bookings":2,"creative":{"title":"Opslagruimte huren in Boxtel","body":"Opslagruimte huren? Bij 1BOX vind je schone, droge en veilige opslag voor al je spullen!","dest_url":"https://www.1box.nl/opslaglocaties/boxtel/","image_url":"","thumbnail_url":"https://scontent-sjc3-1.xx.fbcdn.net/v/t45.1600-4/646759268_1713855139593261_1925841330469140171_n.jpg?_nc_cat=110&ccb=1-7&_nc_ohc=9ELH2ZiJ7FcQ7kNvwGcqpuD&_nc_oc=AdpEgrX90cQO_KYSEGqzHPEpHExMp9pDE5ekDC9N217C81cL4orzShxXiEJEl6hcJgs&_nc_zt=1&_nc_ht=scontent-sjc3-1.xx&edm=AAT1rw8EAAAA&_nc_gid=jQNDCo9q-xPQzU3UtLfxKw&_nc_tpa=Q5bMBQENphJu-PkYWNu-IQ6A-XgeVNYTU7s3lm7C4wB8beqZUQ0EcvxAQEVACkNdrkh7Wh7jrcmyv8Z5&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_Af2w2nbPiw5VKm1XPcr6nJ26nFeIMSK_bLysdpS9BUjFNQ&oe=69E31179"}},{"name":"21-01-2026 | Image | Heerlen Heerlerbaan | V1","id":"120241150494890696","adset":"2026 | NL | performance | FBIG | pros/rem | Heerlen Heerlerbaan","campaign":"Ongoing | NL | performance | FBIG | conversions | pros/rem | Locaties | Standaard attr. (H)","spend":175.58,"clicks":304,"impressions":25487,"ctr":1.19,"cpc":0.58,"bookings":13,"creative":{"title":"Opslagruimte huren in Heerlen Heerlerbaan","body":"Opslagruimte huren? Bij 1BOX vind je schone, droge en veilige opslag voor al je spullen!","dest_url":"https://www.1box.nl/opslaglocaties/heerlen-heerlerbaan/","image_url":"","thumbnail_url":"https://scontent-sjc6-1.xx.fbcdn.net/v/t45.1600-4/645816713_1713855009593274_1316334253914167503_n.jpg?_nc_cat=109&ccb=1-7&_nc_ohc=qPIFhDttHaoQ7kNvwEEDM2X&_nc_oc=AdrnBqhautHPRFSAcMs0XOp7jqAGKBbhpv7I-exU7wkpxvQxZI3puaoR47nfAlwwd6U&_nc_zt=1&_nc_ht=scontent-sjc6-1.xx&edm=AAT1rw8EAAAA&_nc_gid=DfL7ECThjfT444_2gA-8Ag&_nc_tpa=Q5bMBQE0vQ7YbvKb__ziWpMSFYJ5YUyXjSdTdkvHRGhR1Q7FEHR1q35JzI00Ua3XATbDvYpPfoz0dMKg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=52f3c4&_nc_sid=58080a&oh=00_Af2gxpeZi8MHynHjDZQfFQP7KbTzFdrtvkQBzIL96UM7Wg&oe=69E32CB7"}}],"fetched_at":"2026-04-13T16:30:00-03:00"};
+
+    let metaAdsChartInstance = null;
+    let metaAdsCarouselIdx = 0;
+
+    function initMetaAds() {
+        const d = META_ADS_CACHE;
+        const t = d.totals;
+
+        // KPIs
+        document.getElementById('metaKpiCost').textContent = '\u20AC' + t.spend.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2});
+        document.getElementById('metaKpiClicks').textContent = t.clicks.toLocaleString('nl-NL');
+        document.getElementById('metaKpiImpressions').textContent = t.impressions.toLocaleString('nl-NL');
+        document.getElementById('metaKpiIntent').textContent = t.bookings.toLocaleString('nl-NL');
+        document.getElementById('metaKpiCPI').textContent = t.bookings > 0 ? ('\u20AC' + t.cost_per_booking.toFixed(2)) : '—';
+
+        // Period label
+        const ds = new Date(t.date_start), de = new Date(t.date_stop);
+        const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        document.getElementById('metaadsPeriod').textContent = mo[ds.getMonth()] + ' ' + ds.getDate() + ' — ' + mo[de.getMonth()] + ' ' + de.getDate() + ', ' + de.getFullYear();
+
+        // Funnel
+        const funnelClicks = t.clicks;
+        const funnelBooking = t.bookings;
+        // Rental: placeholder — needs GA4 Paid Social data (bm_transparent_booking_complete)
+        // For now, use 0 as we don't have that cross-channel data in this cache
+        const funnelRental = 0;
+        document.getElementById('metaFunnelClicks').textContent = funnelClicks.toLocaleString('nl-NL');
+        document.getElementById('metaFunnelBooking').textContent = funnelBooking.toLocaleString('nl-NL');
+        document.getElementById('metaFunnelRental').textContent = funnelRental > 0 ? funnelRental.toLocaleString('nl-NL') : 'N/A';
+
+        const rateCB = funnelClicks > 0 ? ((funnelBooking / funnelClicks) * 100).toFixed(2) + '%' : '—';
+        const rateBR = funnelBooking > 0 && funnelRental > 0 ? ((funnelRental / funnelBooking) * 100).toFixed(2) + '%' : '—';
+        document.getElementById('metaRateCB').textContent = rateCB;
+        document.getElementById('metaRateBR').textContent = rateBR;
+
+        // Chart: Spend & Intent Events (bookings) daily
+        initMetaAdsChart(d.daily);
+
+        // Top Ads Carousel
+        metaAdsCarouselIdx = 0;
+        renderMetaAdCard(0);
+
+        // Campaigns Table
+        renderMetaCampaignsTable(d.campaigns, t);
+
+        console.log('[META ADS] Initialized');
+    }
+
+    function initMetaAdsChart(daily) {
+        const ctx = document.getElementById('metaAdsChart');
+        if (!ctx) return;
+        if (metaAdsChartInstance) { metaAdsChartInstance.destroy(); }
+
+        const labels = daily.map(d => {
+            const dt = new Date(d.date);
+            return dt.getDate() + '/' + (dt.getMonth()+1);
+        });
+        const spendData = daily.map(d => d.spend);
+        const bookingsData = daily.map(d => d.bookings);
+
+        metaAdsChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Spend (\u20AC)',
+                        data: spendData,
+                        backgroundColor: 'rgba(90,154,47,0.25)',
+                        borderColor: 'var(--green-700)',
+                        borderWidth: 1.5,
+                        borderRadius: 3,
+                        order: 2,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Bookings',
+                        data: bookingsData,
+                        type: 'line',
+                        borderColor: '#1565c0',
+                        backgroundColor: 'rgba(21,101,192,0.1)',
+                        pointBackgroundColor: '#1565c0',
+                        pointRadius: 3,
+                        pointHoverRadius: 5,
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true,
+                        order: 1,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'end',
+                        labels: { boxWidth: 12, padding: 16, font: { size: 11 } }
+                    },
+                    datalabels: { display: false },
+                    tooltip: darkTooltip
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10 }, maxRotation: 45 }
+                    },
+                    y: {
+                        position: 'left',
+                        title: { display: true, text: 'Spend (\u20AC)', font: { size: 11 } },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        ticks: { font: { size: 10 }, callback: v => '\u20AC' + v }
+                    },
+                    y1: {
+                        position: 'right',
+                        title: { display: true, text: 'Bookings', font: { size: 11 } },
+                        grid: { drawOnChartArea: false },
+                        ticks: { font: { size: 10 }, stepSize: 1 },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Top Ads Carousel
+    function renderMetaAdCard(idx) {
+        const ads = META_ADS_CACHE.top_ads;
+        if (!ads || ads.length === 0) return;
+        const ad = ads[idx];
+        const c = ad.creative || {};
+
+        document.getElementById('metaAdBody').textContent = c.body || '';
+        document.getElementById('metaAdDest').textContent = c.dest_url ? c.dest_url.replace('https://www.','').replace('https://','') : '';
+        document.getElementById('metaAdSpent').textContent = '\u20AC' + ad.spend.toFixed(2);
+        document.getElementById('metaAdClicks').textContent = ad.clicks.toLocaleString('nl-NL');
+        document.getElementById('metaAdBookings').textContent = ad.bookings.toLocaleString('nl-NL');
+        document.getElementById('metaAdIdx').textContent = (idx+1) + ' / ' + ads.length;
+
+        // Image
+        const imgContainer = document.getElementById('metaAdImage');
+        const thumbUrl = c.thumbnail_url || c.image_url || '';
+        if (thumbUrl) {
+            imgContainer.innerHTML = '<img src="' + thumbUrl + '" alt="Ad creative" onerror="this.parentElement.innerHTML=\'<div class=metaads-ad-placeholder><svg viewBox=0\\ 0\\ 24\\ 24 fill=none stroke=rgba(0,0,0,0.2) stroke-width=1.5 width=48 height=48><rect x=3 y=3 width=18 height=18 rx=2/><circle cx=8.5 cy=8.5 r=1.5/><polyline points=21\\ 15\\ 16\\ 10\\ 5\\ 21/></svg></div>\'">';
+        } else {
+            imgContainer.innerHTML = '<div class="metaads-ad-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1.5" width="48" height="48"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>';
+        }
+
+        // Title in header
+        const pageEl = document.querySelector('.metaads-ad-page');
+        if (pageEl) pageEl.textContent = '1BOX Self-Storage';
+    }
+
+    function metaAdsCarouselNav(dir) {
+        const ads = META_ADS_CACHE.top_ads;
+        if (!ads || ads.length === 0) return;
+        metaAdsCarouselIdx = (metaAdsCarouselIdx + dir + ads.length) % ads.length;
+        renderMetaAdCard(metaAdsCarouselIdx);
+    }
+
+    // Campaigns Table
+    function renderMetaCampaignsTable(campaigns, totals) {
+        const tbody = document.getElementById('metaCampaignsBody');
+        if (!tbody) return;
+        let html = '';
+
+        // Sort by spend descending
+        const sorted = [...campaigns].sort((a,b) => b.spend - a.spend);
+
+        sorted.forEach(c => {
+            // Extract short name: last meaningful segment
+            const parts = c.name.split('|').map(s => s.trim());
+            const shortName = parts.length > 3 ? parts.slice(3).join(' | ') : c.name;
+            const cpb = c.cost_per_booking > 0 ? ('\u20AC' + c.cost_per_booking.toFixed(2)) : '—';
+            const cpbClass = c.cost_per_booking > 100 ? ' class="cell-red"' : '';
+
+            html += '<tr>'
+                + '<td title="' + c.name.replace(/"/g,'&quot;') + '">' + shortName + '</td>'
+                + '<td>\u20AC' + c.spend.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) + '</td>'
+                + '<td>' + c.clicks.toLocaleString('nl-NL') + '</td>'
+                + '<td>' + c.ctr.toFixed(2) + '%</td>'
+                + '<td>\u20AC' + c.cpc.toFixed(2) + '</td>'
+                + '<td>' + c.lpv.toLocaleString('nl-NL') + '</td>'
+                + '<td>' + c.bookings.toLocaleString('nl-NL') + '</td>'
+                + '<td' + cpbClass + '>' + cpb + '</td>'
+                + '</tr>';
+        });
+
+        // Totals row
+        const tCpb = totals.cost_per_booking > 0 ? ('\u20AC' + totals.cost_per_booking.toFixed(2)) : '—';
+        const avgCtr = totals.impressions > 0 ? ((totals.clicks / totals.impressions) * 100).toFixed(2) + '%' : '—';
+        const avgCpc = totals.clicks > 0 ? ('\u20AC' + (totals.spend / totals.clicks).toFixed(2)) : '—';
+        html += '<tr class="totals-row">'
+            + '<td>Total</td>'
+            + '<td>\u20AC' + totals.spend.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) + '</td>'
+            + '<td>' + totals.clicks.toLocaleString('nl-NL') + '</td>'
+            + '<td>' + avgCtr + '</td>'
+            + '<td>' + avgCpc + '</td>'
+            + '<td>' + (totals.landing_page_views || 0).toLocaleString('nl-NL') + '</td>'
+            + '<td>' + totals.bookings.toLocaleString('nl-NL') + '</td>'
+            + '<td>' + tCpb + '</td>'
+            + '</tr>';
+
+        tbody.innerHTML = html;
+    }
 
 </script>
 
