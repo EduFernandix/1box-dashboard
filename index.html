@@ -2152,9 +2152,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
 
-            <!-- ROW 2: Line chart + Events cards -->
-            <div class="marketing-row marketing-row-mid">
-                <!-- Line: Rentals & Reservations -->
+            <!-- ROW 2: Line chart full width -->
+            <div class="marketing-row" style="grid-template-columns:1fr;">
                 <div class="mkt-panel" style="animation-delay:.2s">
                     <div class="chart-top">
                         <div class="chart-title" style="display:flex;align-items:center;gap:16px;">
@@ -2167,16 +2166,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="chart-body" style="position:relative;"><canvas id="mktTrendChart"></canvas></div>
                 </div>
-                <!-- Source Pie Charts -->
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    <div class="mkt-panel" style="animation-delay:.24s;flex:1;padding:14px 18px 10px;display:flex;flex-direction:column;">
-                        <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title" style="font-size:0.85rem;">Transparent Booking by Source</div></div>
-                        <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;"><canvas id="pieTransparentBooking"></canvas></div>
-                    </div>
-                    <div class="mkt-panel" style="animation-delay:.28s;flex:1;padding:14px 18px 10px;display:flex;flex-direction:column;">
-                        <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title" style="font-size:0.85rem;">Booking Complete by Source</div></div>
-                        <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;"><canvas id="pieBookingComplete"></canvas></div>
-                    </div>
+            </div>
+
+            <!-- ROW 2b: Source Pie Charts side by side -->
+            <div class="marketing-row marketing-row-mid">
+                <div class="mkt-panel" style="animation-delay:.24s;padding:14px 18px 10px;display:flex;flex-direction:column;">
+                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title" style="font-size:0.85rem;">Transparent Booking by Source</div></div>
+                    <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:200px;"><canvas id="pieTransparentBooking"></canvas></div>
+                </div>
+                <div class="mkt-panel" style="animation-delay:.28s;padding:14px 18px 10px;display:flex;flex-direction:column;">
+                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title" style="font-size:0.85rem;">Booking Complete by Source</div></div>
+                    <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-height:200px;"><canvas id="pieBookingComplete"></canvas></div>
                 </div>
             </div>
 
