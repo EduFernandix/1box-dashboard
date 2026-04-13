@@ -2060,17 +2060,16 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="date-range-wrap">
             <button class="date-btn" id="dateToggle" onclick="toggleDatePicker()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                <span id="dateRangeLabel">Mar 1, 2025 — Feb 28, 2026</span>
+                <span id="dateRangeLabel">Last 30 Days</span>
             </button>
             <div class="date-dropdown" id="dateDropdown">
                 <div class="date-presets">
-                    <button class="preset-btn" onclick="setPreset('1w')">Last Week</button>
-                    <button class="preset-btn" onclick="setPreset('1m')">Last Month</button>
-                    <button class="preset-btn" onclick="setPreset('3m')">Last 3M</button>
-                    <button class="preset-btn" onclick="setPreset('6m')">Last 6M</button>
-                    <button class="preset-btn active" onclick="setPreset('12m')">Last 12M</button>
-                    <button class="preset-btn" onclick="setPreset('ytd')">YTD</button>
-                    <button class="preset-btn" onclick="setPreset('all')">All Time</button>
+                    <button class="preset-btn" onclick="setPreset('7d',this)">Last 7 Days</button>
+                    <button class="preset-btn" onclick="setPreset('14d',this)">Last 14 Days</button>
+                    <button class="preset-btn active" onclick="setPreset('30d',this)">Last 30 Days</button>
+                    <button class="preset-btn" onclick="setPreset('3m',this)">Last 3 Months</button>
+                    <button class="preset-btn" onclick="setPreset('6m',this)">Last 6 Months</button>
+                    <button class="preset-btn" onclick="setPreset('custom',this)">Custom</button>
                 </div>
                 <div class="date-inputs">
                     <div>
@@ -2271,11 +2270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <!-- HEADER -->
         <div class="marketing-header">
             <div class="chart-title" style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.04em;color:var(--green-700);">Digital Marketing Overview</div>
-            <div class="marketing-date-inputs">
-                <input type="date" id="mktDateFrom" value="2025-04-01">
-                <input type="date" id="mktDateTo">
-                <button class="mkt-apply-btn" onclick="loadMarketingData()">Apply</button>
-            </div>
+            <!-- Date range controlled by global header dropdown -->
         </div>
 
         <!-- LOADING / ERROR -->
@@ -2662,13 +2657,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="gads-header-title">Google Ads Overview</div>
                 </div>
-                <select class="gads-date-select" id="gadsDateRange" onchange="updateGadsData()">
-                    <option value="all" selected>Sep 2025 – Apr 2026</option>
-                    <option value="mar26">Mar 1 – Mar 31, 2026</option>
-                    <option value="feb26">Feb 1 – Feb 28, 2026</option>
-                    <option value="jan26">Jan 1 – Jan 31, 2026</option>
-                    <option value="q1">Q1 2026 (Jan – Mar)</option>
-                </select>
+                <!-- Date range controlled by global header dropdown -->
             </div>
 
             <!-- Body -->
@@ -2856,12 +2845,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const MKT_API = '/api/ga4/overview';
     let mktSourceChart = null, mktTrendChart = null, mktHourChart = null;
 
-    // Set default end date to today
-    document.getElementById('mktDateTo').value = new Date().toISOString().slice(0, 10);
-
     async function loadMarketingData() {
-        const sd = document.getElementById('mktDateFrom').value;
-        const ed = document.getElementById('mktDateTo').value;
+        // Use global date range
+        const sd = currentDateRange.from ? currentDateRange.from.toISOString().slice(0,10) : new Date(new Date().setDate(new Date().getDate()-30)).toISOString().slice(0,10);
+        const ed = currentDateRange.to ? currentDateRange.to.toISOString().slice(0,10) : new Date().toISOString().slice(0,10);
         const loadEl = document.getElementById('mktLoading');
         const errEl = document.getElementById('mktError');
         const content = document.getElementById('mktContent');
@@ -3452,54 +3439,106 @@ Focus on: channel efficiency, device conversion gap, demographic opportunities, 
         document.getElementById('dateTo').value = to.toISOString().slice(0,10);
     }
 
-    function setPreset(key) {
+    // Global date range state
+    var currentDateRange = { from: null, to: null, preset: '30d' };
+
+    function setPreset(key, btn) {
         document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
+        if (btn) btn.classList.add('active');
 
         const now = new Date();
-        let from;
+        let from, to = now;
+
+        if (key === 'custom') {
+            // Show custom date inputs, don't change range yet
+            document.querySelector('.date-inputs').style.display = 'flex';
+            return;
+        }
+
+        // Hide custom inputs for presets
+        document.querySelector('.date-inputs').style.display = 'none';
 
         switch(key) {
-            case '1w': {
-                const d = new Date(now);
-                d.setDate(d.getDate() - 7);
-                from = d;
+            case '7d': {
+                from = new Date(now);
+                from.setDate(from.getDate() - 7);
                 break;
             }
-            case '1m': {
-                const d = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-                const end = new Date(now.getFullYear(), now.getMonth(), 0);
-                from = d;
-                updateDateLabel(from, end);
-                if (document.getElementById('page-funnel').classList.contains('active')) refreshFunnelData();
-                return;
+            case '14d': {
+                from = new Date(now);
+                from.setDate(from.getDate() - 14);
+                break;
             }
-            case '3m':  from = new Date(now.getFullYear(), now.getMonth() - 3, 1); break;
-            case '6m':  from = new Date(now.getFullYear(), now.getMonth() - 6, 1); break;
-            case '12m': from = new Date(now.getFullYear() - 1, now.getMonth(), 1); break;
-            case 'ytd': from = new Date(now.getFullYear(), 0, 1); break;
-            case 'all': from = new Date(2025, 2, 1); break;
+            case '30d': {
+                from = new Date(now);
+                from.setDate(from.getDate() - 30);
+                break;
+            }
+            case '3m': {
+                from = new Date(now);
+                from.setMonth(from.getMonth() - 3);
+                break;
+            }
+            case '6m': {
+                from = new Date(now);
+                from.setMonth(from.getMonth() - 6);
+                break;
+            }
         }
 
-        updateDateLabel(from, now);
-        // Refresh funnel if on that page
-        if (document.getElementById('page-funnel').classList.contains('active')) {
-            refreshFunnelData();
-        }
+        currentDateRange = { from, to, preset: key };
+        updateDateLabel(from, to);
+
+        // Update label to show preset name instead of date range
+        const presetLabels = { '7d': 'Last 7 Days', '14d': 'Last 14 Days', '30d': 'Last 30 Days', '3m': 'Last 3 Months', '6m': 'Last 6 Months' };
+        document.getElementById('dateRangeLabel').textContent = presetLabels[key] || formatDate(from) + ' \u2014 ' + formatDate(to);
+
+        // Close dropdown after selection
+        document.getElementById('dateDropdown').classList.remove('open');
+
+        // Propagate to all views
+        propagateDateRange(from, to);
     }
 
     function applyCustomRange() {
         document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+        // Highlight "Custom" button
+        const customBtn = document.querySelector('.preset-btn:last-child');
+        if (customBtn) customBtn.classList.add('active');
+
         const from = new Date(document.getElementById('dateFrom').value + 'T00:00:00');
         const to = new Date(document.getElementById('dateTo').value + 'T00:00:00');
         if (!isNaN(from) && !isNaN(to)) {
-            document.getElementById('dateRangeLabel').textContent = formatDate(from) + ' — ' + formatDate(to);
-            // Refresh funnel if on that page
-            if (document.getElementById('page-funnel').classList.contains('active')) {
-                refreshFunnelData();
-            }
+            currentDateRange = { from, to, preset: 'custom' };
+            document.getElementById('dateRangeLabel').textContent = formatDate(from) + ' \u2014 ' + formatDate(to);
+            // Propagate to all views
+            propagateDateRange(from, to);
         }
     }
+
+    function propagateDateRange(from, to) {
+        // Refresh active view with new date range
+        const activePage = document.querySelector('.page.active');
+        if (!activePage) return;
+        const pageId = activePage.id.replace('page-', '');
+
+        if (pageId === 'funnel') {
+            refreshFunnelData();
+        }
+        // Marketing uses GA4 cache - date filtering is visual only since data is pre-cached
+        // Google Ads uses pre-cached data - date filtering is visual only
+    }
+
+    // Initialize: hide custom inputs by default (preset is active)
+    document.addEventListener('DOMContentLoaded', () => {
+        const dateInputs = document.querySelector('.date-inputs');
+        if (dateInputs) dateInputs.style.display = 'none';
+        // Set initial range
+        const now = new Date();
+        const from30 = new Date(now);
+        from30.setDate(from30.getDate() - 30);
+        currentDateRange = { from: from30, to: now, preset: '30d' };
+    });
 
     // ===== HEATMAP COLORING =====
     function applyHeatmaps() {
