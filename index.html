@@ -2609,19 +2609,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">All Conversions</div>
-                        <div class="gads-kpi-value" id="gadsKpiRents">92,397</div>
+                        <div class="gads-kpi-label">Intent Events</div>
+                        <div class="gads-kpi-value" id="gadsKpiRents">8,094</div>
                         <div class="gads-kpi-delta up" id="gadsKpiRentsDelta">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
-                            +10.1% MoM
+                            +47.7% MoM
                         </div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Cost / All Conv.</div>
-                        <div class="gads-kpi-value" id="gadsKpiCPRent">€5.98</div>
+                        <div class="gads-kpi-label">Cost / Intent</div>
+                        <div class="gads-kpi-value" id="gadsKpiCPRent">€68.26</div>
                         <div class="gads-kpi-delta down" id="gadsKpiCPRentDelta">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                            -1.8% MoM
+                            -26.8% MoM
                         </div>
                     </div>
                 </div>
@@ -2647,7 +2647,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <th data-col="clicks" data-type="number">Clicks <span class="sort-icon">▲▼</span></th>
                                     <th data-col="conversions" data-type="number">Conversions <span class="sort-icon">▲▼</span></th>
                                     <th data-col="keyEvents" data-type="number">Key Events <span class="sort-icon">▲▼</span></th>
-                                    <th data-col="intentConv" data-type="number">Intent Conv. <span class="sort-icon">▲▼</span></th>
+                                    <th data-col="intentConv" data-type="number">Intent Events <span class="sort-icon">▲▼</span></th>
                                     <th data-col="convRate" data-type="number">Conv. Rate <span class="sort-icon">▲▼</span></th>
                                     <th data-col="cpl" data-type="number">Cost/Lead <span class="sort-icon">▲▼</span></th>
                                     <th data-col="cpc2" data-type="number">Cost/Call <span class="sort-icon">▲▼</span></th>
@@ -4331,45 +4331,45 @@ Generate insights covering ALL of these topics:
 
     // ===== GOOGLE ADS OVERVIEW =====
     const GADS_CAMPAIGNS = [
-        { name: '[NL] - [NB] - PMax', cost: 16325.94, avgCpc: 2.19, clicks: 7442, conversions: 1105, keyEvents: 9677, intentConv: 1105, convRate: 14.84, cpl: 1.69, cpc2: 1.69, cpIntent: 14.78, cpRes: 22.74, cpMoveIn: 73.9 },
-        { name: '[NL] - [NB] - PMax - 2', cost: 2616.22, avgCpc: 1.22, clicks: 2149, conversions: 718, keyEvents: 2894, intentConv: 718, convRate: 33.4, cpl: 0.9, cpc2: 0.9, cpIntent: 3.65, cpRes: 5.61, cpMoveIn: 18.23 },
-        { name: '[NL] - [NB] - Search - Alkmaar', cost: 20463.35, avgCpc: 5.64, clicks: 3628, conversions: 510, keyEvents: 2301, intentConv: 510, convRate: 14.04, cpl: 8.89, cpc2: 8.89, cpIntent: 40.16, cpRes: 61.79, cpMoveIn: 200.81 },
-        { name: '[NL] - [NB] - Search - Almere', cost: 19987.13, avgCpc: 7.95, clicks: 2513, conversions: 810, keyEvents: 2060, intentConv: 810, convRate: 32.23, cpl: 9.7, cpc2: 9.7, cpIntent: 24.68, cpRes: 37.97, cpMoveIn: 123.4 },
-        { name: '[NL] - [NB] - Search - Almere - Transparent', cost: 274.41, avgCpc: 7.84, clicks: 35, conversions: 7, keyEvents: 16, intentConv: 7, convRate: 21.38, cpl: 17.19, cpc2: 17.19, cpIntent: 36.67, cpRes: 56.42, cpMoveIn: 183.36 },
-        { name: '[NL] - [NB] - Search - Alphen a/d Rijn', cost: 8243.89, avgCpc: 3.89, clicks: 2117, conversions: 228, keyEvents: 2433, intentConv: 228, convRate: 10.78, cpl: 3.39, cpc2: 3.39, cpIntent: 36.11, cpRes: 55.56, cpMoveIn: 180.57 },
-        { name: '[NL] - [NB] - Search - Amsterdam', cost: 28363.51, avgCpc: 7.2, clicks: 3941, conversions: 278, keyEvents: 3421, intentConv: 278, convRate: 7.04, cpl: 8.29, cpc2: 8.29, cpIntent: 102.18, cpRes: 157.2, cpMoveIn: 510.91 },
-        { name: '[NL] - [NB] - Search - Barendrecht', cost: 21553.61, avgCpc: 6.55, clicks: 3291, conversions: 744, keyEvents: 2157, intentConv: 744, convRate: 22.61, cpl: 9.99, cpc2: 9.99, cpIntent: 28.97, cpRes: 44.56, cpMoveIn: 144.83 },
-        { name: '[NL] - [NB] - Search - Barendrecht - Transparent', cost: 156.75, avgCpc: 5.81, clicks: 27, conversions: 5, keyEvents: 16, intentConv: 5, convRate: 18.52, cpl: 9.8, cpc2: 9.8, cpIntent: 31.35, cpRes: 48.23, cpMoveIn: 156.75 },
-        { name: '[NL] - [NB] - Search - Bergen op Zoom', cost: 13605.79, avgCpc: 6.36, clicks: 2138, conversions: 518, keyEvents: 1400, intentConv: 518, convRate: 24.22, cpl: 9.72, cpc2: 9.72, cpIntent: 26.28, cpRes: 40.43, cpMoveIn: 131.38 },
-        { name: '[NL] - [NB] - Search - Boxtel', cost: 8655.94, avgCpc: 6.53, clicks: 1326, conversions: 449, keyEvents: 1078, intentConv: 449, convRate: 33.85, cpl: 8.03, cpc2: 8.03, cpIntent: 19.28, cpRes: 29.66, cpMoveIn: 96.41 },
-        { name: '[NL] - [NB] - Search - Breda', cost: 15326.47, avgCpc: 8.17, clicks: 1877, conversions: 584, keyEvents: 1821, intentConv: 584, convRate: 31.13, cpl: 8.42, cpc2: 8.42, cpIntent: 26.23, cpRes: 40.35, cpMoveIn: 131.13 },
-        { name: '[NL] - [NB] - Search - Breda - Transparent', cost: 202.78, avgCpc: 14.48, clicks: 14, conversions: 2, keyEvents: 5, intentConv: 2, convRate: 14.29, cpl: 40.56, cpc2: 40.56, cpIntent: 101.39, cpRes: 155.98, cpMoveIn: 506.94 },
-        { name: '[NL] - [NB] - Search - Den Bosch', cost: 21181.78, avgCpc: 6.71, clicks: 3159, conversions: 817, keyEvents: 2325, intentConv: 817, convRate: 25.87, cpl: 9.11, cpc2: 9.11, cpIntent: 25.92, cpRes: 39.88, cpMoveIn: 129.62 },
-        { name: '[NL] - [NB] - Search - Den Haag', cost: 20739.21, avgCpc: 4.67, clicks: 4440, conversions: 666, keyEvents: 4168, intentConv: 666, convRate: 14.99, cpl: 4.98, cpc2: 4.98, cpIntent: 31.15, cpRes: 47.92, cpMoveIn: 155.75 },
-        { name: '[NL] - [NB] - Search - Eindhoven Best', cost: 28258.01, avgCpc: 6.75, clicks: 4187, conversions: 968, keyEvents: 2749, intentConv: 968, convRate: 23.11, cpl: 10.28, cpc2: 10.28, cpIntent: 29.21, cpRes: 44.93, cpMoveIn: 146.03 },
-        { name: '[NL] - [NB] - Search - Eindhoven - Transparent', cost: 147.13, avgCpc: 5.45, clicks: 27, conversions: 10, keyEvents: 25, intentConv: 10, convRate: 36.91, cpl: 5.89, cpc2: 5.89, cpIntent: 14.76, cpRes: 22.71, cpMoveIn: 73.82 },
-        { name: '[NL] - [NB] - Search - Goes', cost: 9075.62, avgCpc: 5.36, clicks: 1693, conversions: 485, keyEvents: 1413, intentConv: 485, convRate: 28.64, cpl: 6.43, cpc2: 6.43, cpIntent: 18.72, cpRes: 28.8, cpMoveIn: 93.6 },
-        { name: '[NL] - [NB] - Search - Groningen', cost: 22813.03, avgCpc: 7.71, clicks: 2957, conversions: 721, keyEvents: 2235, intentConv: 721, convRate: 24.38, cpl: 10.21, cpc2: 10.21, cpIntent: 31.65, cpRes: 48.69, cpMoveIn: 158.25 },
-        { name: '[NL] - [NB] - Search - Heerlen', cost: 16898.39, avgCpc: 6.09, clicks: 2777, conversions: 1208, keyEvents: 2943, intentConv: 1208, convRate: 43.49, cpl: 5.74, cpc2: 5.74, cpIntent: 13.99, cpRes: 21.52, cpMoveIn: 69.96 },
-        { name: '[NL] - [NB] - Search - Heerlerbaan', cost: 11378.65, avgCpc: 5.1, clicks: 2233, conversions: 636, keyEvents: 1617, intentConv: 636, convRate: 28.48, cpl: 7.04, cpc2: 7.04, cpIntent: 17.89, cpRes: 27.53, cpMoveIn: 89.47 },
-        { name: '[NL] - [NB] - Search - Hellevoetsluis', cost: 9694.6, avgCpc: 4.92, clicks: 1972, conversions: 506, keyEvents: 2250, intentConv: 506, convRate: 25.66, cpl: 4.31, cpc2: 4.31, cpIntent: 19.16, cpRes: 29.48, cpMoveIn: 95.8 },
-        { name: '[NL] - [NB] - Search - Helmond', cost: 10153.11, avgCpc: 5.87, clicks: 1730, conversions: 547, keyEvents: 1770, intentConv: 547, convRate: 31.59, cpl: 5.73, cpc2: 5.73, cpIntent: 18.58, cpRes: 28.58, cpMoveIn: 92.89 },
-        { name: '[NL] - [NB] - Search - Helmond Kanaaldijk', cost: 5937.35, avgCpc: 5.08, clicks: 1169, conversions: 559, keyEvents: 1151, intentConv: 559, convRate: 47.79, cpl: 5.16, cpc2: 5.16, cpIntent: 10.63, cpRes: 16.35, cpMoveIn: 53.14 },
-        { name: '[NL] - [NB] - Search - Landelijk (high)', cost: 20126.8, avgCpc: 3.64, clicks: 5522, conversions: 1769, keyEvents: 5891, intentConv: 1769, convRate: 32.04, cpl: 3.42, cpc2: 3.42, cpIntent: 11.38, cpRes: 17.5, cpMoveIn: 56.89 },
-        { name: '[NL] - [NB] - Search - Landelijk (low)', cost: 13327.06, avgCpc: 2.84, clicks: 4687, conversions: 2008, keyEvents: 6640, intentConv: 2008, convRate: 42.84, cpl: 2.01, cpc2: 2.01, cpIntent: 6.64, cpRes: 10.21, cpMoveIn: 33.18 },
-        { name: '[NL] - [NB] - Search - Lelystad', cost: 14468.33, avgCpc: 5.4, clicks: 2677, conversions: 842, keyEvents: 2438, intentConv: 842, convRate: 31.45, cpl: 5.94, cpc2: 5.94, cpIntent: 17.19, cpRes: 26.44, cpMoveIn: 85.94 },
-        { name: '[NL] - [NB] - Search - Nijmegen Wijchen', cost: 18444.83, avgCpc: 6.21, clicks: 2969, conversions: 779, keyEvents: 2030, intentConv: 779, convRate: 26.24, cpl: 9.08, cpc2: 9.08, cpIntent: 23.68, cpRes: 36.43, cpMoveIn: 118.4 },
-        { name: '[NL] - [NB] - Search - Rijswijk', cost: 18258.58, avgCpc: 6.01, clicks: 3036, conversions: 752, keyEvents: 2487, intentConv: 752, convRate: 24.77, cpl: 7.34, cpc2: 7.34, cpIntent: 24.28, cpRes: 37.36, cpMoveIn: 121.41 },
-        { name: '[NL] - [NB] - Search - Roermond', cost: 10433.79, avgCpc: 5.7, clicks: 1830, conversions: 611, keyEvents: 1708, intentConv: 611, convRate: 33.41, cpl: 6.11, cpc2: 6.11, cpIntent: 17.06, cpRes: 26.25, cpMoveIn: 85.32 },
-        { name: '[NL] - [NB] - Search - Rotterdam Centrum', cost: 23226.5, avgCpc: 4.75, clicks: 4886, conversions: 821, keyEvents: 2880, intentConv: 821, convRate: 16.8, cpl: 8.06, cpc2: 8.06, cpIntent: 28.29, cpRes: 43.52, cpMoveIn: 141.44 },
-        { name: '[NL] - [NB] - Search - Rotterdam Centrum Test', cost: 2570.25, avgCpc: 5.31, clicks: 484, conversions: 75, keyEvents: 317, intentConv: 75, convRate: 15.43, cpl: 8.1, cpc2: 8.1, cpIntent: 34.41, cpRes: 52.94, cpMoveIn: 172.06 },
-        { name: '[NL] - [NB] - Search - Rotterdam Zuid', cost: 21253.28, avgCpc: 6.68, clicks: 3182, conversions: 933, keyEvents: 2853, intentConv: 933, convRate: 29.33, cpl: 7.45, cpc2: 7.45, cpIntent: 22.77, cpRes: 35.04, cpMoveIn: 113.87 },
-        { name: '[NL] - [NB] - Search - Rotterdam Zuid Test', cost: 2247.3, avgCpc: 6.91, clicks: 325, conversions: 114, keyEvents: 340, intentConv: 114, convRate: 35.21, cpl: 6.61, cpc2: 6.61, cpIntent: 19.64, cpRes: 30.21, cpMoveIn: 98.18 },
-        { name: '[NL] - [NB] - Search - Schiedam', cost: 19739.25, avgCpc: 6.56, clicks: 3008, conversions: 758, keyEvents: 2348, intentConv: 758, convRate: 25.21, cpl: 8.41, cpc2: 8.41, cpIntent: 26.03, cpRes: 40.04, cpMoveIn: 130.13 },
-        { name: '[NL] - [NB] - Search - Sittard', cost: 16483.65, avgCpc: 8.76, clicks: 1881, conversions: 556, keyEvents: 1592, intentConv: 556, convRate: 29.58, cpl: 10.35, cpc2: 10.35, cpIntent: 29.63, cpRes: 45.58, cpMoveIn: 148.14 },
-        { name: '[NL] - [NB] - Search - Tilburg', cost: 19655.38, avgCpc: 4.89, clicks: 4019, conversions: 285, keyEvents: 3866, intentConv: 285, convRate: 7.08, cpl: 5.08, cpc2: 5.08, cpIntent: 69.04, cpRes: 106.21, cpMoveIn: 345.18 },
-        { name: '[NL] - [NB] - Search - Utrecht', cost: 23020.77, avgCpc: 4.42, clicks: 5209, conversions: 318, keyEvents: 3447, intentConv: 318, convRate: 6.1, cpl: 6.68, cpc2: 6.68, cpIntent: 72.41, cpRes: 111.4, cpMoveIn: 362.06 },
-        { name: '[NL] - [NB] - Search - Venlo', cost: 17198.59, avgCpc: 7.92, clicks: 2171, conversions: 633, keyEvents: 1639, intentConv: 633, convRate: 29.16, cpl: 10.49, cpc2: 10.49, cpIntent: 27.17, cpRes: 41.8, cpMoveIn: 135.86 }
+        { name: '[NL] - [NB] - PMax', cost: 16325.94, avgCpc: 2.19, clicks: 7442, conversions: 1105, keyEvents: 9677, intentConv: 714, convRate: 14.84, cpl: 1.69, cpc2: 1.69, cpIntent: 22.87, cpRes: 22.74, cpMoveIn: 73.9 },
+        { name: '[NL] - [NB] - PMax - 2', cost: 2616.22, avgCpc: 1.22, clicks: 2149, conversions: 718, keyEvents: 2894, intentConv: 464, convRate: 33.4, cpl: 0.9, cpc2: 0.9, cpIntent: 5.64, cpRes: 5.61, cpMoveIn: 18.23 },
+        { name: '[NL] - [NB] - Search - Alkmaar', cost: 20463.35, avgCpc: 5.64, clicks: 3628, conversions: 510, keyEvents: 2301, intentConv: 163, convRate: 14.04, cpl: 8.89, cpc2: 8.89, cpIntent: 125.54, cpRes: 61.79, cpMoveIn: 200.81 },
+        { name: '[NL] - [NB] - Search - Almere', cost: 19987.13, avgCpc: 7.95, clicks: 2513, conversions: 810, keyEvents: 2060, intentConv: 166, convRate: 32.23, cpl: 9.7, cpc2: 9.7, cpIntent: 120.4, cpRes: 37.97, cpMoveIn: 123.4 },
+        { name: '[NL] - [NB] - Search - Almere - Transparent', cost: 274.41, avgCpc: 7.84, clicks: 35, conversions: 7, keyEvents: 16, intentConv: 1, convRate: 21.38, cpl: 17.19, cpc2: 17.19, cpIntent: 274.41, cpRes: 56.42, cpMoveIn: 183.36 },
+        { name: '[NL] - [NB] - Search - Alphen a/d Rijn', cost: 8243.89, avgCpc: 3.89, clicks: 2117, conversions: 228, keyEvents: 2433, intentConv: 194, convRate: 10.78, cpl: 3.39, cpc2: 3.39, cpIntent: 42.49, cpRes: 55.56, cpMoveIn: 180.57 },
+        { name: '[NL] - [NB] - Search - Amsterdam', cost: 28363.51, avgCpc: 7.2, clicks: 3941, conversions: 278, keyEvents: 3421, intentConv: 286, convRate: 7.04, cpl: 8.29, cpc2: 8.29, cpIntent: 99.17, cpRes: 157.2, cpMoveIn: 510.91 },
+        { name: '[NL] - [NB] - Search - Barendrecht', cost: 21553.61, avgCpc: 6.55, clicks: 3291, conversions: 744, keyEvents: 2157, intentConv: 167, convRate: 22.61, cpl: 9.99, cpc2: 9.99, cpIntent: 129.06, cpRes: 44.56, cpMoveIn: 144.83 },
+        { name: '[NL] - [NB] - Search - Barendrecht - Transparent', cost: 156.75, avgCpc: 5.81, clicks: 27, conversions: 5, keyEvents: 16, intentConv: 1, convRate: 18.52, cpl: 9.8, cpc2: 9.8, cpIntent: 156.75, cpRes: 48.23, cpMoveIn: 156.75 },
+        { name: '[NL] - [NB] - Search - Bergen op Zoom', cost: 13605.79, avgCpc: 6.36, clicks: 2138, conversions: 518, keyEvents: 1400, intentConv: 127, convRate: 24.22, cpl: 9.72, cpc2: 9.72, cpIntent: 107.13, cpRes: 40.43, cpMoveIn: 131.38 },
+        { name: '[NL] - [NB] - Search - Boxtel', cost: 8655.94, avgCpc: 6.53, clicks: 1326, conversions: 449, keyEvents: 1078, intentConv: 96, convRate: 33.85, cpl: 8.03, cpc2: 8.03, cpIntent: 90.17, cpRes: 29.66, cpMoveIn: 96.41 },
+        { name: '[NL] - [NB] - Search - Breda', cost: 15326.47, avgCpc: 8.17, clicks: 1877, conversions: 584, keyEvents: 1821, intentConv: 162, convRate: 31.13, cpl: 8.42, cpc2: 8.42, cpIntent: 94.61, cpRes: 40.35, cpMoveIn: 131.13 },
+        { name: '[NL] - [NB] - Search - Breda - Transparent', cost: 202.78, avgCpc: 14.48, clicks: 14, conversions: 2, keyEvents: 5, intentConv: 0, convRate: 14.29, cpl: 40.56, cpc2: 40.56, cpIntent: 0, cpRes: 155.98, cpMoveIn: 506.94 },
+        { name: '[NL] - [NB] - Search - Den Bosch', cost: 21181.78, avgCpc: 6.71, clicks: 3159, conversions: 817, keyEvents: 2325, intentConv: 229, convRate: 25.87, cpl: 9.11, cpc2: 9.11, cpIntent: 92.5, cpRes: 39.88, cpMoveIn: 129.62 },
+        { name: '[NL] - [NB] - Search - Den Haag', cost: 20739.21, avgCpc: 4.67, clicks: 4440, conversions: 666, keyEvents: 4168, intentConv: 409, convRate: 14.99, cpl: 4.98, cpc2: 4.98, cpIntent: 50.71, cpRes: 47.92, cpMoveIn: 155.75 },
+        { name: '[NL] - [NB] - Search - Eindhoven Best', cost: 28258.01, avgCpc: 6.75, clicks: 4187, conversions: 968, keyEvents: 2749, intentConv: 141, convRate: 23.11, cpl: 10.28, cpc2: 10.28, cpIntent: 200.41, cpRes: 44.93, cpMoveIn: 146.03 },
+        { name: '[NL] - [NB] - Search - Eindhoven - Transparent', cost: 147.13, avgCpc: 5.45, clicks: 27, conversions: 10, keyEvents: 25, intentConv: 2, convRate: 36.91, cpl: 5.89, cpc2: 5.89, cpIntent: 73.56, cpRes: 22.71, cpMoveIn: 73.82 },
+        { name: '[NL] - [NB] - Search - Goes', cost: 9075.62, avgCpc: 5.36, clicks: 1693, conversions: 485, keyEvents: 1413, intentConv: 124, convRate: 28.64, cpl: 6.43, cpc2: 6.43, cpIntent: 73.19, cpRes: 28.8, cpMoveIn: 93.6 },
+        { name: '[NL] - [NB] - Search - Groningen', cost: 22813.03, avgCpc: 7.71, clicks: 2957, conversions: 721, keyEvents: 2235, intentConv: 148, convRate: 24.38, cpl: 10.21, cpc2: 10.21, cpIntent: 154.14, cpRes: 48.69, cpMoveIn: 158.25 },
+        { name: '[NL] - [NB] - Search - Heerlen', cost: 16898.39, avgCpc: 6.09, clicks: 2777, conversions: 1208, keyEvents: 2943, intentConv: 264, convRate: 43.49, cpl: 5.74, cpc2: 5.74, cpIntent: 64.01, cpRes: 21.52, cpMoveIn: 69.96 },
+        { name: '[NL] - [NB] - Search - Heerlerbaan', cost: 11378.65, avgCpc: 5.1, clicks: 2233, conversions: 636, keyEvents: 1617, intentConv: 151, convRate: 28.48, cpl: 7.04, cpc2: 7.04, cpIntent: 75.36, cpRes: 27.53, cpMoveIn: 89.47 },
+        { name: '[NL] - [NB] - Search - Hellevoetsluis', cost: 9694.6, avgCpc: 4.92, clicks: 1972, conversions: 506, keyEvents: 2250, intentConv: 208, convRate: 25.66, cpl: 4.31, cpc2: 4.31, cpIntent: 46.61, cpRes: 29.48, cpMoveIn: 95.8 },
+        { name: '[NL] - [NB] - Search - Helmond', cost: 10153.11, avgCpc: 5.87, clicks: 1730, conversions: 547, keyEvents: 1770, intentConv: 185, convRate: 31.59, cpl: 5.73, cpc2: 5.73, cpIntent: 54.88, cpRes: 28.58, cpMoveIn: 92.89 },
+        { name: '[NL] - [NB] - Search - Helmond Kanaaldijk', cost: 5937.35, avgCpc: 5.08, clicks: 1169, conversions: 559, keyEvents: 1151, intentConv: 107, convRate: 47.79, cpl: 5.16, cpc2: 5.16, cpIntent: 55.49, cpRes: 16.35, cpMoveIn: 53.14 },
+        { name: '[NL] - [NB] - Search - Landelijk (high)', cost: 20126.8, avgCpc: 3.64, clicks: 5522, conversions: 1769, keyEvents: 5891, intentConv: 479, convRate: 32.04, cpl: 3.42, cpc2: 3.42, cpIntent: 42.02, cpRes: 17.5, cpMoveIn: 56.89 },
+        { name: '[NL] - [NB] - Search - Landelijk (low)', cost: 13327.06, avgCpc: 2.84, clicks: 4687, conversions: 2008, keyEvents: 6640, intentConv: 604, convRate: 42.84, cpl: 2.01, cpc2: 2.01, cpIntent: 22.06, cpRes: 10.21, cpMoveIn: 33.18 },
+        { name: '[NL] - [NB] - Search - Lelystad', cost: 14468.33, avgCpc: 5.4, clicks: 2677, conversions: 842, keyEvents: 2438, intentConv: 270, convRate: 31.45, cpl: 5.94, cpc2: 5.94, cpIntent: 53.59, cpRes: 26.44, cpMoveIn: 85.94 },
+        { name: '[NL] - [NB] - Search - Nijmegen Wijchen', cost: 18444.83, avgCpc: 6.21, clicks: 2969, conversions: 779, keyEvents: 2030, intentConv: 123, convRate: 26.24, cpl: 9.08, cpc2: 9.08, cpIntent: 149.96, cpRes: 36.43, cpMoveIn: 118.4 },
+        { name: '[NL] - [NB] - Search - Rijswijk', cost: 18258.58, avgCpc: 6.01, clicks: 3036, conversions: 752, keyEvents: 2487, intentConv: 183, convRate: 24.77, cpl: 7.34, cpc2: 7.34, cpIntent: 99.77, cpRes: 37.36, cpMoveIn: 121.41 },
+        { name: '[NL] - [NB] - Search - Roermond', cost: 10433.79, avgCpc: 5.7, clicks: 1830, conversions: 611, keyEvents: 1708, intentConv: 146, convRate: 33.41, cpl: 6.11, cpc2: 6.11, cpIntent: 71.46, cpRes: 26.25, cpMoveIn: 85.32 },
+        { name: '[NL] - [NB] - Search - Rotterdam Centrum', cost: 23226.5, avgCpc: 4.75, clicks: 4886, conversions: 821, keyEvents: 2880, intentConv: 302, convRate: 16.8, cpl: 8.06, cpc2: 8.06, cpIntent: 76.91, cpRes: 43.52, cpMoveIn: 141.44 },
+        { name: '[NL] - [NB] - Search - Rotterdam Centrum Test', cost: 2570.25, avgCpc: 5.31, clicks: 484, conversions: 75, keyEvents: 317, intentConv: 30, convRate: 15.43, cpl: 8.1, cpc2: 8.1, cpIntent: 85.67, cpRes: 52.94, cpMoveIn: 172.06 },
+        { name: '[NL] - [NB] - Search - Rotterdam Zuid', cost: 21253.28, avgCpc: 6.68, clicks: 3182, conversions: 933, keyEvents: 2853, intentConv: 277, convRate: 29.33, cpl: 7.45, cpc2: 7.45, cpIntent: 76.73, cpRes: 35.04, cpMoveIn: 113.87 },
+        { name: '[NL] - [NB] - Search - Rotterdam Zuid Test', cost: 2247.3, avgCpc: 6.91, clicks: 325, conversions: 114, keyEvents: 340, intentConv: 25, convRate: 35.21, cpl: 6.61, cpc2: 6.61, cpIntent: 89.89, cpRes: 30.21, cpMoveIn: 98.18 },
+        { name: '[NL] - [NB] - Search - Schiedam', cost: 19739.25, avgCpc: 6.56, clicks: 3008, conversions: 758, keyEvents: 2348, intentConv: 189, convRate: 25.21, cpl: 8.41, cpc2: 8.41, cpIntent: 104.44, cpRes: 40.04, cpMoveIn: 130.13 },
+        { name: '[NL] - [NB] - Search - Sittard', cost: 16483.65, avgCpc: 8.76, clicks: 1881, conversions: 556, keyEvents: 1592, intentConv: 131, convRate: 29.58, cpl: 10.35, cpc2: 10.35, cpIntent: 125.83, cpRes: 45.58, cpMoveIn: 148.14 },
+        { name: '[NL] - [NB] - Search - Tilburg', cost: 19655.38, avgCpc: 4.89, clicks: 4019, conversions: 285, keyEvents: 3866, intentConv: 360, convRate: 7.08, cpl: 5.08, cpc2: 5.08, cpIntent: 54.6, cpRes: 106.21, cpMoveIn: 345.18 },
+        { name: '[NL] - [NB] - Search - Utrecht', cost: 23020.77, avgCpc: 4.42, clicks: 5209, conversions: 318, keyEvents: 3447, intentConv: 340, convRate: 6.1, cpl: 6.68, cpc2: 6.68, cpIntent: 67.71, cpRes: 111.4, cpMoveIn: 362.06 },
+        { name: '[NL] - [NB] - Search - Venlo', cost: 17198.59, avgCpc: 7.92, clicks: 2171, conversions: 633, keyEvents: 1639, intentConv: 127, convRate: 29.16, cpl: 10.49, cpc2: 10.49, cpIntent: 135.42, cpRes: 41.8, cpMoveIn: 135.86 }
     ];
 
     const GADS_CHART_DATA = {
