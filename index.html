@@ -2167,16 +2167,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="chart-body" style="position:relative;"><canvas id="mktTrendChart"></canvas></div>
                 </div>
-                <!-- Source Pie Charts stacked -->
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    <div class="mkt-panel" style="animation-delay:.24s;flex:1;padding:12px 14px 8px;display:flex;flex-direction:column;">
-                        <div class="chart-top" style="margin-bottom:4px;"><div class="chart-title" style="font-size:0.8rem;">Transparent Booking by Source</div></div>
-                        <div style="flex:1;position:relative;min-height:0;"><canvas id="pieTransparentBooking"></canvas></div>
+                <!-- Source Pie Charts — single panel, side by side -->
+                <div class="mkt-panel" style="animation-delay:.24s;padding:12px 14px 8px;display:flex;flex-direction:column;">
+                    <div class="chart-top" style="margin-bottom:4px;"><div class="chart-title" style="font-size:0.8rem;">Bookings by Source (Last Click)</div></div>
+                    <div style="flex:1;display:flex;gap:8px;min-height:0;">
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative;">
+                            <div style="font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:0.04em;color:var(--green-700);margin-bottom:2px;">Transparent Booking</div>
+                            <div style="flex:1;width:100%;position:relative;"><canvas id="pieTransparentBooking"></canvas></div>
+                        </div>
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative;">
+                            <div style="font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:0.04em;color:var(--green-700);margin-bottom:2px;">Booking Complete</div>
+                            <div style="flex:1;width:100%;position:relative;"><canvas id="pieBookingComplete"></canvas></div>
+                        </div>
                     </div>
-                    <div class="mkt-panel" style="animation-delay:.28s;flex:1;padding:12px 14px 8px;display:flex;flex-direction:column;">
-                        <div class="chart-top" style="margin-bottom:4px;"><div class="chart-title" style="font-size:0.8rem;">Booking Complete by Source</div></div>
-                        <div style="flex:1;position:relative;min-height:0;"><canvas id="pieBookingComplete"></canvas></div>
-                    </div>
+                    <div id="sharedPieLegend" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px 10px;padding-top:6px;"></div>
                 </div>
             </div>
 
@@ -2846,8 +2850,21 @@ document.addEventListener('DOMContentLoaded', () => {
     var _pieChartInstances = {};
 
     function renderSourcePieCharts(sourceByEvent) {
-        renderSinglePie('pieTransparentBooking', sourceByEvent.transparent_booking || []);
-        renderSinglePie('pieBookingComplete', sourceByEvent.booking_complete || []);
+        const tbData = sourceByEvent.transparent_booking || [];
+        const bcData = sourceByEvent.booking_complete || [];
+        renderSinglePie('pieTransparentBooking', tbData);
+        renderSinglePie('pieBookingComplete', bcData);
+        // Build shared legend from the union of all sources
+        const allSources = new Map();
+        tbData.forEach(d => allSources.set(d.source, true));
+        bcData.forEach(d => allSources.set(d.source, true));
+        const legendEl = document.getElementById('sharedPieLegend');
+        if (legendEl) {
+            legendEl.innerHTML = Array.from(allSources.keys()).map(src => {
+                const c = SOURCE_COLORS[src] || '#999';
+                return `<span style="display:inline-flex;align-items:center;gap:3px;font-family:'DM Sans',sans-serif;font-size:9px;color:#555;"><span style="width:7px;height:7px;border-radius:50%;background:${c};display:inline-block;"></span>${src}</span>`;
+            }).join('');
+        }
     }
 
     function renderSinglePie(canvasId, data) {
@@ -2880,18 +2897,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 cutout: '50%',
                 layout: { padding: 2 },
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 8,
-                            boxHeight: 8,
-                            padding: 4,
-                            font: { family: 'DM Sans', size: 9 },
-                            color: '#555',
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                        }
-                    },
+                    legend: { display: false },
                     tooltip: {
                         backgroundColor: 'rgba(0,0,0,.82)',
                         titleFont: { family: 'DM Sans', size: 11, weight: '600' },
