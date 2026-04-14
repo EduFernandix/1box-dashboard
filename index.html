@@ -3031,32 +3031,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="gads-kpi">
                         <div class="gads-kpi-label">Total Cost <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> metrics.cost_micros / 1,000,000 summed across all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-kpi-value" id="gadsKpiCost">—</div>
-                        <div class="gads-kpi-delta" id="gadsKpiCostDelta" style="display:none;"></div>
                     </div>
                     <div class="gads-kpi">
                         <div class="gads-kpi-label">Clicks <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> metrics.clicks summed across all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-kpi-value" id="gadsKpiClicks">—</div>
-                        <div class="gads-kpi-delta" id="gadsKpiClicksDelta" style="display:none;"></div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Conversions <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> metrics.conversions summed across all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
-                        <div class="gads-kpi-value" id="gadsKpiRes">—</div>
-                        <div class="gads-kpi-delta" id="gadsKpiResDelta" style="display:none;"></div>
+                        <div class="gads-kpi-label">Bookings <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> metrics.conversions (transparent_booking events) summed across all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
+                        <div class="gads-kpi-value" id="gadsKpiBookings">—</div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Cost / Conversion <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Total Cost / Total Conversions</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
-                        <div class="gads-kpi-value" id="gadsKpiCPR">—</div>
-                        <div class="gads-kpi-delta" id="gadsKpiCPRDelta" style="display:none;"></div>
+                        <div class="gads-kpi-label">Cost / Booking <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Total Cost / Bookings (transparent_booking)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
+                        <div class="gads-kpi-value" id="gadsKpiCPB">—</div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Intent Events <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> metrics.all_conversions from intent event conversion actions</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
-                        <div class="gads-kpi-value" id="gadsKpiRents">—</div>
-                        <div class="gads-kpi-delta" id="gadsKpiRentsDelta" style="display:none;"></div>
-                    </div>
-                    <div class="gads-kpi">
-                        <div class="gads-kpi-label">Cost / Intent <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Total Cost / Intent Events</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
-                        <div class="gads-kpi-value" id="gadsKpiCPRent">—</div>
-                        <div class="gads-kpi-delta" id="gadsKpiCPRentDelta" style="display:none;"></div>
+                        <div class="gads-kpi-label">Cost / Rental <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Total Cost / Rentals (bm_transparent_booking_complete)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
+                        <div class="gads-kpi-value" id="gadsKpiCPRental">—</div>
                     </div>
                 </div>
 
@@ -5332,19 +5322,17 @@ Generate insights covering ALL of these topics:
         // Update KPI values
         const costEl = document.getElementById('gadsKpiCost');
         const clicksEl = document.getElementById('gadsKpiClicks');
-        const resEl = document.getElementById('gadsKpiRes');
-        const cprEl = document.getElementById('gadsKpiCPR');
-        const rentsEl = document.getElementById('gadsKpiRents');
-        const cpRentEl = document.getElementById('gadsKpiCPRent');
+        const bookingsEl = document.getElementById('gadsKpiBookings');
+        const cpbEl = document.getElementById('gadsKpiCPB');
+        const cpRentalEl = document.getElementById('gadsKpiCPRental');
 
         if (costEl) costEl.textContent = fmtEur(d.cost);
         if (clicksEl) clicksEl.textContent = fmtNum(d.clicks);
-        if (resEl) resEl.textContent = fmtNum(d.conversions);
-        if (cprEl) cprEl.textContent = fmtEur2(d.costPerConversion);
-        if (rentsEl) rentsEl.textContent = fmtNum(d.allConversions);
-        if (cpRentEl) {
-            const costPerIntent = d.allConversions > 0 ? d.cost / d.allConversions : 0;
-            cpRentEl.textContent = fmtEur2(costPerIntent);
+        if (bookingsEl) bookingsEl.textContent = fmtNum(d.conversions);
+        if (cpbEl) cpbEl.textContent = d.conversions > 0 ? fmtEur2(d.cost / d.conversions) : '—';
+        if (cpRentalEl) {
+            const bc = d.bookingComplete || 0;
+            cpRentalEl.textContent = bc > 0 ? fmtEur2(d.cost / bc) : '—';
         }
 
         // Hide delta indicators when switching ranges (deltas are static)
