@@ -5037,7 +5037,7 @@ Generate insights covering ALL of these topics:
                 labels: GADS_CHART_DATA.labels,
                 datasets: [
                     { label:'Conversions', data:GADS_CHART_DATA.conversions, ...lineD('#1a3a5c',2.5), yAxisID:'y', datalabels:lineDL('#1a3a5c') },
-                    { label:'Cost (\u20AC)', data:GADS_CHART_DATA.cost, ...lineD('#7CB342',2.5), yAxisID:'y1', datalabels:{...lineDL('#7CB342'), formatter:v=>'\u20AC'+v.toLocaleString('de-DE')} }
+                    { label:'Cost (\u20AC)', data:GADS_CHART_DATA.cost, ...lineD('#7CB342',2.5), yAxisID:'y1', datalabels:{display:false} }
                 ]
             },
             options: {
@@ -5557,30 +5557,12 @@ Generate insights covering ALL of these topics:
         const bookingsData = daily.map(d => d.bookings);
 
         metaAdsChartInstance = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: labels,
                 datasets: [
-                    {
-                        label: 'Spend (\u20AC)',
-                        data: spendData,
-                        backgroundColor: 'rgba(90,154,47,0.25)',
-                        borderColor: '#5a9a2f',
-                        borderWidth: 1.5,
-                        borderRadius: 3,
-                        order: 2,
-                        yAxisID: 'y',
-                        datalabels: { display: false }
-                    },
-                    {
-                        label: 'Bookings',
-                        data: bookingsData,
-                        type: 'line',
-                        ...lineD('#1a3a5c', 2.5),
-                        order: 1,
-                        yAxisID: 'y1',
-                        datalabels: lineDL('#1a3a5c')
-                    }
+                    { label:'Bookings', data:bookingsData, ...lineD('#1a3a5c',2.5), yAxisID:'y1', datalabels:lineDL('#1a3a5c') },
+                    { label:'Spend (\u20AC)', data:spendData, ...lineD('#7CB342',2.5), yAxisID:'y', datalabels:{display:false} }
                 ]
             },
             options: {
@@ -5591,21 +5573,29 @@ Generate insights covering ALL of these topics:
                 plugins: {
                     legend: lineLegend,
                     datalabels: {},
-                    tooltip: darkTooltip
+                    tooltip: {
+                        ...darkTooltip,
+                        callbacks: {
+                            label: function(c) {
+                                if (c.dataset.yAxisID === 'y') return ' Spend: \u20AC' + c.parsed.y.toLocaleString('de-DE',{minimumFractionDigits:2});
+                                return ' Bookings: ' + c.parsed.y;
+                            }
+                        }
+                    }
                 },
                 scales: {
                     x: lineScaleX,
                     y: {
                         position: 'left',
-                        title: { display: true, text: 'Spend (\u20AC)', font: { size: 11, weight:'600' }, color:'#5a9a2f' },
+                        title: { display:true, text:'Spend (\u20AC)', font:{size:11,weight:'600'}, color:'#7CB342' },
                         grid: gridStyle, border: noBorder,
-                        ticks: { ...dimTick, font: { size: 10 }, callback: v => '\u20AC' + v }
+                        ticks: { ...dimTick, font:{size:10}, callback: v => '\u20AC' + v }
                     },
                     y1: {
                         position: 'right',
-                        title: { display: true, text: 'Bookings', font: { size: 11, weight:'600' }, color:'#1a3a5c' },
-                        grid: { drawOnChartArea: false }, border: noBorder,
-                        ticks: { ...dimTick, font: { size: 10 }, stepSize: 1 },
+                        title: { display:true, text:'Bookings', font:{size:11,weight:'600'}, color:'#1a3a5c' },
+                        grid: { drawOnChartArea:false }, border: noBorder,
+                        ticks: { ...dimTick, font:{size:10}, stepSize:1 },
                         beginAtZero: true
                     }
                 }
