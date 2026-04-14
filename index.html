@@ -2874,7 +2874,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- CONVERSION TREND CHART -->
                 <div class="monthly-section">
                     <div class="monthly-section-title">Conversion Rate Trend — Last 6 Months</div>
-                    <div style="height:200px;">
+                    <div style="height:220px;">
                         <canvas id="conversionTrendChart"></canvas>
                     </div>
                 </div>
@@ -4792,8 +4792,8 @@ Generate insights covering ALL of these topics:
                             options: {
                                 responsive: true,
                                 maintainAspectRatio: false,
-                                layout: { padding: { top: 24 } },
-                                plugins: { legend:lineLegend, datalabels:{}, tooltip:{...darkTooltip} },
+                                layout: { padding: { top: 18 } },
+                                plugins: { legend:{...lineLegend, position:'top', align:'start', labels:{...lineLegend.labels, padding:8, font:{family:"'DM Sans',sans-serif", size:10, weight:'600'}, color:'#555'}}, datalabels:{}, tooltip:{...darkTooltip} },
                                 scales: {
                                     x: lineScaleX,
                                     y: lineScaleY({ callback: v => v + '%' }),
