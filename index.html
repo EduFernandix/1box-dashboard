@@ -1114,6 +1114,8 @@ document.addEventListener('DOMContentLoaded', () => {
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
             overflow: hidden;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
         }
         .gads-table-header {
             padding: 16px 24px 12px;
@@ -1121,6 +1123,42 @@ document.addEventListener('DOMContentLoaded', () => {
             font-size: 1.25rem;
             letter-spacing: 0.05em;
             color: var(--green-700);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .gads-table-pager {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+        .gads-table-pager button {
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #444;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .gads-table-pager button:hover:not(:disabled) {
+            background: var(--green-500);
+            color: #fff;
+            border-color: var(--green-500);
+        }
+        .gads-table-pager button:disabled {
+            opacity: 0.35;
+            cursor: default;
         }
         .gads-table-scroll {
             overflow-x: auto;
@@ -1131,7 +1169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             border-collapse: collapse;
             font-variant-numeric: tabular-nums lining-nums;
             font-size: 13px;
-            min-width: 1600px;
+            min-width: 1100px;
         }
         .gads-table thead {
             position: sticky;
@@ -1175,7 +1213,7 @@ document.addEventListener('DOMContentLoaded', () => {
             transition: background 0.15s;
         }
         .gads-table tbody tr:hover {
-            background: #f9fafb;
+            background: rgba(124,179,66,0.06);
         }
         .gads-table tbody td {
             padding: 10px 14px;
@@ -1192,6 +1230,9 @@ document.addEventListener('DOMContentLoaded', () => {
             background: #f0f2f5;
             font-weight: 700;
             border-top: 2px solid var(--text-card);
+            position: sticky;
+            top: 0;
+            z-index: 1;
         }
         .gads-table tbody tr.totals-row td {
             color: var(--text-card);
@@ -1199,6 +1240,21 @@ document.addEventListener('DOMContentLoaded', () => {
         .gads-table .cell-red {
             color: #c62828;
             font-weight: 600;
+        }
+        /* Heatmap cells */
+        .gads-table td[data-heat] {
+            position: relative;
+        }
+        .gads-table td .heat-bg {
+            position: absolute;
+            inset: 2px 4px;
+            border-radius: 4px;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .gads-table td .heat-val {
+            position: relative;
+            z-index: 1;
         }
 
         /* ===== RESPONSIVE: TABLET (max-width: 1200px) ===== */
@@ -3117,7 +3173,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- Campaign Performance Table -->
                 <div class="gads-table-wrap">
-                    <div class="gads-table-header">Campaign Performance <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Per-campaign metrics: cost, avg CPC, clicks, conversions, all conversions (intent events)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
+                    <div class="gads-table-header">
+                        <span>Campaign Performance <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Per-campaign metrics: cost, avg CPC, clicks, conversions, all conversions (intent events)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></span>
+                        <div class="gads-table-pager">
+                            <button id="gadsPagerPrev" disabled>&#8249;</button>
+                            <span id="gadsPagerInfo">1–10 of 33</span>
+                            <button id="gadsPagerNext">&#8250;</button>
+                        </div>
+                    </div>
                     <div class="gads-table-scroll">
                         <table class="gads-table" id="gadsCampaignTable">
                             <thead>
@@ -5223,6 +5286,10 @@ Generate insights covering ALL of these topics:
         return GADS_CAMPAIGNS_BY_RANGE[key] || GADS_CAMPAIGNS_BY_RANGE['30d'];
     }
 
+    let gadsPage = 0;
+    const GADS_PAGE_SIZE = 10;
+    let _gadsSortedCache = [];
+
     function renderGadsTable(campaigns) {
         const tbody = document.getElementById('gadsCampaignBody');
         if (!tbody) return;
@@ -5234,11 +5301,10 @@ Generate insights covering ALL of these topics:
             if (typeof va === 'string') return gadsSortDir * va.localeCompare(vb);
             return gadsSortDir * (va - vb);
         });
+        _gadsSortedCache = sorted;
 
         // Compute totals
-        const totals = {
-            cost: 0, clicks: 0, conversions: 0, allConversions: 0
-        };
+        const totals = { cost: 0, clicks: 0, conversions: 0, allConversions: 0 };
         sorted.forEach(c => {
             totals.cost += c.cost;
             totals.clicks += c.clicks;
@@ -5249,13 +5315,53 @@ Generate insights covering ALL of these topics:
         totals.convRate = totals.clicks > 0 ? (totals.conversions / totals.clicks * 100) : 0;
         totals.costPerConversion = totals.conversions > 0 ? totals.cost / totals.conversions : 0;
 
+        // Compute column min/max for heatmap (excluding totals)
+        const heatCols = ['cost','avgCpc','convRate','costPerConversion'];
+        const colStats = {};
+        heatCols.forEach(col => {
+            const vals = sorted.map(c => c[col] || 0).filter(v => v > 0);
+            colStats[col] = { min: Math.min(...vals), max: Math.max(...vals) };
+        });
+
+        // Heatmap color: for cost/avgCpc/costPerConversion lower=green higher=red
+        // for convRate higher=green lower=red
+        function heatColor(col, val) {
+            const s = colStats[col];
+            if (!s || s.max === s.min || !val || val <= 0) return '';
+            let t = (val - s.min) / (s.max - s.min); // 0..1
+            // For convRate: high is good (green)
+            const higherIsBetter = (col === 'convRate');
+            if (!higherIsBetter) t = 1 - t; // invert for cost columns
+            // t: 0=bad(red), 1=good(green)
+            // Use subtle background: red(0) → neutral(0.5) → green(1)
+            if (t > 0.5) {
+                const g = (t - 0.5) * 2; // 0..1
+                return `rgba(90,154,47,${(g * 0.18).toFixed(2)})`;
+            } else {
+                const r = (0.5 - t) * 2; // 0..1
+                return `rgba(198,40,40,${(r * 0.15).toFixed(2)})`;
+            }
+        }
+
+        function heatCell(col, val, text) {
+            const bg = heatColor(col, val);
+            if (!bg) return `<td>${text}</td>`;
+            return `<td data-heat style="position:relative"><span class="heat-bg" style="background:${bg}"></span><span class="heat-val">${text}</span></td>`;
+        }
+
         const fmt = (v, prefix='', suffix='') => prefix + v.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + suffix;
         const fmtInt = v => Math.round(v).toLocaleString('de-DE');
         const fmtPct = v => v.toFixed(2) + '%';
 
+        // Pagination
+        const totalPages = Math.ceil(sorted.length / GADS_PAGE_SIZE);
+        if (gadsPage >= totalPages) gadsPage = Math.max(0, totalPages - 1);
+        const start = gadsPage * GADS_PAGE_SIZE;
+        const pageItems = sorted.slice(start, start + GADS_PAGE_SIZE);
+
         let html = '';
 
-        // TOTAL ROW AT THE TOP
+        // TOTAL ROW (always visible)
         html += `<tr class="totals-row">
             <td>Total / Average</td>
             <td>${fmt(totals.cost, '€')}</td>
@@ -5267,20 +5373,28 @@ Generate insights covering ALL of these topics:
             <td>${totals.costPerConversion > 0 ? fmt(totals.costPerConversion, '€') : '—'}</td>
         </tr>`;
 
-        sorted.forEach(c => {
+        pageItems.forEach(c => {
             html += `<tr>
                 <td>${c.name}</td>
-                <td>${fmt(c.cost, '€')}</td>
-                <td>${fmt(c.avgCpc, '€')}</td>
+                ${heatCell('cost', c.cost, fmt(c.cost, '€'))}
+                ${heatCell('avgCpc', c.avgCpc, fmt(c.avgCpc, '€'))}
                 <td>${fmtInt(c.clicks)}</td>
                 <td>${fmtInt(c.conversions)}</td>
                 <td>${fmtInt(c.allConversions)}</td>
-                <td>${fmtPct(c.convRate)}</td>
-                <td>${c.costPerConversion > 0 ? fmt(c.costPerConversion, '€') : '—'}</td>
+                ${heatCell('convRate', c.convRate, fmtPct(c.convRate))}
+                ${heatCell('costPerConversion', c.costPerConversion, c.costPerConversion > 0 ? fmt(c.costPerConversion, '€') : '—')}
             </tr>`;
         });
 
         tbody.innerHTML = html;
+
+        // Update pager
+        const pagerInfo = document.getElementById('gadsPagerInfo');
+        const prevBtn = document.getElementById('gadsPagerPrev');
+        const nextBtn = document.getElementById('gadsPagerNext');
+        if (pagerInfo) pagerInfo.textContent = `${start + 1}\u2013${Math.min(start + GADS_PAGE_SIZE, sorted.length)} of ${sorted.length}`;
+        if (prevBtn) prevBtn.disabled = gadsPage === 0;
+        if (nextBtn) nextBtn.disabled = gadsPage >= totalPages - 1;
     }
 
     // Sorting
@@ -5300,12 +5414,20 @@ Generate insights covering ALL of these topics:
                 table.querySelectorAll('thead th').forEach(h => h.classList.remove('sorted'));
                 th.classList.add('sorted');
                 th.querySelector('.sort-icon').textContent = gadsSortDir === 1 ? '▲' : '▼';
+                gadsPage = 0;
                 renderGadsTable();
             });
         });
+
+        // Pager buttons
+        const prevBtn = document.getElementById('gadsPagerPrev');
+        const nextBtn = document.getElementById('gadsPagerNext');
+        if (prevBtn) prevBtn.addEventListener('click', () => { if (gadsPage > 0) { gadsPage--; renderGadsTable(); } });
+        if (nextBtn) nextBtn.addEventListener('click', () => { gadsPage++; renderGadsTable(); });
     });
 
     function loadGadsWithDateRange(from, to) {
+        gadsPage = 0;
         // Determine which preset key matches the date range
         const diffDays = Math.round((to - from) / (1000 * 60 * 60 * 24));
         let key;
