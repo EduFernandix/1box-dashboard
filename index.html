@@ -3120,6 +3120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- Funnel -->
                 <div class="metaads-panel metaads-funnel-panel">
                     <h3>Booking Funnel</h3>
+                    <p style="font-family:'DM Sans',sans-serif;font-size:11px;color:#888;margin:-8px 0 8px 0;">Booking & Rental: GA4 · Paid Social</p>
                     <div class="metaads-funnel">
                         <div class="metaads-funnel-step metaads-funnel-clicks">
                             <span class="metaads-funnel-label">Clicks</span>
@@ -5360,6 +5361,21 @@ Generate insights covering ALL of these topics:
     })();
 
     // ======================== META ADS OVERVIEW JS ========================
+
+    // GA4 Paid Social daily data — transparent_booking (tb) and bm_transparent_booking_complete (bc)
+    const GA4_PAID_SOCIAL = {"2025-11-24":{"tb":1,"bc":0},"2025-11-26":{"tb":1,"bc":0},"2025-11-27":{"tb":1,"bc":0},"2025-12-05":{"tb":1,"bc":0},"2025-12-27":{"tb":1,"bc":0},"2025-12-29":{"tb":1,"bc":0},"2026-01-18":{"tb":1,"bc":0},"2026-02-07":{"tb":1,"bc":0},"2026-02-18":{"tb":1,"bc":0},"2026-03-04":{"tb":1,"bc":0},"2026-03-06":{"tb":1,"bc":0},"2026-03-07":{"tb":2,"bc":0},"2026-03-10":{"tb":1,"bc":0},"2026-03-13":{"tb":1,"bc":0},"2026-03-16":{"tb":1,"bc":0},"2026-03-21":{"tb":1,"bc":0},"2026-03-22":{"tb":1,"bc":0},"2026-03-26":{"tb":2,"bc":0},"2026-03-29":{"tb":1,"bc":0},"2026-03-31":{"tb":3,"bc":0},"2026-04-03":{"tb":1,"bc":0},"2026-04-09":{"tb":1,"bc":0},"2026-04-13":{"tb":1,"bc":0}};
+
+    function getGA4PaidSocial(from, to) {
+        let tb = 0, bc = 0;
+        for (const [date, v] of Object.entries(GA4_PAID_SOCIAL)) {
+            if (date >= from && date <= to) {
+                tb += v.tb;
+                bc += v.bc;
+            }
+        }
+        return { transparent_booking: tb, booking_complete: bc };
+    }
+
     const META_ADS_CONFIG = {
         token: 'EAAN0p7M6ZAksBRMknQ2TYcbsOB7KRjCSAgk6FZATDdZBG1ZAF3YzRx8aj3uAMmbWR5gnWBc8JvCdwpq9rICHfWdZBorpq9YWTqQ44y86g97lbxcDiAuwbgPaUzc8LfmaGppLwio8p2q1P1YuW6NZC5SRFbmT04XGvK7jUdMaymZAjus8JzbEgvZBhGP1PXlmZBkDiMUdpj4ZB2',
         accountId: 'act_1915709141907756',
@@ -5576,16 +5592,17 @@ Generate insights covering ALL of these topics:
         const periodEl = document.getElementById('metaadsPeriod');
         if (periodEl) periodEl.textContent = mo[ds.getMonth()] + ' ' + ds.getDate() + ' \u2014 ' + mo[de.getMonth()] + ' ' + de.getDate() + ', ' + de.getFullYear();
 
-        // Funnel
+        // Funnel — Clicks from Meta Ads, Booking & Rental from GA4 Paid Social
         const funnelClicks = t.clicks;
-        const funnelBooking = t.bookings;
-        const funnelRental = 0; // Needs GA4 Paid Social data
+        const ga4ps = getGA4PaidSocial(t.date_start, t.date_stop);
+        const funnelBooking = ga4ps.transparent_booking;
+        const funnelRental = ga4ps.booking_complete;
         document.getElementById('metaFunnelClicks').textContent = funnelClicks.toLocaleString('nl-NL');
         document.getElementById('metaFunnelBooking').textContent = funnelBooking.toLocaleString('nl-NL');
-        document.getElementById('metaFunnelRental').textContent = funnelRental > 0 ? funnelRental.toLocaleString('nl-NL') : 'N/A';
+        document.getElementById('metaFunnelRental').textContent = funnelRental > 0 ? funnelRental.toLocaleString('nl-NL') : '0';
 
         const rateCB = funnelClicks > 0 ? ((funnelBooking / funnelClicks) * 100).toFixed(2) + '%' : '\u2014';
-        const rateBR = funnelBooking > 0 && funnelRental > 0 ? ((funnelRental / funnelBooking) * 100).toFixed(2) + '%' : '\u2014';
+        const rateBR = funnelBooking > 0 ? ((funnelRental / funnelBooking) * 100).toFixed(2) + '%' : '\u2014';
         document.getElementById('metaRateCB').textContent = rateCB;
         document.getElementById('metaRateBR').textContent = rateBR;
 
