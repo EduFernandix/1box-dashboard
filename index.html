@@ -3239,9 +3239,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===== LINE HELPERS =====
     const lineD = (color, w=2) => ({
         borderColor:color, backgroundColor:'transparent', borderWidth:w,
-        pointRadius:3, pointBackgroundColor:color, pointBorderColor:'#ffffff',
-        pointBorderWidth:2, pointHoverRadius:5, tension:0.35,
+        pointRadius:4, pointBackgroundColor:color, pointBorderColor:'#ffffff',
+        pointBorderWidth:2, pointHoverRadius:6, tension:0.35, fill:false,
     });
+    // Standard datalabels config for line charts (reference style)
+    const lineDL = (color) => ({
+        display:true, anchor:'end', align:'top', offset:4,
+        color: color,
+        font: { family:"'DM Sans',sans-serif", size:10, weight:'700' },
+    });
+    // Standard legend config (reference style: top-right, small boxes)
+    const lineLegend = {
+        position:'top', align:'end',
+        labels: { usePointStyle:true, pointStyle:'rectRounded', boxWidth:10, boxHeight:10, padding:12, font:{ family:"'DM Sans',sans-serif", size:11, weight:'600' }, color:'#555' }
+    };
+    // Standard scales for line charts
+    const lineScaleX = { grid:{display:false}, border:noBorder, ticks:{...dimTick, font:{size:10}} };
+    const lineScaleY = (opts={}) => ({ grid:gridStyle, border:noBorder, ticks:{...dimTick, font:{size:10}, ...opts}, beginAtZero:true });
 
     // ===== MARKETING PAGE =====
     const MKT_API = '/api/ga4/overview';
@@ -3374,18 +3388,15 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels,
                 datasets: [
-                    { label:'Rentals', data:trend.map(t=>t.rentals), ...lineD('#1565C0',2.5), datalabels:{display:true,anchor:'end',align:'top',color:'#1565C0',font:{size:10,weight:700}} },
-                    { label:'Reservations', data:trend.map(t=>t.reservations), ...lineD('#e2b93b',2.5), datalabels:{display:false} }
+                    { label:'Rentals', data:trend.map(t=>t.rentals), ...lineD('#1a3a5c',2.5), datalabels:lineDL('#1a3a5c') },
+                    { label:'Reservations', data:trend.map(t=>t.reservations), ...lineD('#7CB342',2.5), datalabels:lineDL('#7CB342') }
                 ]
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                layout: { padding: { top: 20 } },
-                plugins: { legend:{display:false}, tooltip:{...darkTooltip}, datalabels:{} },
-                scales: {
-                    x: { grid:{display:false}, border:noBorder, ticks:{...dimTick, font:{size:10}} },
-                    y: { grid:gridStyle, border:noBorder, ticks:{...dimTick}, beginAtZero: true }
-                },
+                layout: { padding: { top: 24 } },
+                plugins: { legend:lineLegend, tooltip:{...darkTooltip}, datalabels:{} },
+                scales: { x: lineScaleX, y: lineScaleY() },
                 interaction: { intersect:false, mode:'index' }
             }
         });
@@ -4714,57 +4725,18 @@ Generate insights covering ALL of these topics:
                             data: {
                                 labels,
                                 datasets: [
-                                    {
-                                        label: 'User → Lead %',
-                                        data: t.map(d => d.user_to_lead),
-                                        borderColor: '#7CB342',
-                                        backgroundColor: 'rgba(124,179,66,0.08)',
-                                        fill: true,
-                                        tension: 0.35,
-                                        pointRadius: 3,
-                                        pointBackgroundColor: '#7CB342',
-                                        borderWidth: 2,
-                                    },
-                                    {
-                                        label: 'Lead → Customer %',
-                                        data: t.map(d => d.lead_to_customer),
-                                        borderColor: '#1a3a5c',
-                                        backgroundColor: 'rgba(26,58,92,0.06)',
-                                        fill: true,
-                                        tension: 0.35,
-                                        pointRadius: 3,
-                                        pointBackgroundColor: '#1a3a5c',
-                                        borderWidth: 2,
-                                    },
+                                    { label:'User \u2192 Lead %', data:t.map(d=>d.user_to_lead), ...lineD('#7CB342',2.5), datalabels:{...lineDL('#7CB342'), formatter:v=>v+'%'} },
+                                    { label:'Lead \u2192 Customer %', data:t.map(d=>d.lead_to_customer), ...lineD('#1a3a5c',2.5), datalabels:{...lineDL('#1a3a5c'), formatter:v=>v+'%'} },
                                 ],
                             },
                             options: {
                                 responsive: true,
                                 maintainAspectRatio: false,
-                                plugins: {
-                                    legend: {
-                                        position: 'top',
-                                        align: 'end',
-                                        labels: { font: { size: 8, family: "'DM Sans'" }, boxWidth: 10, padding: 8 },
-                                    },
-                                    datalabels: {
-                                        display: true,
-                                        align: 'top',
-                                        font: { size: 7, weight: 600 },
-                                        formatter: v => v + '%',
-                                        color: ctx2 => ctx2.dataset.borderColor,
-                                    },
-                                },
+                                layout: { padding: { top: 24 } },
+                                plugins: { legend:lineLegend, datalabels:{}, tooltip:{...darkTooltip} },
                                 scales: {
-                                    x: {
-                                        grid: { display: false },
-                                        ticks: { font: { size: 8 } },
-                                    },
-                                    y: {
-                                        grid: { color: 'rgba(0,0,0,0.04)' },
-                                        ticks: { font: { size: 8 }, callback: v => v + '%' },
-                                        beginAtZero: true,
-                                    },
+                                    x: lineScaleX,
+                                    y: lineScaleY({ callback: v => v + '%' }),
                                 },
                             },
                         });
@@ -5064,89 +5036,44 @@ Generate insights covering ALL of these topics:
             data: {
                 labels: GADS_CHART_DATA.labels,
                 datasets: [
-                    {
-                        label: 'Conversions',
-                        data: GADS_CHART_DATA.conversions,
-                        borderColor: '#0f1b2d',
-                        backgroundColor: 'rgba(15,27,45,0.08)',
-                        fill: true,
-                        tension: 0.35,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: '#0f1b2d',
-                        borderWidth: 2.5,
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Cost (€)',
-                        data: GADS_CHART_DATA.cost,
-                        borderColor: '#c62828',
-                        backgroundColor: 'rgba(198,40,40,0.06)',
-                        fill: true,
-                        tension: 0.35,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: '#c62828',
-                        borderWidth: 2.5,
-                        borderDash: [6, 3],
-                        yAxisID: 'y1'
-                    }
+                    { label:'Conversions', data:GADS_CHART_DATA.conversions, ...lineD('#1a3a5c',2.5), yAxisID:'y', datalabels:lineDL('#1a3a5c') },
+                    { label:'Cost (\u20AC)', data:GADS_CHART_DATA.cost, ...lineD('#7CB342',2.5), yAxisID:'y1', datalabels:{...lineDL('#7CB342'), formatter:v=>'\u20AC'+v.toLocaleString('de-DE')} }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: { padding: { top: 24 } },
                 interaction: { mode: 'index', intersect: false },
                 plugins: {
-                    datalabels: { display: false },
-                    legend: {
-                        position: 'top',
-                        align: 'end',
-                        labels: {
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                            padding: 16,
-                            font: { family: "'DM Sans'", size: 12, weight: '600' },
-                            color: '#555'
-                        }
-                    },
+                    datalabels: {},
+                    legend: lineLegend,
                     tooltip: {
-                        backgroundColor: 'rgba(255,255,255,0.97)',
-                        titleColor: '#333',
-                        bodyColor: '#555',
-                        borderColor: 'rgba(0,0,0,0.08)',
-                        borderWidth: 1,
-                        cornerRadius: 8,
-                        padding: 12,
-                        titleFont: { family: "'DM Sans'", size: 13, weight: '700' },
-                        bodyFont: { family: "'DM Sans'", size: 12 },
+                        ...darkTooltip,
                         callbacks: {
                             label: function(ctx) {
-                                if (ctx.dataset.yAxisID === 'y1') return ' Cost: €' + ctx.parsed.y.toLocaleString('de-DE');
+                                if (ctx.dataset.yAxisID === 'y1') return ' Cost: \u20AC' + ctx.parsed.y.toLocaleString('de-DE');
                                 return ' Conversions: ' + ctx.parsed.y;
                             }
                         }
                     }
                 },
                 scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { font: { size: 11 }, color: 'rgba(51,51,51,0.5)' }
-                    },
+                    x: lineScaleX,
                     y: {
                         position: 'left',
-                        title: { display: true, text: 'Conversions', font: { size: 11, weight: '600' }, color: '#0f1b2d' },
-                        grid: { color: 'rgba(0,0,0,0.04)' },
-                        ticks: { font: { size: 11 }, color: 'rgba(51,51,51,0.5)' },
+                        title: { display: true, text: 'Conversions', font: { size: 11, weight: '600' }, color: '#1a3a5c' },
+                        grid: gridStyle, border: noBorder,
+                        ticks: { ...dimTick, font: { size: 10 } },
                         beginAtZero: true
                     },
                     y1: {
                         position: 'right',
-                        title: { display: true, text: 'Cost (€)', font: { size: 11, weight: '600' }, color: '#c62828' },
-                        grid: { drawOnChartArea: false },
+                        title: { display: true, text: 'Cost (\u20AC)', font: { size: 11, weight: '600' }, color: '#7CB342' },
+                        grid: { drawOnChartArea: false }, border: noBorder,
                         ticks: {
-                            font: { size: 11 },
-                            color: 'rgba(198,40,40,0.6)',
+                            font: { size: 10 },
+                            color: 'rgba(90,154,47,0.7)',
                             callback: v => '€' + (v/1000).toFixed(0) + 'k'
                         },
                         beginAtZero: true
@@ -5638,59 +5565,47 @@ Generate insights covering ALL of these topics:
                         label: 'Spend (\u20AC)',
                         data: spendData,
                         backgroundColor: 'rgba(90,154,47,0.25)',
-                        borderColor: 'var(--green-700)',
+                        borderColor: '#5a9a2f',
                         borderWidth: 1.5,
                         borderRadius: 3,
                         order: 2,
-                        yAxisID: 'y'
+                        yAxisID: 'y',
+                        datalabels: { display: false }
                     },
                     {
                         label: 'Bookings',
                         data: bookingsData,
                         type: 'line',
-                        borderColor: '#1565c0',
-                        backgroundColor: 'rgba(21,101,192,0.1)',
-                        pointBackgroundColor: '#1565c0',
-                        pointRadius: 3,
-                        pointHoverRadius: 5,
-                        borderWidth: 2,
-                        tension: 0.3,
-                        fill: true,
+                        ...lineD('#1a3a5c', 2.5),
                         order: 1,
-                        yAxisID: 'y1'
+                        yAxisID: 'y1',
+                        datalabels: lineDL('#1a3a5c')
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: { padding: { top: 24 } },
                 interaction: { mode: 'index', intersect: false },
                 plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        align: 'end',
-                        labels: { boxWidth: 12, padding: 16, font: { size: 11 } }
-                    },
-                    datalabels: { display: false },
+                    legend: lineLegend,
+                    datalabels: {},
                     tooltip: darkTooltip
                 },
                 scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { font: { size: 10 }, maxRotation: 45 }
-                    },
+                    x: lineScaleX,
                     y: {
                         position: 'left',
-                        title: { display: true, text: 'Spend (\u20AC)', font: { size: 11 } },
-                        grid: { color: 'rgba(0,0,0,0.05)' },
-                        ticks: { font: { size: 10 }, callback: v => '\u20AC' + v }
+                        title: { display: true, text: 'Spend (\u20AC)', font: { size: 11, weight:'600' }, color:'#5a9a2f' },
+                        grid: gridStyle, border: noBorder,
+                        ticks: { ...dimTick, font: { size: 10 }, callback: v => '\u20AC' + v }
                     },
                     y1: {
                         position: 'right',
-                        title: { display: true, text: 'Bookings', font: { size: 11 } },
-                        grid: { drawOnChartArea: false },
-                        ticks: { font: { size: 10 }, stepSize: 1 },
+                        title: { display: true, text: 'Bookings', font: { size: 11, weight:'600' }, color:'#1a3a5c' },
+                        grid: { drawOnChartArea: false }, border: noBorder,
+                        ticks: { ...dimTick, font: { size: 10 }, stepSize: 1 },
                         beginAtZero: true
                     }
                 }
