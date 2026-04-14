@@ -3261,10 +3261,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const MKT_API = '/api/ga4/overview';
     let mktSourceChart = null, mktTrendChart = null, mktHourChart = null;
 
+    // Helper: determine GADS_BY_RANGE key from date range
+    function getGadsRangeKey(from, to) {
+        const diffDays = Math.round((to - from) / (1000 * 60 * 60 * 24));
+        if (diffDays <= 7) return '7d';
+        if (diffDays <= 14) return '14d';
+        if (diffDays <= 30) return '30d';
+        if (diffDays <= 92) return '3m';
+        return '6m';
+    }
+
     async function loadMarketingData() {
         // Use global date range
-        const sd = currentDateRange.from ? currentDateRange.from.toISOString().slice(0,10) : new Date(new Date().setDate(new Date().getDate()-30)).toISOString().slice(0,10);
-        const ed = currentDateRange.to ? currentDateRange.to.toISOString().slice(0,10) : new Date().toISOString().slice(0,10);
+        const from = currentDateRange.from || new Date(new Date().setDate(new Date().getDate()-30));
+        const to = currentDateRange.to || new Date();
+        const sd = from.toISOString().slice(0,10);
+        const ed = to.toISOString().slice(0,10);
         const loadEl = document.getElementById('mktLoading');
         const errEl = document.getElementById('mktError');
         const content = document.getElementById('mktContent');
@@ -3272,10 +3284,36 @@ document.addEventListener('DOMContentLoaded', () => {
         errEl.style.display = 'none';
         content.style.display = 'none';
         try {
+            // Fetch GA4 data
             const r = await fetch(`${MKT_API}?start_date=${sd}&end_date=${ed}`);
             if (!r.ok) throw new Error(`HTTP ${r.status}`);
             const data = await r.json();
             if (data.error) throw new Error(data.error);
+
+            // Google Ads cost from cached range data
+            const gadsKey = getGadsRangeKey(from, to);
+            const gadsData = GADS_BY_RANGE[gadsKey];
+            const gadsCost = gadsData ? gadsData.cost : 0;
+
+            // Meta Ads cost — fetch live if not already cached for this range
+            let metaCost = 0;
+            try {
+                const metaData = await fetchMetaAdsData(from, to);
+                if (metaData && metaData.totals) {
+                    metaCost = metaData.totals.spend || 0;
+                    // Cache for other uses
+                    _metaAdsData = metaData;
+                    _metaAdsFetchedRange = from.toISOString().slice(0,10) + '_' + to.toISOString().slice(0,10);
+                }
+            } catch(metaErr) {
+                console.warn('[MKT] Meta Ads cost fetch failed, using 0:', metaErr.message);
+            }
+
+            // Store combined cost on data for AI Insights and rendering
+            data._combinedCost = gadsCost + metaCost;
+            data._gadsCost = gadsCost;
+            data._metaCost = metaCost;
+
             loadEl.style.display = 'none';
             content.style.display = 'flex';
             renderMarketing(data);
@@ -3287,9 +3325,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderMarketing(d) {
-        // Scorecards
-        document.getElementById('mktCost').textContent = d.scorecards.total_cost != null
-            ? '$' + Number(d.scorecards.total_cost).toLocaleString('en-US') : '—';
+        // Scorecards — Total Cost = Google Ads + Meta Ads combined
+        const combinedCost = d._combinedCost;
+        document.getElementById('mktCost').textContent = combinedCost != null && combinedCost > 0
+            ? '€' + combinedCost.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) : '—';
         document.getElementById('mktRent').textContent = Number(d.scorecards.rent).toLocaleString();
         document.getElementById('mktReservations').textContent = Number(d.scorecards.reservations).toLocaleString();
         renderDeviceBreakdown('mktDeviceVisits', d.visits_by_device);
@@ -3847,7 +3886,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const prompt = `Analyze this digital marketing data for 1BOX Self-Storage (Netherlands, 28 locations). Provide exactly 5 concise, actionable insights.
 
 Scorecard metrics:
-- Total Cost: ${sc.total_cost != null ? '$' + Number(sc.total_cost).toLocaleString() : 'N/A'}
+- Total Cost (Google Ads + Meta Ads): ${data._combinedCost > 0 ? '€' + data._combinedCost.toLocaleString('de-DE', {minimumFractionDigits:0, maximumFractionDigits:0}) + ' (Google Ads: €' + (data._gadsCost||0).toLocaleString('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0}) + ', Meta Ads: €' + (data._metaCost||0).toLocaleString('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0}) + ')' : 'N/A'}
 - Rent conversions: ${sc.rent || 'N/A'}
 - Reservation conversions: ${sc.reservations || 'N/A'}
 
