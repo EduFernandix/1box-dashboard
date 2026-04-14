@@ -1893,19 +1893,29 @@ document.addEventListener('DOMContentLoaded', () => {
         .monthly-pace-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1px 16px;
+            gap: 1px 20px;
         }
         .monthly-pace-row {
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 2.5px 0;
+            gap: 4px;
+            padding: 1.5px 0;
         }
+        .monthly-pace-pct {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 12px;
+            width: 32px;
+            text-align: right;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .monthly-pace-pct.ahead { color: var(--green-700); }
+        .monthly-pace-pct.behind { color: #dc2626; }
         .monthly-pace-label {
-            font-size: 8.5px;
+            font-size: 7.5px;
             font-weight: 600;
             color: var(--text-card);
-            width: 72px;
+            width: 64px;
             flex-shrink: 0;
             white-space: nowrap;
             overflow: hidden;
@@ -1913,7 +1923,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         .monthly-pace-track {
             flex: 1;
-            height: 10px;
+            height: 8px;
             background: rgba(0,0,0,0.04);
             border-radius: 3px;
             position: relative;
@@ -1930,15 +1940,15 @@ document.addEventListener('DOMContentLoaded', () => {
             position: absolute;
             top: -2px;
             width: 1.5px;
-            height: 14px;
+            height: 12px;
             background: rgba(0,0,0,0.5);
             z-index: 1;
         }
         .monthly-pace-vals {
-            font-size: 8px;
+            font-size: 7px;
             font-weight: 600;
             color: var(--text-dim);
-            width: 40px;
+            width: 32px;
             text-align: right;
             flex-shrink: 0;
             white-space: nowrap;
@@ -4793,7 +4803,8 @@ Generate insights covering ALL of these topics:
 
                     const sorted = [...bp.facilities]
                         .filter(f => f.leads_budget > 0)
-                        .sort((a, b) => b.leads_budget - a.leads_budget);
+                        .map(f => ({ ...f, pctOfTarget: f.leads_budget > 0 ? (f.leads_actual / f.leads_budget) * 100 : 0 }))
+                        .sort((a, b) => b.pctOfTarget - a.pctOfTarget);
 
                     grid.innerHTML = sorted.map(f => {
                         const budget = f.leads_budget;
@@ -4803,15 +4814,17 @@ Generate insights covering ALL of these topics:
                         const isAhead = actual >= expected;
                         const fillPct = Math.min((actual / maxVal) * 100, 100);
                         const markerPct = Math.min((expected / maxVal) * 100, 100);
+                        const pctStr = Math.round(f.pctOfTarget) + '%';
 
                         return `<div class="monthly-pace-row">
-                            <div class="monthly-pace-label">${f.name}</div>
+                            <div class="monthly-pace-pct ${isAhead ? 'ahead' : 'behind'}">${pctStr}</div>
+                            <div class="monthly-pace-label" title="${f.name}">${f.name}</div>
                             <div class="monthly-pace-track">
                                 <div class="monthly-pace-fill ${isAhead ? 'ahead' : 'behind'}" style="width:${fillPct.toFixed(1)}%"></div>
                                 <div class="monthly-pace-marker" style="left:${markerPct.toFixed(1)}%"></div>
                             </div>
                             <div class="monthly-pace-vals">
-                                <span class="${isAhead ? 'ahead' : 'behind'}">${actual}</span> / ${budget}
+                                <span class="${isAhead ? 'ahead' : 'behind'}">${actual}</span>/${budget}
                             </div>
                         </div>`;
                     }).join('');
