@@ -1979,6 +1979,69 @@ document.addEventListener('DOMContentLoaded', () => {
             letter-spacing: 0.3px;
         }
 
+
+        /* ===== SOURCE INFO TOOLTIP ===== */
+        .src-info {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.06);
+            color: rgba(0,0,0,0.32);
+            font-size: 9px;
+            font-weight: 700;
+            font-style: italic;
+            font-family: Georgia, serif;
+            cursor: help;
+            margin-left: 5px;
+            flex-shrink: 0;
+            vertical-align: middle;
+            transition: background 0.2s, color 0.2s;
+            z-index: 1;
+        }
+        .src-info:hover {
+            background: rgba(90,154,47,0.15);
+            color: var(--green-700);
+        }
+        .src-info .src-tip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px;
+            background: #1a2332;
+            color: #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 10.5px;
+            font-weight: 400;
+            font-style: normal;
+            line-height: 1.55;
+            letter-spacing: 0;
+            text-transform: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .src-info .src-tip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1a2332;
+        }
+        .src-info:hover .src-tip { display: block; }
+        .src-tip b { color: #fff; font-weight: 600; }
+        .src-tip .src-row { margin-bottom: 4px; }
+        .src-tip .src-row:last-child { margin-bottom: 0; }
+
         /* ===== MONTHLY REPORT RESPONSIVE OVERRIDES (must come after base monthly CSS) ===== */
         @media (max-width: 1200px) {
             .monthly-pace-grid { grid-template-columns: 1fr; }
@@ -2605,21 +2668,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- Scorecards column -->
                 <div style="display:flex;flex-direction:column;gap:12px;">
                     <div class="mkt-sc" style="animation-delay:.08s">
-                        <div class="sc-label">Total Cost</div>
+                        <div class="sc-label">Total Cost <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API + Meta Ads API</div><div class="src-row"><b>Calculation:</b> Sum of cost_micros (GAds) + spend (Meta) for all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="sc-value" id="mktCost">—</div>
                     </div>
                     <div class="mkt-sc" style="animation-delay:.12s">
-                        <div class="sc-label">Rent</div>
+                        <div class="sc-label">Rent <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Count of bm_transparent_booking_complete events</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="sc-value" id="mktRent">—</div>
                     </div>
                     <div class="mkt-sc" style="animation-delay:.16s">
-                        <div class="sc-label">Reservations</div>
+                        <div class="sc-label">Reservations <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Count of transparent_booking events</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="sc-value" id="mktReservations">—</div>
                     </div>
                 </div>
                 <!-- Bar: Key Conversions Source -->
                 <div class="mkt-panel" style="animation-delay:.16s">
-                    <div class="chart-top"><div class="chart-title">Key Conversions Source</div></div>
+                    <div class="chart-top"><div class="chart-title">Key Conversions Source <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> User count grouped by sessionDefaultChannelGroup for transparent_booking events</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div></div>
                     <div class="chart-body" style="position:relative;"><canvas id="mktSourceChart"></canvas></div>
                 </div>
             </div>
@@ -2630,7 +2693,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="mkt-panel" style="animation-delay:.2s">
                     <div class="chart-top">
                         <div class="chart-title" style="display:flex;align-items:center;gap:16px;">
-                            <span>Rentals & Reservations</span>
+                            <span>Rentals & Reservations <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Monthly count of bm_transparent_booking_complete (Rentals) and transparent_booking (Reservations)</div><div class="src-row"><b>Period:</b> Last 3 months rolling</div></span></span></span>
                             <div style="display:flex;gap:14px;font-size:11px;font-weight:500;color:var(--text-dim);">
                                 <span><span style="display:inline-block;width:12px;height:3px;background:#1565C0;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>Rentals</span>
                                 <span><span style="display:inline-block;width:12px;height:3px;background:#e2b93b;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>Reservations</span>
@@ -2641,7 +2704,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <!-- Source Pie Charts — single panel, side by side -->
                 <div class="mkt-panel" style="animation-delay:.24s;padding:14px 18px 12px;display:flex;flex-direction:column;">
-                    <div class="chart-top" style="margin-bottom:8px;"><div class="chart-title">Bookings by Source (Last Click)</div></div>
+                    <div class="chart-top" style="margin-bottom:8px;"><div class="chart-title">Bookings by Source (Last Click) <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Count of bm_transparent_booking_complete events by sessionDefaultChannelGroup</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div></div>
                     <div style="display:flex;gap:18px;justify-content:center;align-items:flex-start;padding:0 10px;">
                         <div style="display:flex;flex-direction:column;align-items:center;width:32%;max-width:160px;">
                             <div style="font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:0.04em;color:var(--green-700);margin-bottom:6px;">Transparent Booking</div>
@@ -2659,11 +2722,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- ROW 3: Devices side by side -->
             <div class="marketing-row marketing-row-mid">
                 <div class="mkt-panel" style="animation-delay:.3s;padding:14px 18px 10px;">
-                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title">Visits by Device</div></div>
+                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title">Visits by Device <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Total users grouped by deviceCategory (mobile, desktop, tablet)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div></div>
                     <div class="device-breakdown" id="mktDeviceVisits"></div>
                 </div>
                 <div class="mkt-panel" style="animation-delay:.34s;padding:14px 18px 10px;">
-                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title">Conversions by Device</div></div>
+                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title">Conversions by Device <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Count of bm_transparent_booking_complete events by deviceCategory</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div></div>
                     <div class="device-breakdown" id="mktDeviceConversions"></div>
                 </div>
             </div>
@@ -2671,15 +2734,15 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- ROW 4: Top Cities + Day of Week + Hour of Day -->
             <div class="marketing-row" style="grid-template-columns: 1fr 1fr 1fr;">
                 <div class="mkt-panel" style="animation-delay:.38s;padding:14px 18px 10px;">
-                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title">Top Cities</div></div>
+                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title">Top Cities <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Total users and sessions grouped by city, sorted by users descending (top 9)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div></div>
                     <div id="mktMapContainer" class="nl-map-layout"></div>
                 </div>
                 <div class="mkt-panel" style="animation-delay:.42s;padding:14px 18px 10px;">
-                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title">Sessions by Day of Week</div></div>
+                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title">Sessions by Day of Week <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Total sessions grouped by dayOfWeek (0=Sun to 6=Sat)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div></div>
                     <div id="mktDayOfWeek"></div>
                 </div>
                 <div class="mkt-panel" style="animation-delay:.46s;padding:14px 18px 10px;">
-                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title">Sessions by Hour</div></div>
+                    <div class="chart-top" style="margin-bottom:6px;"><div class="chart-title">Sessions by Hour <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Total sessions grouped by hour (0–23)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div></div>
                     <div class="chart-body" style="position:relative;height:220px;"><canvas id="mktHourChart"></canvas></div>
                 </div>
             </div>
@@ -2718,17 +2781,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- Scorecards -->
             <div class="funnel-scorecards">
                 <div class="sc" style="animation-delay:0s">
-                    <div class="sc-top"><span class="sc-label">Full Funnel Conversion</span></div>
+                    <div class="sc-top"><span class="sc-label">Full Funnel Conversion <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> (bm_transparent_booking_complete / clickto_sizepage_transparent) × 100</div><div class="src-row"><b>Period:</b> Last 65 days</div></span></span></span></div>
                     <div class="sc-value" id="scFunnelConversion" style="color:#5a9a2f">—</div>
                     <div class="sc-sub">Step 1 → Complete</div>
                 </div>
                 <div class="sc" style="animation-delay:.04s">
-                    <div class="sc-top"><span class="sc-label">Avg. Bounce Rate / Step</span></div>
+                    <div class="sc-top"><span class="sc-label">Avg. Bounce Rate / Step <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Average drop-off rate between consecutive funnel steps</div><div class="src-row"><b>Period:</b> Last 65 days</div></span></span></span></div>
                     <div class="sc-value" id="scAvgBounce" style="color:#dc2626">—</div>
                     <div class="sc-sub">Average step-to-step drop-off</div>
                 </div>
                 <div class="sc" style="animation-delay:.08s">
-                    <div class="sc-top"><span class="sc-label">Total Users Entered</span></div>
+                    <div class="sc-top"><span class="sc-label">Total Users Entered <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Sum of organic + paid + direct for clickto_sizepage_transparent (step 1)</div><div class="src-row"><b>Period:</b> Last 65 days</div></span></span></span></div>
                     <div class="sc-value" id="scTotalUsers">—</div>
                     <div class="sc-sub">Users starting transparent_booking</div>
                 </div>
@@ -2743,7 +2806,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- VISUAL FUNNEL -->
                 <div class="chart-panel" style="animation-delay:.12s;overflow:hidden;min-width:0">
                     <div class="chart-top" style="flex-wrap:wrap;gap:8px;">
-                        <div class="chart-title">Conversion Funnel <span id="funnelDataBadge" style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(226,185,59,0.15);color:#e2b93b;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;">Sample Data</span></div>
+                        <div class="chart-title">Conversion Funnel <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> 10-step funnel: size page → details → select unit → booking → start → steps 1-4 → complete. Segmented by Organic/Paid/Direct channels</div><div class="src-row"><b>Period:</b> Last 65 days vs. previous 65 days</div></span></span> <span id="funnelDataBadge" style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(226,185,59,0.15);color:#e2b93b;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;">Sample Data</span></div>
                         <select id="funnelFacilitySelect" onchange="onFunnelFacilityChange()" style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:white;color:var(--text-card);cursor:pointer;outline:none;min-width:140px;">
                             <option value="">All Locations</option>
                         </select>
@@ -2775,7 +2838,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- RIGHT: LOCATION TABLE + CHART -->
             <div class="chart-panel funnel-detail-panel" style="animation-delay:.16s">
                 <div class="chart-top" style="flex-wrap:wrap;gap:8px;">
-                    <div class="chart-title">Location Performance <span id="locationDataBadge" style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(124,179,66,0.15);color:#7CB342;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;">GA4 Live</span></div>
+                    <div class="chart-title">Location Performance <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Per-location metrics: users entered, bookings (transparent_booking), completed (booking_complete), avg bounce rate, completion rate</div><div class="src-row"><b>Period:</b> Last 65 days</div></span></span> <span id="locationDataBadge" style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(124,179,66,0.15);color:#7CB342;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;">GA4 Live</span></div>
                     <div class="facility-filter-wrap" id="facilityFilterWrap">
                         <button class="facility-filter-btn" id="facilityFilterBtn">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
@@ -2854,17 +2917,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="monthly-sections-body">
                 <!-- SECTION 1: CONVERSION RATES -->
                 <div class="monthly-section">
-                    <div class="monthly-section-title">Website Conversion Rates</div>
+                    <div class="monthly-section-title">Website Conversion Rates <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> User-to-lead and lead-to-booking conversion percentages</div><div class="src-row"><b>Period:</b> Current calendar month vs. previous month</div></span></span></div>
                     <div class="monthly-kpi-row" id="monthlyConversionKpis">
                         <div class="monthly-kpi">
                             <div class="monthly-kpi-value" id="wkUserToLead">—</div>
-                            <div class="monthly-kpi-label">User → Booking (Lead)</div>
+                            <div class="monthly-kpi-label">User → Booking (Lead) <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> (transparent_booking events / total users) × 100</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                             <div class="monthly-kpi-sub" id="wkUserToLeadSub"></div>
                             <span class="monthly-kpi-trend" id="wkUserToLeadTrend"></span>
                         </div>
                         <div class="monthly-kpi">
                             <div class="monthly-kpi-value" id="wkLeadToCust">—</div>
-                            <div class="monthly-kpi-label">Lead → Booking</div>
+                            <div class="monthly-kpi-label">Lead → Booking <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> (bm_transparent_booking_complete / transparent_booking) × 100</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                             <div class="monthly-kpi-sub" id="wkLeadToCustSub"></div>
                             <span class="monthly-kpi-trend" id="wkLeadToCustTrend"></span>
                         </div>
@@ -2873,7 +2936,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- CONVERSION TREND CHART -->
                 <div class="monthly-section">
-                    <div class="monthly-section-title">Conversion Rate Trend — Last 6 Months</div>
+                    <div class="monthly-section-title">Conversion Rate Trend — Last 6 Months <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Monthly user_to_lead and lead_to_customer rates</div><div class="src-row"><b>Period:</b> Rolling 6 months</div></span></span></div>
                     <div style="height:220px;">
                         <canvas id="conversionTrendChart"></canvas>
                     </div>
@@ -2881,21 +2944,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- SECTION 2: CPL & LEAD VOLUME -->
                 <div class="monthly-section">
-                    <div class="monthly-section-title">Budget vs Actual — Leads by Facility</div>
+                    <div class="monthly-section-title">Budget vs Actual — Leads by Facility <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603) + Budget targets (config)</div><div class="src-row"><b>Calculation:</b> transparent_booking events per facility vs. monthly budget target</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                     <div class="monthly-kpi-row">
                         <div class="monthly-kpi small">
                             <div class="monthly-kpi-value" id="wkTotalLeads">—</div>
-                            <div class="monthly-kpi-label">Monthly Leads (Bookings)</div>
+                            <div class="monthly-kpi-label">Monthly Leads (Bookings) <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Count of transparent_booking events</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                             <span class="monthly-kpi-trend" id="wkTotalLeadsTrend"></span>
                         </div>
                         <div class="monthly-kpi small">
                             <div class="monthly-kpi-value" id="wkTotalCustomers">—</div>
-                            <div class="monthly-kpi-label">Monthly Move-ins</div>
+                            <div class="monthly-kpi-label">Monthly Move-ins <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Count of bm_transparent_booking_complete events</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                             <span class="monthly-kpi-trend" id="wkTotalCustomersTrend"></span>
                         </div>
                         <div class="monthly-kpi small">
                             <div class="monthly-kpi-value" id="wkTotalUsers">—</div>
-                            <div class="monthly-kpi-label">Total Visitors</div>
+                            <div class="monthly-kpi-label">Total Visitors <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Total active users</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                             <span class="monthly-kpi-trend" id="wkTotalUsersTrend"></span>
                         </div>
                     </div>
@@ -2904,33 +2967,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- SECTION 3: WEBSITE DATA -->
                 <div class="monthly-section">
-                    <div class="monthly-section-title">Website Data</div>
+                    <div class="monthly-section-title">Website Data <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Core web analytics: visitors, bounce rate, session duration, pages/session, engagement rate</div><div class="src-row"><b>Period:</b> Current calendar month vs. previous month</div></span></span></div>
                     <div class="monthly-kpi-row">
                         <div class="monthly-kpi small">
                             <div class="monthly-kpi-value" id="wkUniqueVisitors">—</div>
-                            <div class="monthly-kpi-label">Unique Visitors</div>
+                            <div class="monthly-kpi-label">Unique Visitors <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Distinct active users (totalUsers metric)</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                             <span class="monthly-kpi-trend" id="wkUniqueVisitorsTrend"></span>
                         </div>
                         <div class="monthly-kpi small">
                             <div class="monthly-kpi-value" id="wkBounceRate">—</div>
-                            <div class="monthly-kpi-label">Bounce Rate</div>
+                            <div class="monthly-kpi-label">Bounce Rate <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> (bounced sessions / total sessions) × 100</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                             <span class="monthly-kpi-trend" id="wkBounceRateTrend"></span>
                         </div>
                         <div class="monthly-kpi small">
                             <div class="monthly-kpi-value" id="wkAvgDuration">—</div>
-                            <div class="monthly-kpi-label">Avg. Session Duration</div>
+                            <div class="monthly-kpi-label">Avg. Session Duration <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Average of userEngagementDuration per session</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                             <span class="monthly-kpi-trend" id="wkAvgDurationTrend"></span>
                         </div>
                     </div>
                     <div class="monthly-kpi-row">
                         <div class="monthly-kpi small">
                             <div class="monthly-kpi-value" id="wkPagesPerSession">—</div>
-                            <div class="monthly-kpi-label">Pages / Session</div>
+                            <div class="monthly-kpi-label">Pages / Session <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> screenPageViews / sessions</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                             <span class="monthly-kpi-trend" id="wkPagesPerSessionTrend"></span>
                         </div>
                         <div class="monthly-kpi small">
                             <div class="monthly-kpi-value" id="wkEngagementRate">—</div>
-                            <div class="monthly-kpi-label">Engagement Rate</div>
+                            <div class="monthly-kpi-label">Engagement Rate <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> (engaged sessions / total sessions) × 100</div><div class="src-row"><b>Period:</b> Current calendar month</div></span></span></div>
                             <span class="monthly-kpi-trend" id="wkEngagementRateTrend"></span>
                         </div>
                     </div>
@@ -2966,32 +3029,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- KPI Cards -->
                 <div class="gads-kpis">
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Total Cost</div>
+                        <div class="gads-kpi-label">Total Cost <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> metrics.cost_micros / 1,000,000 summed across all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-kpi-value" id="gadsKpiCost">—</div>
                         <div class="gads-kpi-delta" id="gadsKpiCostDelta" style="display:none;"></div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Clicks</div>
+                        <div class="gads-kpi-label">Clicks <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> metrics.clicks summed across all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-kpi-value" id="gadsKpiClicks">—</div>
                         <div class="gads-kpi-delta" id="gadsKpiClicksDelta" style="display:none;"></div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Conversions</div>
+                        <div class="gads-kpi-label">Conversions <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> metrics.conversions summed across all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-kpi-value" id="gadsKpiRes">—</div>
                         <div class="gads-kpi-delta" id="gadsKpiResDelta" style="display:none;"></div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Cost / Conversion</div>
+                        <div class="gads-kpi-label">Cost / Conversion <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Total Cost / Total Conversions</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-kpi-value" id="gadsKpiCPR">—</div>
                         <div class="gads-kpi-delta" id="gadsKpiCPRDelta" style="display:none;"></div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Intent Events</div>
+                        <div class="gads-kpi-label">Intent Events <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> metrics.all_conversions from intent event conversion actions</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-kpi-value" id="gadsKpiRents">—</div>
                         <div class="gads-kpi-delta" id="gadsKpiRentsDelta" style="display:none;"></div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Cost / Intent</div>
+                        <div class="gads-kpi-label">Cost / Intent <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Total Cost / Intent Events</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-kpi-value" id="gadsKpiCPRent">—</div>
                         <div class="gads-kpi-delta" id="gadsKpiCPRentDelta" style="display:none;"></div>
                     </div>
@@ -3001,7 +3064,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="gads-chart-funnel-row">
                     <!-- Dual-axis chart -->
                     <div class="gads-chart-panel">
-                        <div class="chart-title">Conversions vs. Cost Over Time</div>
+                        <div class="chart-title">Conversions vs. Cost Over Time <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Monthly metrics.conversions and metrics.cost_micros aggregated by month</div><div class="src-row"><b>Period:</b> Last 6 months</div></span></span></div>
                         <div class="gads-chart-body">
                             <canvas id="gadsLineChart"></canvas>
                         </div>
@@ -3009,7 +3072,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     <!-- Booking Funnel -->
                     <div class="gads-funnel-panel">
-                        <div class="chart-title">Booking Funnel</div>
+                        <div class="chart-title">Booking Funnel <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603) — Paid Social channel</div><div class="src-row"><b>Calculation:</b> transparent_booking (Paid Social) and bm_transparent_booking_complete (Paid Social) event counts</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-funnel-body">
                             <!-- Step 1: Clicks -->
                             <div class="gads-funnel-step" style="grid-template-columns: 1fr 120px;">
@@ -3064,7 +3127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- Campaign Performance Table -->
                 <div class="gads-table-wrap">
-                    <div class="gads-table-header">Campaign Performance</div>
+                    <div class="gads-table-header">Campaign Performance <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Per-campaign metrics: cost, avg CPC, clicks, conversions, all conversions (intent events)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                     <div class="gads-table-scroll">
                         <table class="gads-table" id="gadsCampaignTable">
                             <thead>
@@ -3111,27 +3174,27 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="metaads-kpis">
                 <div class="metaads-kpi">
                     <div class="metaads-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-                    <div class="metaads-kpi-label">Total Cost</div>
+                    <div class="metaads-kpi-label">Total Cost <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Sum of spend field across all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                     <div class="metaads-kpi-value" id="metaKpiCost">—</div>
                 </div>
                 <div class="metaads-kpi">
                     <div class="metaads-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div>
-                    <div class="metaads-kpi-label">Clicks</div>
+                    <div class="metaads-kpi-label">Clicks <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Sum of clicks field across all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                     <div class="metaads-kpi-value" id="metaKpiClicks">—</div>
                 </div>
                 <div class="metaads-kpi">
                     <div class="metaads-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
-                    <div class="metaads-kpi-label">Impressions</div>
+                    <div class="metaads-kpi-label">Impressions <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Sum of impressions field across all campaigns</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                     <div class="metaads-kpi-value" id="metaKpiImpressions">—</div>
                 </div>
                 <div class="metaads-kpi">
                     <div class="metaads-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-                    <div class="metaads-kpi-label">Intent Events</div>
+                    <div class="metaads-kpi-label">Intent Events <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Sum of actions where action_type contains booking-related events</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                     <div class="metaads-kpi-value" id="metaKpiIntent">—</div>
                 </div>
                 <div class="metaads-kpi">
                     <div class="metaads-kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-                    <div class="metaads-kpi-label">Cost / Intent</div>
+                    <div class="metaads-kpi-label">Cost / Intent <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Total Cost / Intent Events</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                     <div class="metaads-kpi-value" id="metaKpiCPI">—</div>
                 </div>
             </div>
@@ -3140,7 +3203,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="metaads-middle">
                 <!-- Funnel -->
                 <div class="metaads-panel metaads-funnel-panel">
-                    <h3>Booking Funnel</h3>
+                    <h3>Booking Funnel <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Funnel: Clicks → Intent Events (booking actions) → Bookings (action ID: 1391541132570833)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></h3>
                     <p style="font-family:'DM Sans',sans-serif;font-size:11px;color:#888;margin:-8px 0 8px 0;">Booking & Rental: GA4 · Paid Social</p>
                     <div class="metaads-funnel">
                         <div class="metaads-funnel-step metaads-funnel-clicks">
@@ -3164,7 +3227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- Chart -->
                 <div class="metaads-panel metaads-chart-panel">
-                    <h3>Spend & Intent Events</h3>
+                    <h3>Spend & Intent Events <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Monthly spend and intent event counts per campaign</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></h3>
                     <div class="metaads-chart-container">
                         <canvas id="metaAdsChart"></canvas>
                     </div>
@@ -3172,7 +3235,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- Top Ads Carousel -->
                 <div class="metaads-panel metaads-topads-panel">
-                    <h3>Most Spend Ads</h3>
+                    <h3>Most Spend Ads <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Top ads ranked by spend, showing creative preview, impressions, clicks, CTR, CPC</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></h3>
                     <div class="metaads-carousel">
                         <div class="metaads-ad-card" id="metaAdCard">
                             <div class="metaads-ad-preview">
@@ -3211,7 +3274,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <!-- Campaigns Table -->
             <div class="metaads-panel metaads-campaigns-panel">
-                <h3>Campaigns</h3>
+                <h3>Campaigns <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> All active campaigns with spend, impressions, clicks, CTR, CPC, actions breakdown</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></h3>
                 <div class="metaads-table-wrap">
                     <table class="metaads-table" id="metaCampaignsTable">
                         <thead>
@@ -3274,6 +3337,11 @@ document.addEventListener('DOMContentLoaded', () => {
         position:'top', align:'end',
         labels: { usePointStyle:true, pointStyle:'rectRounded', boxWidth:10, boxHeight:10, padding:12, font:{ family:"'DM Sans',sans-serif", size:11, weight:'600' }, color:'#555' }
     };
+
+    // Source info tooltip generator
+    function srcInfo(source, calc, period) {
+        return `<span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> ${source}</div><div class="src-row"><b>Calculation:</b> ${calc}</div><div class="src-row"><b>Period:</b> ${period}</div></span></span>`;
+    }
     // Standard scales for line charts
     const lineScaleX = { grid:{display:false}, border:noBorder, ticks:{...dimTick, font:{size:10}} };
     const lineScaleY = (opts={}) => ({ grid:gridStyle, border:noBorder, ticks:{...dimTick, font:{size:10}, ...opts}, beginAtZero:true });
