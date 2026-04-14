@@ -3045,7 +3045,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="gads-kpi-value" id="gadsKpiCPB">—</div>
                     </div>
                     <div class="gads-kpi">
-                        <div class="gads-kpi-label">Cost / Rental <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678)</div><div class="src-row"><b>Calculation:</b> Total Cost / Rentals (bm_transparent_booking_complete)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
+                        <div class="gads-kpi-label">Cost / Rental <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678) + GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Google Ads Total Cost / GA4 bm_transparent_booking_complete (Paid Search channel)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-kpi-value" id="gadsKpiCPRental">—</div>
                     </div>
                 </div>
@@ -3062,7 +3062,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     <!-- Booking Funnel -->
                     <div class="gads-funnel-panel">
-                        <div class="chart-title">Booking Funnel <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603) — Paid Social channel</div><div class="src-row"><b>Calculation:</b> transparent_booking (Paid Social) and bm_transparent_booking_complete (Paid Social) event counts</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
+                        <div class="chart-title">Booking Funnel <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678) + GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Clicks &amp; Bookings from Google Ads conversions; Complete (Rental) = GA4 bm_transparent_booking_complete filtered by Paid Search channel</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-funnel-body">
                             <!-- Step 1: Clicks -->
                             <div class="gads-funnel-step" style="grid-template-columns: 1fr 120px;">
@@ -5137,13 +5137,13 @@ Generate insights covering ALL of these topics:
         cost: [95891, 87677, 66255, 71299, 69237, 66620, 72059, 23469]
     };
 
-    // ===== GOOGLE ADS DATA BY DATE RANGE (live data fetched 13 Apr 2026, corrected) =====
+    // ===== GOOGLE ADS DATA BY DATE RANGE (live data fetched 14 Apr 2026, audited) =====
     const GADS_BY_RANGE = {
-        "7d":  { cost: 13559.31,  clicks: 2840,  conversions: 621,  allConversions: 2855,  avgCpc: 4.77, costPerConversion: 21.83, bookingComplete: 12 },
-        "14d":  { cost: 27174.34,  clicks: 5635,  conversions: 1211,  allConversions: 5894,  avgCpc: 4.82, costPerConversion: 22.44, bookingComplete: 18 },
-        "30d":  { cost: 62353.22,  clicks: 12969,  conversions: 3435,  allConversions: 14690,  avgCpc: 4.81, costPerConversion: 18.15, bookingComplete: 60 },
-        "3m":  { cost: 210326.71,  clicks: 41917,  conversions: 12256,  allConversions: 46696,  avgCpc: 5.02, costPerConversion: 17.16, bookingComplete: 127 },
-        "6m":  { cost: 422990.15,  clicks: 81129,  conversions: 19629,  allConversions: 80119,  avgCpc: 5.21, costPerConversion: 21.55, bookingComplete: 190 },
+        "7d":  { cost: 13559.31,  clicks: 2840,  conversions: 621,  allConversions: 2855,  avgCpc: 4.77, costPerConversion: 21.83, bookingComplete: 3 },
+        "14d":  { cost: 27174.34,  clicks: 5635,  conversions: 1211,  allConversions: 5894,  avgCpc: 4.82, costPerConversion: 22.44, bookingComplete: 4 },
+        "30d":  { cost: 62353.22,  clicks: 12969,  conversions: 3435,  allConversions: 14690,  avgCpc: 4.81, costPerConversion: 18.15, bookingComplete: 24 },
+        "3m":  { cost: 210326.71,  clicks: 41917,  conversions: 12256,  allConversions: 46696,  avgCpc: 5.02, costPerConversion: 17.16, bookingComplete: 46 },
+        "6m":  { cost: 422990.15,  clicks: 81129,  conversions: 19629,  allConversions: 80119,  avgCpc: 5.21, costPerConversion: 21.55, bookingComplete: 105 },
     };
 
     let gadsChart = null;
