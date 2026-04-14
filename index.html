@@ -4906,8 +4906,8 @@ Generate insights covering ALL of these topics:
                             data: {
                                 labels,
                                 datasets: [
-                                    { label:'User \u2192 Lead %', data:t.map(d=>d.user_to_lead), ...lineD('#7CB342',2.5), datalabels:{...lineDL('#7CB342'), formatter:v=>v+'%'} },
-                                    { label:'Lead \u2192 Booking %', data:t.map(d=>d.lead_to_customer), ...lineD('#1a3a5c',2.5), datalabels:{...lineDL('#1a3a5c'), formatter:v=>v+'%'} },
+                                    { label:'User \u2192 Lead %', data:t.map(d=>d.user_to_lead), ...lineD('#7CB342',2.5), datalabels:{...lineDL('#7CB342'), align:'bottom', offset:6, formatter:v=>v+'%'} },
+                                    { label:'Lead \u2192 Booking %', data:t.map(d=>d.lead_to_customer), ...lineD('#1a3a5c',2.5), datalabels:{...lineDL('#1a3a5c'), align:'top', offset:6, formatter:v=>v+'%'} },
                                 ],
                             },
                             options: {
