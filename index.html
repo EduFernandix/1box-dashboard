@@ -1817,8 +1817,13 @@ document.addEventListener('DOMContentLoaded', () => {
         .monthly-print-btn:hover { background: var(--green-700); }
         .monthly-print-btn svg { width: 13px; height: 13px; }
 
-        .monthly-section { margin-bottom: 12px; }
-        .monthly-section:last-of-type { margin-bottom: 0; }
+        .monthly-sections-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .monthly-section { margin-bottom: 0; }
         .monthly-section-title {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 13px;
@@ -2846,6 +2851,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
+                <div class="monthly-sections-body">
                 <!-- SECTION 1: CONVERSION RATES -->
                 <div class="monthly-section">
                     <div class="monthly-section-title">Website Conversion Rates</div>
@@ -2868,7 +2874,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <!-- CONVERSION TREND CHART -->
                 <div class="monthly-section">
                     <div class="monthly-section-title">Conversion Rate Trend — Last 6 Months</div>
-                    <div style="height:140px;">
+                    <div style="height:200px;">
                         <canvas id="conversionTrendChart"></canvas>
                     </div>
                 </div>
@@ -2929,6 +2935,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 </div>
+                </div><!-- /monthly-sections-body -->
 
                 <!-- FOOTER -->
                 <div class="monthly-footer" id="monthlyFooter">
