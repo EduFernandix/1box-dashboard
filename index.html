@@ -3062,7 +3062,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     <!-- Booking Funnel -->
                     <div class="gads-funnel-panel">
-                        <div class="chart-title">Booking Funnel <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678) + GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Clicks &amp; Bookings from Google Ads conversions; Complete (Rental) = GA4 bm_transparent_booking_complete filtered by Paid Search channel</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
+                        <div class="chart-title">Booking Funnel <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Google Ads API (CID: 5400964678) + GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Clicks from Google Ads; Bookings = GA4 transparent_booking (Paid Search); Complete = GA4 bm_transparent_booking_complete (Paid Search)</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></div>
                         <div class="gads-funnel-body">
                             <!-- Step 1: Clicks -->
                             <div class="gads-funnel-step" style="grid-template-columns: 1fr 120px;">
@@ -5138,12 +5138,15 @@ Generate insights covering ALL of these topics:
     };
 
     // ===== GOOGLE ADS DATA BY DATE RANGE (live data fetched 14 Apr 2026, audited) =====
+    // conversions = Google Ads metrics.conversions (used for KPIs)
+    // transparentBookings = GA4 transparent_booking event count (Paid Search channel) — used in Booking Funnel
+    // bookingComplete = GA4 bm_transparent_booking_complete event count (Paid Search channel) — used in Booking Funnel & Cost/Rental
     const GADS_BY_RANGE = {
-        "7d":  { cost: 13559.31,  clicks: 2840,  conversions: 621,  allConversions: 2855,  avgCpc: 4.77, costPerConversion: 21.83, bookingComplete: 3 },
-        "14d":  { cost: 27174.34,  clicks: 5635,  conversions: 1211,  allConversions: 5894,  avgCpc: 4.82, costPerConversion: 22.44, bookingComplete: 4 },
-        "30d":  { cost: 62353.22,  clicks: 12969,  conversions: 3435,  allConversions: 14690,  avgCpc: 4.81, costPerConversion: 18.15, bookingComplete: 24 },
-        "3m":  { cost: 210326.71,  clicks: 41917,  conversions: 12256,  allConversions: 46696,  avgCpc: 5.02, costPerConversion: 17.16, bookingComplete: 46 },
-        "6m":  { cost: 422990.15,  clicks: 81129,  conversions: 19629,  allConversions: 80119,  avgCpc: 5.21, costPerConversion: 21.55, bookingComplete: 105 },
+        "7d":  { cost: 13559.31,  clicks: 2840,  conversions: 621,  allConversions: 2855,  avgCpc: 4.77, costPerConversion: 21.83, transparentBookings: 41,  bookingComplete: 3 },
+        "14d":  { cost: 27174.34,  clicks: 5635,  conversions: 1211,  allConversions: 5894,  avgCpc: 4.82, costPerConversion: 22.44, transparentBookings: 65,  bookingComplete: 4 },
+        "30d":  { cost: 62353.22,  clicks: 12969,  conversions: 3435,  allConversions: 14690,  avgCpc: 4.81, costPerConversion: 18.15, transparentBookings: 203, bookingComplete: 24 },
+        "3m":  { cost: 210326.71,  clicks: 41917,  conversions: 12256,  allConversions: 46696,  avgCpc: 5.02, costPerConversion: 17.16, transparentBookings: 566, bookingComplete: 46 },
+        "6m":  { cost: 422990.15,  clicks: 81129,  conversions: 19629,  allConversions: 80119,  avgCpc: 5.21, costPerConversion: 21.55, transparentBookings: 1016, bookingComplete: 105 },
     };
 
     let gadsChart = null;
@@ -5340,7 +5343,7 @@ Generate insights covering ALL of these topics:
             el.style.display = 'none';
         });
 
-        // Update booking funnel
+        // Update booking funnel (uses GA4 Paid Search data for consistency)
         const funnelClicks = document.getElementById('gadsFunnelClicks');
         const funnelBookings = document.getElementById('gadsFunnelBookings');
         const funnelBookingsRate = document.getElementById('gadsFunnelBookingsRate');
@@ -5348,7 +5351,7 @@ Generate insights covering ALL of these topics:
         const funnelCompleteRate = document.getElementById('gadsFunnelCompleteRate');
         if (funnelClicks) {
             const clicks = d.clicks;
-            const bookings = Math.round(d.conversions);
+            const bookings = d.transparentBookings || Math.round(d.conversions);
             const complete = d.bookingComplete || 0;
             const bookingRate = clicks > 0 ? (bookings / clicks * 100) : 0;
             const completeRate = bookings > 0 ? (complete / bookings * 100) : 0;
