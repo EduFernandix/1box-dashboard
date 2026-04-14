@@ -1891,9 +1891,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         .monthly-pace-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1px 20px;
+            display: flex;
+            gap: 16px;
+        }
+        .monthly-pace-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         .monthly-pace-row {
             display: flex;
@@ -2854,7 +2858,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="monthly-kpi">
                             <div class="monthly-kpi-value" id="wkLeadToCust">—</div>
-                            <div class="monthly-kpi-label">Lead → Customer (Move-in)</div>
+                            <div class="monthly-kpi-label">Lead → Booking</div>
                             <div class="monthly-kpi-sub" id="wkLeadToCustSub"></div>
                             <span class="monthly-kpi-trend" id="wkLeadToCustTrend"></span>
                         </div>
@@ -4743,7 +4747,7 @@ Generate insights covering ALL of these topics:
 
             document.getElementById('wkLeadToCust').textContent = c.lead_to_customer_rate + '%';
             document.getElementById('wkLeadToCustSub').textContent =
-                `${c.total_leads.toLocaleString()} leads → ${c.total_customers.toLocaleString()} confirmed move-ins`;
+                `${c.total_leads.toLocaleString()} leads → ${c.total_customers.toLocaleString()} bookings`;
             document.getElementById('wkLeadToCustTrend').outerHTML =
                 trendBadge(c.lead_to_customer_rate, c.prev_lead_to_customer_rate, 'pp', false);
 
@@ -4775,7 +4779,7 @@ Generate insights covering ALL of these topics:
                                 labels,
                                 datasets: [
                                     { label:'User \u2192 Lead %', data:t.map(d=>d.user_to_lead), ...lineD('#7CB342',2.5), datalabels:{...lineDL('#7CB342'), formatter:v=>v+'%'} },
-                                    { label:'Lead \u2192 Customer %', data:t.map(d=>d.lead_to_customer), ...lineD('#1a3a5c',2.5), datalabels:{...lineDL('#1a3a5c'), formatter:v=>v+'%'} },
+                                    { label:'Lead \u2192 Booking %', data:t.map(d=>d.lead_to_customer), ...lineD('#1a3a5c',2.5), datalabels:{...lineDL('#1a3a5c'), formatter:v=>v+'%'} },
                                 ],
                             },
                             options: {
@@ -4806,7 +4810,7 @@ Generate insights covering ALL of these topics:
                         .map(f => ({ ...f, pctOfTarget: f.leads_budget > 0 ? (f.leads_actual / f.leads_budget) * 100 : 0 }))
                         .sort((a, b) => b.pctOfTarget - a.pctOfTarget);
 
-                    grid.innerHTML = sorted.map(f => {
+                    const renderRow = (f) => {
                         const budget = f.leads_budget;
                         const actual = f.leads_actual;
                         const expected = budget * dayR;
@@ -4815,7 +4819,6 @@ Generate insights covering ALL of these topics:
                         const fillPct = Math.min((actual / maxVal) * 100, 100);
                         const markerPct = Math.min((expected / maxVal) * 100, 100);
                         const pctStr = Math.round(f.pctOfTarget) + '%';
-
                         return `<div class="monthly-pace-row">
                             <div class="monthly-pace-pct ${isAhead ? 'ahead' : 'behind'}">${pctStr}</div>
                             <div class="monthly-pace-label" title="${f.name}">${f.name}</div>
@@ -4827,7 +4830,11 @@ Generate insights covering ALL of these topics:
                                 <span class="${isAhead ? 'ahead' : 'behind'}">${actual}</span>/${budget}
                             </div>
                         </div>`;
-                    }).join('');
+                    };
+                    const half = Math.ceil(sorted.length / 2);
+                    const leftCol = sorted.slice(0, half).map(renderRow).join('');
+                    const rightCol = sorted.slice(half).map(renderRow).join('');
+                    grid.innerHTML = `<div class="monthly-pace-col">${leftCol}</div><div class="monthly-pace-col">${rightCol}</div>`;
                 }
             } catch (e) { console.warn('Budget pace in monthly report failed:', e); }
 
