@@ -112,11 +112,11 @@ const FUNNEL_EVENTS = [
   'clickto_detailspage_transparent',
   'select_unit_size_transparent',
   'transparent_booking',
-  'transparent_booking_start',
-  'transparent_booking_step_2',
-  'transparent_booking_step_3',
-  'transparent_booking_payment',
-  'transparent_booking_complete',
+  'bm_transparent_booking_start',
+  'bm_transparent_booking_step_1',
+  'bm_transparent_booking_step_2',
+  'bm_transparent_booking_step_3',
+  'bm_transparent_booking_step_4',
   'bm_transparent_booking_complete',
 ];
 
@@ -696,30 +696,47 @@ app.get('/api/ga4/funnel', async (req, res) => {
       };
     }
 
-    // Query all funnel events in one request with eventName + channel dimensions
-    const body = {
-      dateRanges,
-      metrics: [{ name: 'eventCount' }],
-      dimensions: [{ name: 'eventName' }, { name: 'sessionDefaultChannelGrouping' }],
-      dimensionFilter: {
-        andGroup: {
-          expressions: [
-            {
-              filter: {
-                fieldName: 'eventName',
-                inListFilter: { values: FUNNEL_EVENTS },
-              },
+    // Build GA4 date range for previous period
+    const prevDateRanges = [{
+      startDate: prevRange.start,
+      endDate: prevRange.end,
+    }];
+
+    // Shared dimension filter for funnel events (+ optional location)
+    const dimFilter = {
+      andGroup: {
+        expressions: [
+          {
+            filter: {
+              fieldName: 'eventName',
+              inListFilter: { values: FUNNEL_EVENTS },
             },
-            ...(locationFilter ? [locationFilter] : []),
-          ],
-        },
+          },
+          ...(locationFilter ? [locationFilter] : []),
+        ],
       },
     };
 
-    const report = await ga4RunReport(body);
-    const rows = parseGA4Rows(report);
+    // Query current + previous period in parallel
+    const [report, prevReport] = await Promise.all([
+      ga4RunReport({
+        dateRanges,
+        metrics: [{ name: 'eventCount' }],
+        dimensions: [{ name: 'eventName' }, { name: 'sessionDefaultChannelGrouping' }],
+        dimensionFilter: dimFilter,
+      }),
+      ga4RunReport({
+        dateRanges: prevDateRanges,
+        metrics: [{ name: 'eventCount' }],
+        dimensions: [{ name: 'eventName' }],
+        dimensionFilter: dimFilter,
+      }),
+    ]);
 
-    // Aggregate: event → channel → count
+    const rows = parseGA4Rows(report);
+    const prevRows = parseGA4Rows(prevReport);
+
+    // Aggregate current period: event → channel → count
     const eventData = {};
     FUNNEL_EVENTS.forEach((e) => { eventData[e] = { organic: 0, paid: 0, direct: 0 }; });
 
@@ -732,6 +749,15 @@ app.get('/api/ga4/funnel', async (req, res) => {
       eventData[event][bucket] += count;
     });
 
+    // Aggregate previous period totals
+    const prevTotals = {};
+    FUNNEL_EVENTS.forEach((e) => { prevTotals[e] = 0; });
+    prevRows.forEach((r) => {
+      const event = r.eventName;
+      const count = parseInt(r.eventCount, 10);
+      if (prevTotals[event] !== undefined) prevTotals[event] += count;
+    });
+
     const funnel = FUNNEL_EVENTS.map((event, i) => {
       const d = eventData[event];
       return {
@@ -741,6 +767,7 @@ app.get('/api/ga4/funnel', async (req, res) => {
         paid: d.paid,
         direct: d.direct,
         total: d.organic + d.paid + d.direct,
+        prev_total: prevTotals[event],
       };
     });
 
