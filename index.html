@@ -2802,9 +2802,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="chart-top">
                         <div class="chart-title" style="display:flex;align-items:center;gap:16px;">
                             <span>Rentals & Reservations <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Monthly count of bm_transparent_booking_complete (Rentals) and transparent_booking (Reservations)</div><div class="src-row"><b>Period:</b> Last 3 months rolling</div></span></span></span>
-                            <div style="display:flex;gap:14px;font-size:11px;font-weight:500;color:var(--text-dim);">
-                                <span><span style="display:inline-block;width:12px;height:3px;background:#1565C0;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>Rentals</span>
-                                <span><span style="display:inline-block;width:12px;height:3px;background:#e2b93b;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>Reservations</span>
+                            <div style="display:flex;gap:14px;font-size:11px;font-weight:500;color:var(--text-dim);align-items:center;">
+                                <span style="display:inline-flex;align-items:center;gap:4px;"><span style="display:inline-block;width:12px;height:3px;background:#1a3a5c;border-radius:2px;"></span>Rentals</span>
+                                <span style="display:inline-flex;align-items:center;gap:4px;"><span style="display:inline-block;width:12px;height:3px;background:#7CB342;border-radius:2px;"></span>Reservations</span>
                             </div>
                         </div>
                     </div>
@@ -3653,7 +3653,7 @@ document.addEventListener('DOMContentLoaded', () => {
             options: {
                 responsive: true, maintainAspectRatio: false,
                 layout: { padding: { top: 24 } },
-                plugins: { legend:lineLegend, tooltip:{...darkTooltip}, datalabels:{} },
+                plugins: { legend:{display:false}, tooltip:{...darkTooltip}, datalabels:{} },
                 scales: { x: lineScaleX, y: lineScaleY() },
                 interaction: { intersect:false, mode:'index' }
             }
