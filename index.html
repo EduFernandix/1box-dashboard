@@ -3209,7 +3209,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <!-- Step 2: Transparent Bookings -->
                             <div class="gads-funnel-step" style="grid-template-columns: 1fr 120px; padding: 0 8%;">
                                 <div class="gads-funnel-shape" style="margin: 0;">
-                                    <svg viewBox="0 0 400 72" preserveAspectRatio="none"><polygon points="10,0 390,0 370,72 30,72" fill="#c62828"/></svg>
+                                    <svg viewBox="0 0 400 72" preserveAspectRatio="none"><polygon points="10,0 390,0 370,72 30,72" fill="#7CB342"/></svg>
                                     <span class="gads-funnel-shape-label">Transparent<br>Bookings</span>
                                 </div>
                                 <div class="gads-funnel-info">
@@ -3349,7 +3349,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- Chart -->
                 <div class="metaads-panel metaads-chart-panel">
-                    <h3>Spend & Intent Events <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Monthly spend and intent event counts per campaign</div><div class="src-row"><b>Period:</b> Selected date range (dropdown)</div></span></span></h3>
+                    <h3>Spend & Intent Events <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Monthly spend and intent event counts (bookings)</div><div class="src-row"><b>Period:</b> Last 12 months (fixed, does not react to dropdown)</div></span></span></h3>
                     <div class="metaads-chart-container">
                         <canvas id="metaAdsChart"></canvas>
                     </div>
@@ -5803,6 +5803,7 @@ Generate insights covering ALL of these topics:
     let metaAdsChartInstance = null;
     let metaAdsCarouselIdx = 0;
     let _metaAdsFetching = false;
+    let _metaMonthlyChartData = null; // cached 12-month data for chart
 
     // Fetch data from Meta Graph API for a given date range
     async function fetchMetaAdsData(from, to) {
@@ -6019,8 +6020,8 @@ Generate insights covering ALL of these topics:
         document.getElementById('metaRateCB').textContent = rateCB;
         document.getElementById('metaRateBR').textContent = rateBR;
 
-        // Chart
-        initMetaAdsChart(d.daily);
+        // Chart — always last 12 months (does not react to dropdown)
+        fetchMetaAdsMonthlyChart();
 
         // Top Ads Carousel
         metaAdsCarouselIdx = 0;
@@ -6030,17 +6031,53 @@ Generate insights covering ALL of these topics:
         renderMetaCampaignsTable(d.campaigns, t);
     }
 
-    function initMetaAdsChart(daily) {
+    // Fetch last 12 months of Meta Ads data for the Spend & Intent Events chart
+    async function fetchMetaAdsMonthlyChart() {
+        if (_metaMonthlyChartData) {
+            initMetaAdsChart(_metaMonthlyChartData);
+            return;
+        }
+        const cfg = META_ADS_CONFIG;
+        const base = `https://graph.facebook.com/${cfg.apiVersion}`;
+        const now = new Date();
+        // 12 months ago, first day
+        const from = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+        // Yesterday (to avoid partial today)
+        const until = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+        const since = from.toISOString().slice(0,10);
+        const untilStr = until.toISOString().slice(0,10);
+        const tp = `&time_range={"since":"${since}","until":"${untilStr}"}`;
+        try {
+            const url = `${base}/${cfg.accountId}/insights?fields=spend,clicks,impressions,actions&time_increment=monthly&limit=50&access_token=${cfg.token}${tp}`;
+            const r = await fetch(url);
+            if (!r.ok) throw new Error('Meta monthly fetch: ' + r.status);
+            const json = await r.json();
+            const months = (json.data || []).map(d => {
+                let bk = 0;
+                (d.actions || []).forEach(a => {
+                    if (a.action_type === 'offsite_conversion.custom.' + cfg.bookingActionId) bk = parseInt(a.value) || 0;
+                });
+                return { date: d.date_start, spend: parseFloat(d.spend) || 0, bookings: bk };
+            });
+            _metaMonthlyChartData = months;
+            initMetaAdsChart(months);
+        } catch(e) {
+            console.warn('[META] Monthly chart fetch failed:', e);
+        }
+    }
+
+    function initMetaAdsChart(monthly) {
         const ctx = document.getElementById('metaAdsChart');
         if (!ctx) return;
         if (metaAdsChartInstance) { metaAdsChartInstance.destroy(); }
 
-        const labels = daily.map(d => {
+        const moNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const labels = monthly.map(d => {
             const dt = new Date(d.date + 'T00:00:00');
-            return dt.getDate() + '/' + (dt.getMonth()+1);
+            return moNames[dt.getMonth()] + ' ' + dt.getFullYear().toString().slice(2);
         });
-        const spendData = daily.map(d => d.spend);
-        const bookingsData = daily.map(d => d.bookings);
+        const spendData = monthly.map(d => d.spend);
+        const bookingsData = monthly.map(d => d.bookings);
 
         metaAdsChartInstance = new Chart(ctx, {
             type: 'line',
@@ -6075,7 +6112,7 @@ Generate insights covering ALL of these topics:
                         position: 'left',
                         title: { display:true, text:'Spend (\u20AC)', font:{size:11,weight:'600'}, color:'#7CB342' },
                         grid: gridStyle, border: noBorder,
-                        ticks: { ...dimTick, font:{size:10}, callback: v => '\u20AC' + v }
+                        ticks: { ...dimTick, font:{size:10}, callback: v => '\u20AC' + (v >= 1000 ? (v/1000).toFixed(1)+'K' : v) }
                     },
                     y1: {
                         position: 'right',
