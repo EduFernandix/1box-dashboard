@@ -2316,8 +2316,12 @@ document.addEventListener('DOMContentLoaded', () => {
         /* Middle Row: 3 panels */
         .metaads-middle {
             display: grid;
-            grid-template-columns: 1fr 1.4fr 1fr;
+            grid-template-columns: 0.7fr 1.3fr;
             gap: 16px;
+            padding: 0 24px;
+            margin-bottom: 20px;
+        }
+        .metaads-bottom-chart {
             padding: 0 24px;
             margin-bottom: 20px;
         }
@@ -2419,7 +2423,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .metaads-chart-container {
             flex: 1;
             position: relative;
-            min-height: 280px;
+            min-height: 220px;
         }
 
         /* Top Ads Carousel */
@@ -3321,7 +3325,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
 
-            <!-- Middle row: Funnel + Chart + Top Ads -->
+            <!-- Middle row: Funnel + Top Ads -->
             <div class="metaads-middle">
                 <!-- Funnel -->
                 <div class="metaads-panel metaads-funnel-panel">
@@ -3344,14 +3348,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="metaads-funnel-rates">
                         <div><span class="metaads-rate-label">Click → Booking</span><span class="metaads-rate-value" id="metaRateCB">—</span></div>
                         <div><span class="metaads-rate-label">Booking → Rental</span><span class="metaads-rate-value" id="metaRateBR">—</span></div>
-                    </div>
-                </div>
-
-                <!-- Chart -->
-                <div class="metaads-panel metaads-chart-panel">
-                    <h3>Spend & Intent Events <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Monthly spend and intent event counts (bookings)</div><div class="src-row"><b>Period:</b> Last 12 months (fixed, does not react to dropdown)</div></span></span></h3>
-                    <div class="metaads-chart-container">
-                        <canvas id="metaAdsChart"></canvas>
                     </div>
                 </div>
 
@@ -3390,6 +3386,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="metaads-carousel-idx" id="metaAdIdx">1 / 5</span>
                             <button class="metaads-carousel-btn" id="metaAdNext" onclick="metaAdsCarouselNav(1)">›</button>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spend & Intent Events Chart (full width) -->
+            <div class="metaads-bottom-chart">
+                <div class="metaads-panel metaads-chart-panel">
+                    <h3>Spend & Intent Events <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> Meta Ads API (Account: act_1915709141907756)</div><div class="src-row"><b>Calculation:</b> Monthly spend and intent event counts (bookings)</div><div class="src-row"><b>Period:</b> Last 12 months (fixed, does not react to dropdown)</div></span></span></h3>
+                    <div class="metaads-chart-container">
+                        <canvas id="metaAdsChart"></canvas>
                     </div>
                 </div>
             </div>
