@@ -34,12 +34,13 @@ const CLICKUP_SPACE_ID = '90150527892';
 
 // Location slugs for the funnel
 const LOCATION_SLUGS = [
-  'alkmaar', 'almere', 'amsterdam-schepenbergweg', 'boxtel', 'breda',
+  'alkmaar', 'almere', 'amsterdam-schepenbergweg', 'amsterdam-zuidoost',
+  'bergen-op-zoom', 'boxtel', 'breda',
   'den-bosch', 'den-haag', 'eindhoven-best', 'goes', 'groningen',
   'heerlen', 'helmond', 'hellevoetsluis', 'lelystad', 'nijmegen-wijchen',
   'rijswijk', 'roermond', 'rotterdam-centrum', 'rotterdam-zuid', 'schiedam',
   'sittard', 'tilburg', 'utrecht', 'venlo',
-  'alphen-aan-den-rijn', 'barendrecht', 'heerlen-heerlerbaan', 'helmond-kanaaldijk', 'boxtel'
+  'alphen-aan-den-rijn', 'barendrecht', 'heerlen-heerlerbaan', 'helmond-kanaaldijk'
 ];
 
 // Friendly location names (slug → display name)
@@ -47,6 +48,8 @@ const LOCATION_NAMES = {
   'alkmaar': 'Alkmaar',
   'almere': 'Almere',
   'amsterdam-schepenbergweg': 'Amsterdam Schepenbergweg',
+  'amsterdam-zuidoost': 'Amsterdam-Zuidoost',
+  'bergen-op-zoom': 'Bergen op Zoom',
   'boxtel': 'Boxtel',
   'breda': 'Breda',
   'den-bosch': 'Den Bosch',
@@ -72,6 +75,36 @@ const LOCATION_NAMES = {
   'barendrecht': 'Barendrecht',
   'heerlen-heerlerbaan': 'Heerlen Heerlerbaan',
   'helmond-kanaaldijk': 'Helmond Kanaaldijk',
+};
+
+// GA4 customEvent:locatie value → slug mapping
+// GA4 fires events with locatie param like "Breda", "Den Haag", "Amsterdam-Zuidoost" etc.
+// This maps those exact GA4 values to our slug keys.
+const LOCATIE_TO_SLUG = {};
+Object.entries(LOCATION_NAMES).forEach(([slug, name]) => {
+  LOCATIE_TO_SLUG[name] = slug;
+  // Also map without dashes for variants (e.g. "Nijmegen Wijchen" → "nijmegen-wijchen")
+  LOCATIE_TO_SLUG[name.replace(/-/g, ' ')] = slug;
+});
+// Explicit overrides for GA4 locatie values that differ from display names
+// GA4 returns values like "Amsterdam-Schepenbergweg" (with dash) while display names may not have dashes
+LOCATIE_TO_SLUG['Amsterdam Schepenbergweg'] = 'amsterdam-schepenbergweg';
+LOCATIE_TO_SLUG['Amsterdam-Schepenbergweg'] = 'amsterdam-schepenbergweg';
+LOCATIE_TO_SLUG['Heerlen Heerlerbaan'] = 'heerlen-heerlerbaan';
+LOCATIE_TO_SLUG['Heerlen-Heerlerbaan'] = 'heerlen-heerlerbaan';
+LOCATIE_TO_SLUG['Nijmegen Wijchen'] = 'nijmegen-wijchen';
+LOCATIE_TO_SLUG['Nijmegen-Wijchen'] = 'nijmegen-wijchen';
+LOCATIE_TO_SLUG['Amsterdam-Zuidoost'] = 'amsterdam-zuidoost';
+LOCATIE_TO_SLUG['Amsterdam Zuidoost'] = 'amsterdam-zuidoost';
+LOCATIE_TO_SLUG['Helmond Kanaaldijk'] = 'helmond-kanaaldijk';
+LOCATIE_TO_SLUG['Bergen op Zoom'] = 'bergen-op-zoom';
+
+// Display name → GA4 locatie value mapping (for cases where they differ)
+// Most are identical, but some GA4 values use dashes while display names don't
+const NAME_TO_GA4_LOCATIE = {
+  'Amsterdam Schepenbergweg': 'Amsterdam-Schepenbergweg',
+  'Heerlen Heerlerbaan': 'Heerlen-Heerlerbaan',
+  'Nijmegen Wijchen': 'Nijmegen-Wijchen',
 };
 
 const FUNNEL_EVENTS = [
@@ -624,14 +657,21 @@ app.get('/api/ga4/funnel', async (req, res) => {
     const actualEnd = end || daysAgoStr(1);
 
     // Build dimension filter for location if provided
+    // Use customEvent:locatie — the GA4 event parameter that contains location name
+    // for ALL funnel events (including booking events that fire on generic pages)
     let locationFilter = null;
     if (location) {
+      // Map display name to GA4 locatie value
+      // Frontend sends display name (e.g. "Amsterdam Schepenbergweg")
+      // GA4 may store it differently (e.g. "Amsterdam-Schepenbergweg")
+      const displayName = LOCATION_NAMES[location] || location;
+      const locatieName = NAME_TO_GA4_LOCATIE[displayName] || displayName;
       locationFilter = {
         filter: {
-          fieldName: 'pageLocation',
+          fieldName: 'customEvent:locatie',
           stringFilter: {
-            matchType: 'CONTAINS',
-            value: `/opslaglocaties/${location}`,
+            matchType: 'EXACT',
+            value: locatieName,
             caseSensitive: false,
           },
         },
@@ -723,12 +763,14 @@ app.get('/api/ga4/funnel/locations', async (req, res) => {
     const actualStart = start || daysAgoStr(30);
     const actualEnd = end || daysAgoStr(1);
 
-    // Query all three events with pagePath dimension — then filter per location in code
+    // Query all three events with customEvent:locatie dimension
+    // This correctly attributes booking events to locations even when they fire
+    // on generic pages like /bestellen/reservation-confirmed/
     const [startedReport, bookingReport, completedReport] = await Promise.all([
       ga4RunReport({
         dateRanges,
         metrics: [{ name: 'eventCount' }],
-        dimensions: [{ name: 'pagePath' }],
+        dimensions: [{ name: 'customEvent:locatie' }],
         dimensionFilter: {
           filter: { fieldName: 'eventName', stringFilter: { value: 'clickto_sizepage_transparent' } },
         },
@@ -737,7 +779,7 @@ app.get('/api/ga4/funnel/locations', async (req, res) => {
       ga4RunReport({
         dateRanges,
         metrics: [{ name: 'eventCount' }],
-        dimensions: [{ name: 'pagePath' }],
+        dimensions: [{ name: 'customEvent:locatie' }],
         dimensionFilter: {
           filter: { fieldName: 'eventName', stringFilter: { value: 'transparent_booking' } },
         },
@@ -746,7 +788,7 @@ app.get('/api/ga4/funnel/locations', async (req, res) => {
       ga4RunReport({
         dateRanges,
         metrics: [{ name: 'eventCount' }],
-        dimensions: [{ name: 'pagePath' }],
+        dimensions: [{ name: 'customEvent:locatie' }],
         dimensionFilter: {
           filter: { fieldName: 'eventName', stringFilter: { value: 'bm_transparent_booking_complete' } },
         },
@@ -754,23 +796,23 @@ app.get('/api/ga4/funnel/locations', async (req, res) => {
       }),
     ]);
 
-    function aggregateBySlug(rows, fieldName) {
+    // Aggregate by locatie name → slug using LOCATIE_TO_SLUG mapping
+    function aggregateByLocatie(rows) {
       const result = {};
       rows.forEach((r) => {
-        const pagePath = r.pagePath || '';
-        for (const slug of Object.keys(LOCATION_NAMES)) {
-          if (pagePath.includes(`/opslaglocaties/${slug}`)) {
-            result[slug] = (result[slug] || 0) + parseInt(r[fieldName], 10);
-            break;
-          }
+        const locatie = r['customEvent:locatie'] || '';
+        if (!locatie || locatie === '(not set)') return;
+        const slug = LOCATIE_TO_SLUG[locatie];
+        if (slug) {
+          result[slug] = (result[slug] || 0) + parseInt(r.eventCount, 10);
         }
       });
       return result;
     }
 
-    const startedBySlug = aggregateBySlug(parseGA4Rows(startedReport), 'eventCount');
-    const bookingBySlug = aggregateBySlug(parseGA4Rows(bookingReport), 'eventCount');
-    const completedBySlug = aggregateBySlug(parseGA4Rows(completedReport), 'eventCount');
+    const startedBySlug = aggregateByLocatie(parseGA4Rows(startedReport));
+    const bookingBySlug = aggregateByLocatie(parseGA4Rows(bookingReport));
+    const completedBySlug = aggregateByLocatie(parseGA4Rows(completedReport));
 
     const locations = Object.keys(LOCATION_NAMES).map((slug) => {
       const started = startedBySlug[slug] || 0;
