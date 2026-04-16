@@ -806,30 +806,57 @@ app.get('/api/ga4/funnel/locations', async (req, res) => {
 // ─── API: /api/ga4/monthly-report ────────────────────────────────────────────
 
 app.get('/api/ga4/monthly-report', async (req, res) => {
-  const cacheKey = 'ga4-monthly-report';
+  // Accept optional start_date & end_date query params to react to date dropdown
+  const qStart = req.query.start_date;
+  const qEnd = req.query.end_date;
+  const cacheKey = qStart && qEnd ? `ga4-monthly-report-${qStart}-${qEnd}` : 'ga4-monthly-report';
   const cached = cacheGet(cacheKey);
   if (cached) return res.json(cached);
 
   try {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1; // 1-based
-    const monthStr = String(month).padStart(2, '0');
-    const monthStart = `${year}-${monthStr}-01`;
-    const today = now.toISOString().split('T')[0];
+    let monthStart, today, monthName, year, month;
 
     const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'];
-    const monthName = MONTH_NAMES[month - 1];
 
-    // Previous month
-    const prevDate = new Date(year, month - 2, 1);
-    const prevYear = prevDate.getFullYear();
-    const prevMonth = prevDate.getMonth() + 1;
-    const prevMonthStr = String(prevMonth).padStart(2, '0');
-    const prevStart = `${prevYear}-${prevMonthStr}-01`;
-    // Last day of prev month
-    const prevEndDate = new Date(year, month - 1, 0);
+    if (qStart && qEnd) {
+      // Use dropdown-selected range
+      monthStart = qStart;
+      today = qEnd;
+      const startD = new Date(qStart + 'T00:00:00');
+      year = startD.getFullYear();
+      month = startD.getMonth() + 1;
+      const endD = new Date(qEnd + 'T00:00:00');
+      // Build a descriptive label from the date range
+      const diffDays = Math.round((endD - startD) / (1000 * 60 * 60 * 24));
+      if (diffDays <= 40) {
+        // Within roughly one month — use start month name
+        monthName = MONTH_NAMES[month - 1];
+      } else {
+        // Multi-month range — show range
+        monthName = MONTH_NAMES[startD.getMonth()] + ' – ' + MONTH_NAMES[endD.getMonth()];
+        year = endD.getFullYear();
+      }
+    } else {
+      // Default: current month
+      const now = new Date();
+      year = now.getFullYear();
+      month = now.getMonth() + 1;
+      const monthStr = String(month).padStart(2, '0');
+      monthStart = `${year}-${monthStr}-01`;
+      today = now.toISOString().split('T')[0];
+      monthName = MONTH_NAMES[month - 1];
+    }
+
+    // Compute previous period (same duration, immediately before)
+    const startD = new Date(monthStart + 'T00:00:00');
+    const endD = new Date(today + 'T00:00:00');
+    const rangeDays = Math.round((endD - startD) / (1000 * 60 * 60 * 24));
+    const prevEndDate = new Date(startD);
+    prevEndDate.setDate(prevEndDate.getDate() - 1);
+    const prevStartDate = new Date(prevEndDate);
+    prevStartDate.setDate(prevStartDate.getDate() - rangeDays + 1);
+    const prevStart = prevStartDate.toISOString().split('T')[0];
     const prevEnd = prevEndDate.toISOString().split('T')[0];
 
     const buildMonthData = async (s, e) => {

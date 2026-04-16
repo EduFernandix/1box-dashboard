@@ -4264,6 +4264,10 @@ Focus on: channel efficiency, source attribution for bookings vs completions, de
         const from30 = new Date(now);
         from30.setDate(from30.getDate() - 30);
         currentDateRange = { from: from30, to: now, preset: '30d' };
+        // Update hidden date inputs to match the computed range
+        document.getElementById('dateFrom').value = from30.toISOString().slice(0,10);
+        document.getElementById('dateTo').value = now.toISOString().slice(0,10);
+        document.getElementById('dateRangeLabel').textContent = 'Last 30 Days';
         // Load marketing data for default page
         if (!window._mktLoaded) {
             window._mktLoaded = true;
@@ -5093,16 +5097,40 @@ Generate insights covering ALL of these topics:
         const arrow = (delta >= 0) ? arrowUp : arrowDown;
         const sign = delta > 0 ? '+' : '';
         const label = suffix === 'pp'
-            ? `${sign}${delta.toFixed(1)}pp vs last month`
-            : `${sign}${Math.round((delta / (previous || 1)) * 100)}% vs last month`;
+            ? `${sign}${delta.toFixed(1)}pp vs prev period`
+            : `${sign}${Math.round((delta / (previous || 1)) * 100)}% vs prev period`;
         return `<span class="monthly-kpi-trend ${cls}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${arrow}</svg>${label}</span>`;
+    }
+
+    // Inner-only version (for use with innerHTML on persistent containers)
+    function trendBadgeInner(current, previous, suffix, invertColor) {
+        const delta = current - previous;
+        if (delta === 0 && current === 0) return '';
+        const isPositive = invertColor ? delta < 0 : delta > 0;
+        const cls = isPositive ? 'up' : 'down';
+        const arrowUp = '<polyline points="18 15 12 9 6 15"/>';
+        const arrowDown = '<polyline points="6 9 12 15 18 9"/>';
+        const arrow = (delta >= 0) ? arrowUp : arrowDown;
+        const sign = delta > 0 ? '+' : '';
+        const label = suffix === 'pp'
+            ? `${sign}${delta.toFixed(1)}pp vs prev period`
+            : `${sign}${Math.round((delta / (previous || 1)) * 100)}% vs prev period`;
+        // Return just inner content — the parent element keeps its ID
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${arrow}</svg>${label}`;
     }
 
     async function loadMonthlyReport() {
         const loader = document.getElementById('monthlyLoader');
         if (loader) loader.style.display = 'flex';
         try {
-            const res = await fetch(MONTHLY_API);
+            // Pass current date range from dropdown to the API
+            const sd = document.getElementById('dateFrom').value;
+            const ed = document.getElementById('dateTo').value;
+            let url = MONTHLY_API;
+            if (sd && ed) {
+                url += `?start_date=${sd}&end_date=${ed}`;
+            }
+            const res = await fetch(url);
             if (!res.ok) throw new Error('API error ' + res.status);
             const data = await res.json();
             if (data.error) throw new Error(data.error);
@@ -5118,27 +5146,27 @@ Generate insights covering ALL of these topics:
             document.getElementById('wkUserToLead').textContent = c.user_to_lead_rate + '%';
             document.getElementById('wkUserToLeadSub').textContent =
                 `${c.total_users.toLocaleString()} visitors → ${c.total_leads.toLocaleString()} leads`;
-            document.getElementById('wkUserToLeadTrend').outerHTML =
-                trendBadge(c.user_to_lead_rate, c.prev_user_to_lead_rate, 'pp', false);
+            const wkULTrend = document.getElementById('wkUserToLeadTrend');
+            if (wkULTrend) { wkULTrend.className = 'monthly-kpi-trend ' + ((c.user_to_lead_rate - c.prev_user_to_lead_rate) >= 0 ? 'up' : 'down'); wkULTrend.innerHTML = trendBadgeInner(c.user_to_lead_rate, c.prev_user_to_lead_rate, 'pp', false); }
 
             document.getElementById('wkLeadToCust').textContent = c.lead_to_customer_rate + '%';
             document.getElementById('wkLeadToCustSub').textContent =
                 `${c.total_leads.toLocaleString()} leads → ${c.total_customers.toLocaleString()} bookings`;
-            document.getElementById('wkLeadToCustTrend').outerHTML =
-                trendBadge(c.lead_to_customer_rate, c.prev_lead_to_customer_rate, 'pp', false);
+            const wkLCTrend = document.getElementById('wkLeadToCustTrend');
+            if (wkLCTrend) { wkLCTrend.className = 'monthly-kpi-trend ' + ((c.lead_to_customer_rate - c.prev_lead_to_customer_rate) >= 0 ? 'up' : 'down'); wkLCTrend.innerHTML = trendBadgeInner(c.lead_to_customer_rate, c.prev_lead_to_customer_rate, 'pp', false); }
 
             // Section 2: Volume KPIs
             document.getElementById('wkTotalLeads').textContent = c.total_leads.toLocaleString();
-            document.getElementById('wkTotalLeadsTrend').outerHTML =
-                trendBadge(c.total_leads, c.prev_total_leads, '%', false);
+            const wkTLTrend = document.getElementById('wkTotalLeadsTrend');
+            if (wkTLTrend) { wkTLTrend.className = 'monthly-kpi-trend ' + ((c.total_leads - c.prev_total_leads) >= 0 ? 'up' : 'down'); wkTLTrend.innerHTML = trendBadgeInner(c.total_leads, c.prev_total_leads, '%', false); }
 
             document.getElementById('wkTotalCustomers').textContent = c.total_customers.toLocaleString();
-            document.getElementById('wkTotalCustomersTrend').outerHTML =
-                trendBadge(c.total_customers, c.prev_total_customers, '%', false);
+            const wkTCTrend = document.getElementById('wkTotalCustomersTrend');
+            if (wkTCTrend) { wkTCTrend.className = 'monthly-kpi-trend ' + ((c.total_customers - c.prev_total_customers) >= 0 ? 'up' : 'down'); wkTCTrend.innerHTML = trendBadgeInner(c.total_customers, c.prev_total_customers, '%', false); }
 
             document.getElementById('wkTotalUsers').textContent = c.total_users.toLocaleString();
-            document.getElementById('wkTotalUsersTrend').outerHTML =
-                trendBadge(c.total_users, c.prev_total_users, '%', false);
+            const wkTUTrend = document.getElementById('wkTotalUsersTrend');
+            if (wkTUTrend) { wkTUTrend.className = 'monthly-kpi-trend ' + ((c.total_users - c.prev_total_users) >= 0 ? 'up' : 'down'); wkTUTrend.innerHTML = trendBadgeInner(c.total_users, c.prev_total_users, '%', false); }
 
             // Conversion Trend Chart (6 months)
             try {
@@ -5149,6 +5177,9 @@ Generate insights covering ALL of these topics:
                     const labels = t.map(d => d.month);
                     const ctx = document.getElementById('conversionTrendChart');
                     if (ctx) {
+                        // Destroy existing chart before re-creating
+                        const existingChart = Chart.getChart(ctx);
+                        if (existingChart) existingChart.destroy();
                         new Chart(ctx, {
                             type: 'line',
                             data: {
@@ -5218,26 +5249,26 @@ Generate insights covering ALL of these topics:
             const w = data.website_data;
             if (w) {
                 document.getElementById('wkUniqueVisitors').textContent = w.unique_visitors.toLocaleString();
-                document.getElementById('wkUniqueVisitorsTrend').outerHTML =
-                    trendBadge(w.unique_visitors, w.prev_unique_visitors, '%', false);
+                const uvT = document.getElementById('wkUniqueVisitorsTrend');
+                if (uvT) { uvT.className = 'monthly-kpi-trend ' + ((w.unique_visitors - w.prev_unique_visitors) >= 0 ? 'up' : 'down'); uvT.innerHTML = trendBadgeInner(w.unique_visitors, w.prev_unique_visitors, '%', false); }
 
                 document.getElementById('wkBounceRate').textContent = w.bounce_rate + '%';
-                document.getElementById('wkBounceRateTrend').outerHTML =
-                    trendBadge(w.bounce_rate, w.prev_bounce_rate, 'pp', true);
+                const brT = document.getElementById('wkBounceRateTrend');
+                if (brT) { const d = w.bounce_rate - w.prev_bounce_rate; brT.className = 'monthly-kpi-trend ' + (d <= 0 ? 'up' : 'down'); brT.innerHTML = trendBadgeInner(w.bounce_rate, w.prev_bounce_rate, 'pp', true); }
 
                 const durMin = Math.floor(w.avg_session_duration / 60);
                 const durSec = Math.round(w.avg_session_duration % 60);
                 document.getElementById('wkAvgDuration').textContent = `${durMin}m ${durSec}s`;
-                document.getElementById('wkAvgDurationTrend').outerHTML =
-                    trendBadge(w.avg_session_duration, w.prev_avg_session_duration, '%', false);
+                const adT = document.getElementById('wkAvgDurationTrend');
+                if (adT) { adT.className = 'monthly-kpi-trend ' + ((w.avg_session_duration - w.prev_avg_session_duration) >= 0 ? 'up' : 'down'); adT.innerHTML = trendBadgeInner(w.avg_session_duration, w.prev_avg_session_duration, '%', false); }
 
                 document.getElementById('wkPagesPerSession').textContent = w.pages_per_session.toFixed(1);
-                document.getElementById('wkPagesPerSessionTrend').outerHTML =
-                    trendBadge(w.pages_per_session, w.prev_pages_per_session, '%', false);
+                const ppT = document.getElementById('wkPagesPerSessionTrend');
+                if (ppT) { ppT.className = 'monthly-kpi-trend ' + ((w.pages_per_session - w.prev_pages_per_session) >= 0 ? 'up' : 'down'); ppT.innerHTML = trendBadgeInner(w.pages_per_session, w.prev_pages_per_session, '%', false); }
 
                 document.getElementById('wkEngagementRate').textContent = w.engagement_rate + '%';
-                document.getElementById('wkEngagementRateTrend').outerHTML =
-                    trendBadge(w.engagement_rate, w.prev_engagement_rate, 'pp', false);
+                const erT = document.getElementById('wkEngagementRateTrend');
+                if (erT) { erT.className = 'monthly-kpi-trend ' + ((w.engagement_rate - w.prev_engagement_rate) >= 0 ? 'up' : 'down'); erT.innerHTML = trendBadgeInner(w.engagement_rate, w.prev_engagement_rate, 'pp', false); }
             }
 
             // Footer
@@ -5391,6 +5422,7 @@ Generate insights covering ALL of these topics:
         if (!tbody) return;
 
         campaigns = campaigns || getCurrentCampaigns();
+        if (!campaigns || !Array.isArray(campaigns) || campaigns.length === 0) return;
 
         const sorted = [...campaigns].sort((a, b) => {
             const va = a[gadsSortCol], vb = b[gadsSortCol];
@@ -5522,7 +5554,7 @@ Generate insights covering ALL of these topics:
         if (nextBtn) nextBtn.addEventListener('click', () => { gadsPage++; renderGadsTable(); });
     });
 
-    function loadGadsWithDateRange(from, to) {
+    async function loadGadsWithDateRange(from, to) {
         gadsPage = 0;
         // Determine which preset key matches the date range
         const diffDays = Math.round((to - from) / (1000 * 60 * 60 * 24));
@@ -5532,6 +5564,22 @@ Generate insights covering ALL of these topics:
         else if (diffDays <= 30) key = '30d';
         else if (diffDays <= 92) key = '3m';
         else key = '6m';
+
+        // If data for this range isn't cached yet, fetch it on demand
+        if (!GADS_BY_RANGE[key] || !GADS_BY_RANGE[key].cost) {
+            try {
+                console.log('[GADS] Fetching data on demand for range:', key);
+                const [ov, cp] = await Promise.all([
+                    fetch(`${API_BASE}/api/gads/overview?range=${key}`).then(r => r.json()),
+                    fetch(`${API_BASE}/api/gads/campaigns?range=${key}`).then(r => r.json())
+                ]);
+                GADS_BY_RANGE[key] = ov;
+                GADS_CAMPAIGNS_BY_RANGE[key] = cp;
+            } catch (fetchErr) {
+                console.error('[GADS] On-demand fetch failed for range', key, fetchErr);
+                return;
+            }
+        }
 
         const d = GADS_BY_RANGE[key];
         if (!d) return;
