@@ -382,6 +382,7 @@ app.get('/api/ga4/overview', async (req, res) => {
       dowReport,
       bookSrcTransparentReport,
       bookSrcCompleteReport,
+      hourReport,
     ] = await Promise.all([
       // a) Rent count
       ga4RunReport({
@@ -494,6 +495,12 @@ app.get('/api/ga4/overview', async (req, res) => {
         dimensionFilter: {
           filter: { fieldName: 'eventName', stringFilter: { value: 'bm_transparent_booking_complete' } },
         },
+      }),
+      // o) Sessions by hour of day
+      ga4RunReport({
+        dateRanges,
+        metrics: [{ name: 'sessions' }],
+        dimensions: [{ name: 'hour' }],
       }),
     ]);
 
@@ -613,6 +620,19 @@ app.get('/api/ga4/overview', async (req, res) => {
       booking_complete: buildBookingBySource(bookCompRows),
     };
 
+    // Sessions by hour of day
+    const hourRows = parseGA4Rows(hourReport);
+    const sessions_by_hour = {};
+    for (let h = 0; h < 24; h++) {
+      sessions_by_hour[h.toString().padStart(2, '0')] = { sessions: 0 };
+    }
+    hourRows.forEach((r) => {
+      const hour = (r.hour || '').padStart(2, '0');
+      if (sessions_by_hour[hour] !== undefined) {
+        sessions_by_hour[hour].sessions = parseInt(r.sessions, 10);
+      }
+    });
+
     const result = {
       scorecards: { rent, reservations, total_cost: null },
       visits_by_device,
@@ -624,6 +644,7 @@ app.get('/api/ga4/overview', async (req, res) => {
       trend,
       top_cities,
       sessions_by_dow,
+      sessions_by_hour,
       source_by_event,
     };
 
