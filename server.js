@@ -1045,6 +1045,70 @@ app.get('/api/ga4/monthly-report', async (req, res) => {
   }
 });
 
+// ─── API: /api/ga4/paid-social ───────────────────────────────────────────────
+// Returns daily transparent_booking and bm_transparent_booking_complete counts
+// filtered by Paid Social channel — used by Meta Ads Booking Funnel
+
+app.get('/api/ga4/paid-social', async (req, res) => {
+  const start = req.query.start_date || req.query.start;
+  const end = req.query.end_date || req.query.end;
+  const cacheKey = `ga4-paid-social-${start}-${end}`;
+  const cached = cacheGet(cacheKey);
+  if (cached) return res.json(cached);
+
+  try {
+    const dateRanges = buildDateRange(start, end);
+    const paidSocialFilter = {
+      andGroup: {
+        expressions: [
+          {
+            filter: {
+              fieldName: 'sessionDefaultChannelGrouping',
+              stringFilter: { value: 'Paid Social' },
+            },
+          },
+          {
+            filter: {
+              fieldName: 'eventName',
+              inListFilter: { values: ['transparent_booking', 'bm_transparent_booking_complete'] },
+            },
+          },
+        ],
+      },
+    };
+
+    const report = await ga4RunReport({
+      dateRanges,
+      metrics: [{ name: 'eventCount' }],
+      dimensions: [{ name: 'date' }, { name: 'eventName' }],
+      dimensionFilter: paidSocialFilter,
+      limit: 10000,
+    });
+
+    const rows = parseGA4Rows(report);
+    const daily = {};
+    rows.forEach((r) => {
+      const date = r.date; // YYYYMMDD
+      const fmtDate = date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8);
+      if (!daily[fmtDate]) daily[fmtDate] = { tb: 0, bc: 0 };
+      const count = parseInt(r.eventCount, 10);
+      if (r.eventName === 'transparent_booking') daily[fmtDate].tb += count;
+      if (r.eventName === 'bm_transparent_booking_complete') daily[fmtDate].bc += count;
+    });
+
+    // Also compute totals
+    let totalTb = 0, totalBc = 0;
+    Object.values(daily).forEach((d) => { totalTb += d.tb; totalBc += d.bc; });
+
+    const result = { daily, totals: { transparent_booking: totalTb, booking_complete: totalBc } };
+    cacheSet(cacheKey, result);
+    res.json(result);
+  } catch (err) {
+    console.error('[/api/ga4/paid-social]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ─── API: /api/ga4/conversion-trend ──────────────────────────────────────────
 
 app.get('/api/ga4/conversion-trend', async (req, res) => {
