@@ -1804,26 +1804,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /* ===== CLICKUP PROJECTS PANEL (right side of Monthly page) ===== */
         #page-monthly.active { display: flex; flex-direction: row; overflow-x: auto; overflow-y: hidden; }
-        .clickup-panel { flex: 1; min-width: 380px; height: 100%; overflow-y: auto; padding: 24px 22px; background: var(--bg); }
+        .clickup-panel { flex: 1; min-width: 420px; height: 100%; overflow-y: auto; padding: 24px 22px; background: var(--bg); }
         .clickup-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
         .clickup-panel-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1.5px; color: var(--text-card); margin: 0; }
         .clickup-panel-header .cu-icon { width: 24px; height: 24px; }
         .clickup-panel-header .cu-badge { font-family: 'DM Sans', sans-serif; font-size: 11px; background: var(--green-700); color: #fff; border-radius: 10px; padding: 2px 9px; }
-        .cu-card { background: #fff; border-radius: 8px; border-left: 4px solid var(--green-700); box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 14px; }
-        .cu-card-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px 8px; border-bottom: 1px solid var(--border); }
-        .cu-card-title { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-card); flex: 1; margin-right: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* Tag group sections */
+        .cu-tag-group { margin-bottom: 18px; }
+        .cu-tag-header { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; }
+        .cu-tag-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .cu-tag-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #444; flex: 1; }
+        .cu-tag-count { font-family: 'DM Sans', sans-serif; font-size: 10px; color: #888; background: rgba(0,0,0,0.06); border-radius: 8px; padding: 1px 7px; }
+        /* Task cards */
+        .cu-card { background: #fff; border-radius: 8px; border-left: 4px solid var(--green-700); box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 10px; }
+        .cu-card-head { display: flex; align-items: center; padding: 10px 12px 8px; gap: 8px; cursor: pointer; user-select: none; transition: background 0.15s; }
+        .cu-card-head:hover { background: #fafafa; }
+        .cu-card-toggle { width: 16px; height: 16px; flex-shrink: 0; transition: transform 0.2s ease; color: #aaa; }
+        .cu-card-toggle.open { transform: rotate(90deg); color: #666; }
+        .cu-card-title { font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--text-card); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .cu-card-title a { color: inherit; text-decoration: none; }
         .cu-card-title a:hover { text-decoration: underline; }
+        .cu-card-meta { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
         .cu-status { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
         .cu-status.in-progress { background: #e0f0ff; color: #1090e0; }
         .cu-status.not-started { background: #f0f0f0; color: #87909e; }
         .cu-status.roadblock { background: #ffe5e5; color: #e5484d; }
         .cu-status.complete { background: #e0f5e0; color: #008844; }
-        .cu-card-body { padding: 0; }
-        .cu-task { display: flex; align-items: center; padding: 7px 14px; border-bottom: 1px solid rgba(0,0,0,0.04); gap: 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; transition: background 0.15s; }
+        .cu-subtask-count { font-family: 'DM Sans', sans-serif; font-size: 9px; color: #999; white-space: nowrap; }
+        /* Subtasks body (collapsible) */
+        .cu-card-body { padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+        .cu-card-body.open { max-height: 600px; }
+        .cu-task { display: flex; align-items: center; padding: 7px 14px 7px 34px; border-top: 1px solid rgba(0,0,0,0.04); gap: 8px; font-family: 'DM Sans', sans-serif; font-size: 11.5px; transition: background 0.15s; }
         .cu-task:hover { background: #fafafa; }
         .cu-task:last-child { border-bottom: none; }
-        .cu-task-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .cu-task-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
         .cu-task-dot.in-progress { background: #1090e0; }
         .cu-task-dot.not-started { background: #c0c4cc; }
         .cu-task-dot.roadblock { background: #e5484d; }
@@ -1831,16 +1845,19 @@ document.addEventListener('DOMContentLoaded', () => {
         .cu-task-name { flex: 1; color: #444; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .cu-task-name a { color: inherit; text-decoration: none; }
         .cu-task-name a:hover { text-decoration: underline; color: var(--green-700); }
-        .cu-task-due { font-size: 10px; color: #999; white-space: nowrap; min-width: 58px; text-align: right; }
+        .cu-task-due { font-size: 10px; color: #999; white-space: nowrap; min-width: 50px; text-align: right; }
         .cu-task-due.overdue { color: #e5484d; font-weight: 600; }
         .cu-task-due.soon { color: #f76808; }
         .cu-avatars { display: flex; flex-shrink: 0; }
-        .cu-avatar { width: 22px; height: 22px; border-radius: 50%; font-size: 8px; font-weight: 700; display: flex; align-items: center; justify-content: center; color: #fff; margin-left: -4px; border: 2px solid #fff; }
+        .cu-avatar { width: 20px; height: 20px; border-radius: 50%; font-size: 7.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; color: #fff; margin-left: -4px; border: 2px solid #fff; }
         .cu-avatar:first-child { margin-left: 0; }
-        .cu-card-foot { padding: 6px 14px; background: #fafafa; font-family: 'DM Sans', sans-serif; font-size: 10px; color: #999; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .cu-card-foot { padding: 5px 12px; background: #fafafa; font-family: 'DM Sans', sans-serif; font-size: 10px; color: #999; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .cu-card-foot .cu-owner { display: flex; align-items: center; gap: 5px; }
         .cu-more { font-size: 10px; color: #888; }
-        .cu-empty { padding: 12px 14px; font-family: 'DM Sans', sans-serif; font-size: 11px; color: #aaa; font-style: italic; }
+        .cu-empty { padding: 10px 14px 10px 34px; font-family: 'DM Sans', sans-serif; font-size: 11px; color: #aaa; font-style: italic; }
+        .cu-loading { text-align: center; padding: 40px 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: #999; }
+        .cu-loading .cu-spinner { width: 24px; height: 24px; border: 3px solid #e0e0e0; border-top-color: var(--green-700); border-radius: 50%; animation: cu-spin 0.8s linear infinite; margin: 0 auto 10px; }
+        @keyframes cu-spin { to { transform: rotate(360deg); } }
         @media print { .clickup-panel { display: none !important; } }
 
         /* ===== MONTHLY REPORT PAGE ===== */
@@ -4887,107 +4904,262 @@ Generate insights covering ALL of these topics:
     renderFacilityTable();
     // Data will be fetched from GA4 when switching to the funnel page via refreshFunnelData()
 
-    // ===== CLICKUP PROJECTS DATA & RENDER =====
-    const CLICKUP_DATA = [
-      {id:'86b9bym7g',n:'Update location images',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bym7g',tc:0,ch:[]},
-      {id:'86b9bypzv',n:'Monitor Huren.nl',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bypzv',tc:4,ch:[
-        {n:'Improve Huren.nl account',s:'not started',d:'2026-04-30',a:['FP','ZW'],u:'https://app.clickup.com/t/86b9byr13'},
-        {n:'Make decision about Huren.nl; continue or stop?',s:'not started',d:'2026-06-12',a:['ZW','EF'],u:'https://app.clickup.com/t/86b9byqgw'},
-        {n:'Monitor Huren.nl results after 3 months',s:'not started',d:'2026-06-12',a:['EF'],u:'https://app.clickup.com/t/86b9byqfa'},
-        {n:'Monitor Huren.nl results after 2 months',s:'not started',d:'2026-05-12',a:['EF'],u:'https://app.clickup.com/t/86b9byqad'}
-      ]},
-      {id:'86b9byr2c',n:'Create copy regarding the digital locks (3 versions)',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9byr2c',tc:0,ch:[]},
-      {id:'86b9bz9e1',n:'Create floor plan for all stores',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bz9e1',tc:2,ch:[
+    // ===== CLICKUP PROJECTS: TAG-BASED REAL-TIME RENDER =====
+    const CU_AVATAR_COLORS = {FP:'#81b1ff',ZW:'#5a9a2f',EF:'#d60800',GC:'#f76808',SW:'#aa2fff'};
+    const CU_INITIALS_MAP = {
+      'info@freelancefaya.nl':'FP','zwalters@voltaglobal.com':'ZW',
+      'efernandes@voltaglobal.com':'EF','gchaupis@voltaglobal.com':'GC','sigrid@1box.nl':'SW'
+    };
+
+    // 6 tag groups — order & colors defined by user
+    const CU_TAG_GROUPS = [
+      { label: 'New Website & Conversion Funnel', color: '#b388ff', tagMatch: 'new website & conversion funnel' },
+      { label: 'Performance Marketing (SEA / SEO / GEO)', color: '#5d4037', tagMatch: 'performance marketing (sea / seo / geo)' },
+      { label: 'Customer Retention & Activation', color: '#1090e0', tagMatch: 'customer retention & activation' },
+      { label: 'Google & Trustpilot Reviews', color: '#f5a623', tagMatch: 'google & trustpilot reviews' },
+      { label: 'Data & Marketing Reporting', color: '#5f7c8a', tagMatch: 'data & marketing reporting' },
+      { label: 'Brand Awareness', color: '#e040fb', tagMatch: 'brand awareness incl. social' }
+    ];
+
+    const CU_LIST_ID = '901415219099';
+    const CU_API_BASE = 'https://api.clickup.com/api/v2';
+
+    // Cache: auto-populated at build time (2026-04-16). Fallback if live fetch fails.
+    const CU_CACHE_RAW = [
+      {id:'86b9bz9e1',n:'Create floor plan for all stores',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bz9e1',tags:['new website & conversion funnel'],ch:[
         {n:'Create floor plan Breda',s:'roadblock',d:null,a:[],u:'https://app.clickup.com/t/86b9bz9qx'},
         {n:'Finalize floor plan Nijmegen',s:'roadblock',d:null,a:['FP'],u:'https://app.clickup.com/t/86b9bz9gd'}
       ]},
-      {id:'86b9byr7z',n:'Organic social media content',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9byr7z',tc:2,ch:[
-        {n:'Plan social posts for upcoming month',s:'not started',d:'2026-04-28',a:['FP'],u:'https://app.clickup.com/t/86b9byrjc'},
-        {n:'Create social media content aug-dec',s:'not started',d:'2026-07-31',a:['FP'],u:'https://app.clickup.com/t/86b9byr9j'}
+      {id:'86b9bym7g',n:'Update location images',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bym7g',tags:['new website & conversion funnel'],ch:[]},
+      {id:'86b9a3dfx',n:'Calcumate Fix',s:'not started',a:[],u:'https://app.clickup.com/t/86b9a3dfx',tags:['new website & conversion funnel'],ch:[
+        {n:'Create integration with Store365',s:'not started',d:null,a:[],u:'https://app.clickup.com/t/86b9c0jdr'}
       ]},
-      {id:'86b9bykgd',n:'SEO content',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bykgd',tc:5,ch:[
-        {n:'Work on optimizations in EEAT scan',s:'not started',d:'2026-04-19',a:['FP'],u:'https://app.clickup.com/t/86b9cvmut'},
-        {n:'Set up Reddit company account',s:'in progress',d:'2026-04-30',a:['GC'],u:'https://app.clickup.com/t/86b9cvkv3'},
+      {id:'86b9a3dar',n:'Web Chat Integration',s:'not started',a:[],u:'https://app.clickup.com/t/86b9a3dar',tags:['new website & conversion funnel'],ch:[]},
+      {id:'86b9bypd5',n:'New AI visuals for META campaigns',s:'not started',a:['FP','SW'],u:'https://app.clickup.com/t/86b9bypd5',tags:['performance marketing (sea / seo / geo)'],ch:[]},
+      {id:'86b9bykgd',n:'SEO content',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bykgd',tags:['performance marketing (sea / seo / geo)'],ch:[
+        {n:'Work on optimizations in EEAT scan',s:'not started',d:'1776564000000',a:['FP'],u:'https://app.clickup.com/t/86b9cvmut'},
+        {n:'Set up Reddit company account',s:'in progress',d:'1777514400000',a:['GC'],u:'https://app.clickup.com/t/86b9cvkv3'},
         {n:"Update 'Security' page",s:'roadblock',d:null,a:['FP'],u:'https://app.clickup.com/t/86b9c0kf4'},
-        {n:"Create English 'rent a trailer' page",s:'not started',d:'2026-04-30',a:['GC'],u:'https://app.clickup.com/t/86b9bykvq'},
-        {n:"Create English 'insurances' page",s:'not started',d:'2026-04-30',a:['GC'],u:'https://app.clickup.com/t/86b9bym28'}
+        {n:"Create English 'rent a trailer' page",s:'not started',d:'1777428000000',a:['GC'],u:'https://app.clickup.com/t/86b9bykvq'},
+        {n:"Create English 'insurances' page",s:'not started',d:'1777428000000',a:['GC'],u:'https://app.clickup.com/t/86b9bym28'}
       ]},
-      {id:'86b9bymad',n:'Review Project',s:'in progress',a:['GC'],u:'https://app.clickup.com/t/86b9bymad',tc:3,ch:[
-        {n:'Review management Trustpilot & Google',s:'in progress',d:'2026-04-12',a:['FP'],u:'https://app.clickup.com/t/86b9bz6dh'},
-        {n:'Monthly Reporting',s:'in progress',d:'2026-05-01',a:['GC'],u:'https://app.clickup.com/t/86b9bynct'},
-        {n:'Weekly monitoring',s:'not started',d:'2026-04-20',a:['GC'],u:'https://app.clickup.com/t/86b9bynak'}
-      ]},
-      {id:'86b9bypd5',n:'New AI visuals for META campaigns',s:'not started',a:['FP','SW'],u:'https://app.clickup.com/t/86b9bypd5',tc:0,ch:[]},
-      {id:'86b9byjjp',n:'Content for social advertisements (meta)',s:'not started',a:['FP'],u:'https://app.clickup.com/t/86b9byjjp',tc:3,ch:[
+      {id:'86b9byjjp',n:'Content for social advertisements (meta)',s:'not started',a:['FP'],u:'https://app.clickup.com/t/86b9byjjp',tags:['performance marketing (sea / seo / geo)'],ch:[
         {n:'Create briefing for new lifestyle images',s:'not started',d:null,a:['FP'],u:'https://app.clickup.com/t/86b9e7brq'},
         {n:'Monitor mid-funnel campaigns (by Follo)',s:'not started',d:null,a:['FP'],u:'https://app.clickup.com/t/86b9cxcf8'},
-        {n:'Create new templates for Meta ads',s:'not started',d:'2026-04-23',a:['SW','FP'],u:'https://app.clickup.com/t/86b9cw0df'}
+        {n:'Create new templates for Meta ads',s:'not started',d:'1776909600000',a:['SW','FP'],u:'https://app.clickup.com/t/86b9cw0df'}
       ]},
-      {id:'86b9a350z',n:'Brand images AI',s:'not started',a:['SW'],u:'https://app.clickup.com/t/86b9a350z',tc:0,ch:[]},
-      {id:'86b9a3dar',n:'Web Chat Integration',s:'not started',a:[],u:'https://app.clickup.com/t/86b9a3dar',tc:0,ch:[]},
-      {id:'86b9a3dfx',n:'Calcumate Fix',s:'not started',a:[],u:'https://app.clickup.com/t/86b9a3dfx',tc:1,ch:[
-        {n:'Create integration with Store365',s:'not started',d:null,a:[],u:'https://app.clickup.com/t/86b9c0jdr'}
-      ]}
+      {id:'86b9byr2c',n:'Create copy regarding the digital locks (3 versions)',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9byr2c',tags:['customer retention & activation'],ch:[]},
+      {id:'86b9bymad',n:'Review Project',s:'in progress',a:['GC'],u:'https://app.clickup.com/t/86b9bymad',tags:['data & marketing reporting'],ch:[
+        {n:'Review management Trustpilot & Google',s:'in progress',d:'1775959200000',a:['FP'],u:'https://app.clickup.com/t/86b9bz6dh'},
+        {n:'Monthly Reporting',s:'in progress',d:'1777600800000',a:['GC'],u:'https://app.clickup.com/t/86b9bynct'},
+        {n:'Weekly monitoring',s:'not started',d:'1776476400000',a:['GC'],u:'https://app.clickup.com/t/86b9bynak'}
+      ]},
+      {id:'86b9bypzv',n:'Monitor Huren.nl',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bypzv',tags:['data & marketing reporting'],ch:[
+        {n:'Improve Huren.nl account',s:'not started',d:'1777428000000',a:['FP','ZW'],u:'https://app.clickup.com/t/86b9byr13'},
+        {n:'Make decision about Huren.nl; continue or stop?',s:'not started',d:'1781128800000',a:['ZW','EF'],u:'https://app.clickup.com/t/86b9byqgw'},
+        {n:'Monitor Huren.nl results after 3 months',s:'not started',d:'1781128800000',a:['EF'],u:'https://app.clickup.com/t/86b9byqfa'},
+        {n:'Monitor Huren.nl results after 2 months',s:'not started',d:'1778536800000',a:['EF'],u:'https://app.clickup.com/t/86b9byqad'}
+      ]},
+      {id:'86b9byr7z',n:'Organic social media content',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9byr7z',tags:['brand awareness incl. social'],ch:[
+        {n:'Plan social posts for upcoming month',s:'not started',d:'1777341600000',a:['FP'],u:'https://app.clickup.com/t/86b9byrjc'},
+        {n:'Create social media content aug-dec',s:'not started',d:'1785463200000',a:['FP'],u:'https://app.clickup.com/t/86b9byr9j'}
+      ]},
+      {id:'86b9a350z',n:'Brand images AI',s:'not started',a:['SW'],u:'https://app.clickup.com/t/86b9a350z',tags:['brand awareness incl. social'],ch:[]}
     ];
 
-    const CU_AVATAR_COLORS = {FP:'#81b1ff',ZW:'#5a9a2f',EF:'#d60800',GC:'#f76808',SW:'#aa2fff'};
-
-    function renderClickupPanel() {
-        const container = document.getElementById('clickupCards');
-        if (!container) return;
-        const now = new Date();
-        let html = '';
-        CLICKUP_DATA.forEach(fa => {
-            const sc = fa.s.replace(/\s+/g, '-');
-            // card header
-            html += `<div class="cu-card">`;
-            html += `<div class="cu-card-head">`;
-            html += `<div class="cu-card-title"><a href="${fa.u}" target="_blank" title="${fa.n}">${fa.n}</a></div>`;
-            html += `<span class="cu-status ${sc}">${fa.s}</span>`;
-            html += `</div>`;
-            // card body - subtasks
-            html += `<div class="cu-card-body">`;
-            if (fa.ch.length === 0) {
-                html += `<div class="cu-empty">No subtasks</div>`;
-            } else {
-                fa.ch.slice(0, 5).forEach(t => {
-                    const tsc = t.s.replace(/\s+/g, '-');
-                    // due date formatting
-                    let dueHtml = '';
-                    if (t.d) {
-                        const dd = new Date(t.d + 'T00:00:00');
-                        const diff = Math.floor((dd - now) / 86400000);
-                        const label = dd.toLocaleDateString('en-GB', {day:'numeric',month:'short'});
-                        let cls = '';
-                        if (diff < 0) cls = 'overdue';
-                        else if (diff <= 7) cls = 'soon';
-                        dueHtml = `<span class="cu-task-due ${cls}">${diff < 0 ? '⚠ ' : ''}${label}</span>`;
-                    }
-                    // avatars
-                    let avHtml = '';
-                    if (t.a.length) {
-                        avHtml = '<span class="cu-avatars">' + t.a.map(i => `<span class="cu-avatar" style="background:${CU_AVATAR_COLORS[i]||'#888'}" title="${i}">${i}</span>`).join('') + '</span>';
-                    }
-                    html += `<div class="cu-task">`;
-                    html += `<span class="cu-task-dot ${tsc}"></span>`;
-                    html += `<span class="cu-task-name"><a href="${t.u}" target="_blank" title="${t.n}">${t.n}</a></span>`;
-                    html += dueHtml;
-                    html += avHtml;
-                    html += `</div>`;
-                });
-            }
-            html += `</div>`;
-            // card footer
-            const ownerAv = fa.a.length ? fa.a.map(i => `<span class="cu-avatar" style="background:${CU_AVATAR_COLORS[i]||'#888'}" title="${i}">${i}</span>`).join('') : '<span style="color:#bbb">Unassigned</span>';
-            const moreLabel = fa.tc > 5 ? `+${fa.tc - 5} more` : `${fa.tc} task${fa.tc !== 1 ? 's' : ''}`;
-            html += `<div class="cu-card-foot">`;
-            html += `<span class="cu-owner">${ownerAv}</span>`;
-            html += `<span class="cu-more">${moreLabel}</span>`;
-            html += `</div></div>`;
-        });
-        container.innerHTML = html;
+    function cuParseCacheToParents(cache) {
+      return cache.map(t => ({
+        id: t.id, name: t.n, status: t.s, assignees: t.a, url: t.u,
+        tags: t.tags, children: (t.ch || []).map(c => ({
+          id: c.id || '', name: c.n, status: c.s, assignees: c.a || [],
+          url: c.u, dueDate: c.d
+        }))
+      }));
     }
-    renderClickupPanel();
+
+    let CU_CACHED_TASKS = cuParseCacheToParents(CU_CACHE_RAW);
+
+    function cuParseInitials(assignees) {
+      return (assignees || []).map(a => CU_INITIALS_MAP[a.email] || a.initials || '??');
+    }
+
+    function cuFormatDue(ts) {
+      if (!ts) return '';
+      const dd = new Date(parseInt(ts));
+      const now = new Date();
+      const diff = Math.floor((dd - now) / 86400000);
+      const label = dd.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+      let cls = '';
+      if (diff < 0) cls = 'overdue';
+      else if (diff <= 7) cls = 'soon';
+      return `<span class="cu-task-due ${cls}">${diff < 0 ? '\u26A0 ' : ''}${label}</span>`;
+    }
+
+    function cuAvatarsHtml(initials) {
+      if (!initials.length) return '';
+      return '<span class="cu-avatars">' + initials.map(i =>
+        `<span class="cu-avatar" style="background:${CU_AVATAR_COLORS[i]||'#888'}" title="${i}">${i}</span>`
+      ).join('') + '</span>';
+    }
+
+    function cuTransformApiData(apiTasks) {
+      // Separate parents and subtasks
+      const parents = [];
+      const childMap = {};
+      apiTasks.forEach(t => {
+        const item = {
+          id: t.id, name: t.name,
+          status: t.status?.status || 'not started',
+          statusColor: t.status?.color || '#87909e',
+          assignees: cuParseInitials(t.assignees),
+          url: t.url,
+          dueDate: t.due_date,
+          tags: (t.tags || []).map(tg => tg.name.toLowerCase()),
+          parent: t.parent
+        };
+        if (t.parent) {
+          if (!childMap[t.parent]) childMap[t.parent] = [];
+          childMap[t.parent].push(item);
+        } else {
+          parents.push(item);
+        }
+      });
+      // Attach children to parents
+      parents.forEach(p => { p.children = childMap[p.id] || []; });
+      return parents;
+    }
+
+    function cuGroupByTag(parentTasks) {
+      const groups = CU_TAG_GROUPS.map(g => ({ ...g, tasks: [] }));
+      parentTasks.forEach(p => {
+        let placed = false;
+        for (const g of groups) {
+          if (p.tags.includes(g.tagMatch)) {
+            g.tasks.push(p);
+            placed = true;
+            break;
+          }
+        }
+        // If no tag match, try partial match or put in first matching group
+        if (!placed) {
+          // Check for partial matches
+          for (const g of groups) {
+            const words = g.tagMatch.split(/\s+/);
+            if (words.some(w => p.tags.some(t => t.includes(w)))) {
+              g.tasks.push(p);
+              placed = true;
+              break;
+            }
+          }
+        }
+      });
+      return groups;
+    }
+
+    const CU_CHEVRON_SVG = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 4 10 8 6 12"/></svg>`;
+
+    function renderClickupPanel(parentTasks) {
+      const container = document.getElementById('clickupCards');
+      if (!container) return;
+      const groups = cuGroupByTag(parentTasks);
+      const totalTasks = groups.reduce((s, g) => s + g.tasks.length, 0);
+      const badge = document.getElementById('cuFocusCount');
+      if (badge) badge.textContent = `${totalTasks} projects`;
+
+      let html = '';
+      groups.forEach((g, gi) => {
+        if (g.tasks.length === 0) return;
+        html += `<div class="cu-tag-group">`;
+        html += `<div class="cu-tag-header" style="background:${g.color}15;">`;
+        html += `<span class="cu-tag-dot" style="background:${g.color}"></span>`;
+        html += `<span class="cu-tag-label">${g.label}</span>`;
+        html += `<span class="cu-tag-count">${g.tasks.length}</span>`;
+        html += `</div>`;
+
+        g.tasks.forEach((task, ti) => {
+          const sc = task.status.replace(/\s+/g, '-');
+          const cardId = `cu-card-${gi}-${ti}`;
+          const hasChildren = task.children.length > 0;
+          const chevronCls = hasChildren ? 'cu-card-toggle' : 'cu-card-toggle';
+          const chevronStyle = hasChildren ? '' : 'visibility:hidden;';
+
+          html += `<div class="cu-card" style="border-left-color:${g.color};">`;
+          // Card header — click to toggle subtasks
+          html += `<div class="cu-card-head" onclick="cuToggle('${cardId}')">`;
+          html += `<span class="${chevronCls}" id="${cardId}-chevron" style="${chevronStyle}">${CU_CHEVRON_SVG}</span>`;
+          html += `<div class="cu-card-title"><a href="${task.url}" target="_blank" title="${task.name}" onclick="event.stopPropagation()">${task.name}</a></div>`;
+          html += `<div class="cu-card-meta">`;
+          if (hasChildren) html += `<span class="cu-subtask-count">${task.children.length} subtask${task.children.length > 1 ? 's' : ''}</span>`;
+          html += `<span class="cu-status ${sc}">${task.status}</span>`;
+          html += cuAvatarsHtml(task.assignees);
+          html += `</div></div>`;
+
+          // Collapsible subtasks body
+          html += `<div class="cu-card-body" id="${cardId}-body">`;
+          if (hasChildren) {
+            task.children.slice(0, 5).forEach(ch => {
+              const chSc = ch.status.replace(/\s+/g, '-');
+              html += `<div class="cu-task">`;
+              html += `<span class="cu-task-dot ${chSc}"></span>`;
+              html += `<span class="cu-task-name"><a href="${ch.url}" target="_blank" title="${ch.name}">${ch.name}</a></span>`;
+              html += cuFormatDue(ch.dueDate);
+              html += cuAvatarsHtml(ch.assignees);
+              html += `</div>`;
+            });
+            if (task.children.length > 5) {
+              html += `<div class="cu-empty">+${task.children.length - 5} more subtasks</div>`;
+            }
+          } else {
+            html += `<div class="cu-empty">No subtasks</div>`;
+          }
+          html += `</div>`; // end body
+          html += `</div>`; // end card
+        });
+        html += `</div>`; // end tag group
+      });
+      container.innerHTML = html;
+    }
+
+    function cuToggle(cardId) {
+      const body = document.getElementById(cardId + '-body');
+      const chevron = document.getElementById(cardId + '-chevron');
+      if (!body) return;
+      const isOpen = body.classList.toggle('open');
+      if (chevron) chevron.classList.toggle('open', isOpen);
+    }
+
+    // ===== CLICKUP REAL-TIME FETCH =====
+    // Tries live ClickUp API first (requires CU_TOKEN set below).
+    // Falls back to embedded cache if CORS / auth blocks the call.
+    const CU_TOKEN = ''; // Paste a ClickUp personal token (pk_...) here for real-time
+
+    async function cuFetchTasks() {
+      const container = document.getElementById('clickupCards');
+      // If no token configured, skip live fetch and use cache directly
+      if (!CU_TOKEN) {
+        renderClickupPanel(CU_CACHED_TASKS);
+        return;
+      }
+      if (container) container.innerHTML = '<div class="cu-loading"><div class="cu-spinner"></div>Loading ClickUp tasks...</div>';
+      try {
+        const apiUrl = `${CU_API_BASE}/list/${CU_LIST_ID}/task?subtasks=true&include_closed=true&order_by=created`;
+        const _f = window._origFetchCU || window.fetch;
+        const res = await _f(apiUrl, {
+          headers: { 'Authorization': CU_TOKEN, 'Content-Type': 'application/json' }
+        });
+        if (!res.ok) throw new Error('API ' + res.status);
+        const data = await res.json();
+        const parents = cuTransformApiData(data.tasks || []);
+        CU_CACHED_TASKS = parents;
+        renderClickupPanel(parents);
+      } catch (e) {
+        console.warn('ClickUp live fetch failed, using cache:', e.message);
+        renderClickupPanel(CU_CACHED_TASKS);
+      }
+    }
+
+    // Load tasks on page init
+    cuFetchTasks();
 
     // ===== MONTHLY REPORT: GA4 INTEGRATION =====
     const MONTHLY_API = '/api/ga4/monthly-report';
