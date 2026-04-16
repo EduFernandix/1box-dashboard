@@ -181,9 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
             margin-left: 68px;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            height: 100vh;
+            min-height: 0;
             min-width: 0;
             max-width: calc(100vw - 68px);
+            overflow: hidden;
         }
 
         /* ===== HEADER ===== */
@@ -1800,14 +1802,57 @@ document.addEventListener('DOMContentLoaded', () => {
             .mkt-events-row { grid-template-columns: 1fr; }
         }
 
+        /* ===== CLICKUP PROJECTS PANEL (right side of Monthly page) ===== */
+        #page-monthly.active { display: flex; flex-direction: row; overflow: hidden; }
+        .clickup-panel { flex: 1; min-width: 0; height: 100%; overflow-y: auto; padding: 24px 22px; background: var(--bg); }
+        .clickup-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .clickup-panel-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1.5px; color: var(--text-card); margin: 0; }
+        .clickup-panel-header .cu-icon { width: 24px; height: 24px; }
+        .clickup-panel-header .cu-badge { font-family: 'DM Sans', sans-serif; font-size: 11px; background: var(--green-700); color: #fff; border-radius: 10px; padding: 2px 9px; }
+        .cu-card { background: #fff; border-radius: 8px; border-left: 4px solid var(--green-700); box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 14px; }
+        .cu-card-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px 8px; border-bottom: 1px solid var(--border); }
+        .cu-card-title { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-card); flex: 1; margin-right: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .cu-card-title a { color: inherit; text-decoration: none; }
+        .cu-card-title a:hover { text-decoration: underline; }
+        .cu-status { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+        .cu-status.in-progress { background: #e0f0ff; color: #1090e0; }
+        .cu-status.not-started { background: #f0f0f0; color: #87909e; }
+        .cu-status.roadblock { background: #ffe5e5; color: #e5484d; }
+        .cu-status.complete { background: #e0f5e0; color: #008844; }
+        .cu-card-body { padding: 0; }
+        .cu-task { display: flex; align-items: center; padding: 7px 14px; border-bottom: 1px solid rgba(0,0,0,0.04); gap: 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; transition: background 0.15s; }
+        .cu-task:hover { background: #fafafa; }
+        .cu-task:last-child { border-bottom: none; }
+        .cu-task-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .cu-task-dot.in-progress { background: #1090e0; }
+        .cu-task-dot.not-started { background: #c0c4cc; }
+        .cu-task-dot.roadblock { background: #e5484d; }
+        .cu-task-dot.complete { background: #008844; }
+        .cu-task-name { flex: 1; color: #444; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cu-task-name a { color: inherit; text-decoration: none; }
+        .cu-task-name a:hover { text-decoration: underline; color: var(--green-700); }
+        .cu-task-due { font-size: 10px; color: #999; white-space: nowrap; min-width: 58px; text-align: right; }
+        .cu-task-due.overdue { color: #e5484d; font-weight: 600; }
+        .cu-task-due.soon { color: #f76808; }
+        .cu-avatars { display: flex; flex-shrink: 0; }
+        .cu-avatar { width: 22px; height: 22px; border-radius: 50%; font-size: 8px; font-weight: 700; display: flex; align-items: center; justify-content: center; color: #fff; margin-left: -4px; border: 2px solid #fff; }
+        .cu-avatar:first-child { margin-left: 0; }
+        .cu-card-foot { padding: 6px 14px; background: #fafafa; font-family: 'DM Sans', sans-serif; font-size: 10px; color: #999; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .cu-card-foot .cu-owner { display: flex; align-items: center; gap: 5px; }
+        .cu-more { font-size: 10px; color: #888; }
+        .cu-empty { padding: 12px 14px; font-family: 'DM Sans', sans-serif; font-size: 11px; color: #aaa; font-style: italic; }
+        @media print { .clickup-panel { display: none !important; } }
+
         /* ===== MONTHLY REPORT PAGE ===== */
         .monthly-report-wrapper {
-            flex: 1;
+            flex: 0 0 auto;
+            width: calc(210mm + 56px);
             padding: 20px 28px;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            overflow: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
             background: var(--bg);
             position: relative;
         }
@@ -3063,6 +3108,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             </div>
         </div>
+
+        <!-- ===== CLICKUP PROJECTS PANEL (right side) ===== -->
+        <div class="clickup-panel" id="clickupPanel">
+            <div class="clickup-panel-header">
+                <svg class="cu-icon" viewBox="0 0 24 24" fill="none"><path d="M3.59 13.82l2.72-2.2a7.2 7.2 0 005.69 2.8 7.2 7.2 0 005.69-2.8l2.72 2.2A10.78 10.78 0 0112 18.02a10.78 10.78 0 01-8.41-4.2z" fill="#7B68EE"/><path d="M3.59 9.31L6.31 7.1A7.2 7.2 0 0112 4.31a7.2 7.2 0 015.69 2.8l2.72-2.2A10.78 10.78 0 0012 .62 10.78 10.78 0 003.59 9.3z" fill="#49CCF9"/></svg>
+                <h2>PROJECTS</h2>
+                <span class="cu-badge" id="cuFocusCount">12 focus areas</span>
+            </div>
+            <div id="clickupCards"></div>
+        </div>
+
     </div><!-- /page-monthly -->
 
     <!-- ===== PAGE: GOOGLE ADS OVERVIEW ===== -->
@@ -4830,6 +4886,108 @@ Generate insights covering ALL of these topics:
     initFacilitySort();
     renderFacilityTable();
     // Data will be fetched from GA4 when switching to the funnel page via refreshFunnelData()
+
+    // ===== CLICKUP PROJECTS DATA & RENDER =====
+    const CLICKUP_DATA = [
+      {id:'86b9bym7g',n:'Update location images',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bym7g',tc:0,ch:[]},
+      {id:'86b9bypzv',n:'Monitor Huren.nl',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bypzv',tc:4,ch:[
+        {n:'Improve Huren.nl account',s:'not started',d:'2026-04-30',a:['FP','ZW'],u:'https://app.clickup.com/t/86b9byr13'},
+        {n:'Make decision about Huren.nl; continue or stop?',s:'not started',d:'2026-06-12',a:['ZW','EF'],u:'https://app.clickup.com/t/86b9byqgw'},
+        {n:'Monitor Huren.nl results after 3 months',s:'not started',d:'2026-06-12',a:['EF'],u:'https://app.clickup.com/t/86b9byqfa'},
+        {n:'Monitor Huren.nl results after 2 months',s:'not started',d:'2026-05-12',a:['EF'],u:'https://app.clickup.com/t/86b9byqad'}
+      ]},
+      {id:'86b9byr2c',n:'Create copy regarding the digital locks (3 versions)',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9byr2c',tc:0,ch:[]},
+      {id:'86b9bz9e1',n:'Create floor plan for all stores',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bz9e1',tc:2,ch:[
+        {n:'Create floor plan Breda',s:'roadblock',d:null,a:[],u:'https://app.clickup.com/t/86b9bz9qx'},
+        {n:'Finalize floor plan Nijmegen',s:'roadblock',d:null,a:['FP'],u:'https://app.clickup.com/t/86b9bz9gd'}
+      ]},
+      {id:'86b9byr7z',n:'Organic social media content',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9byr7z',tc:2,ch:[
+        {n:'Plan social posts for upcoming month',s:'not started',d:'2026-04-28',a:['FP'],u:'https://app.clickup.com/t/86b9byrjc'},
+        {n:'Create social media content aug-dec',s:'not started',d:'2026-07-31',a:['FP'],u:'https://app.clickup.com/t/86b9byr9j'}
+      ]},
+      {id:'86b9bykgd',n:'SEO content',s:'in progress',a:['FP'],u:'https://app.clickup.com/t/86b9bykgd',tc:5,ch:[
+        {n:'Work on optimizations in EEAT scan',s:'not started',d:'2026-04-19',a:['FP'],u:'https://app.clickup.com/t/86b9cvmut'},
+        {n:'Set up Reddit company account',s:'in progress',d:'2026-04-30',a:['GC'],u:'https://app.clickup.com/t/86b9cvkv3'},
+        {n:"Update 'Security' page",s:'roadblock',d:null,a:['FP'],u:'https://app.clickup.com/t/86b9c0kf4'},
+        {n:"Create English 'rent a trailer' page",s:'not started',d:'2026-04-30',a:['GC'],u:'https://app.clickup.com/t/86b9bykvq'},
+        {n:"Create English 'insurances' page",s:'not started',d:'2026-04-30',a:['GC'],u:'https://app.clickup.com/t/86b9bym28'}
+      ]},
+      {id:'86b9bymad',n:'Review Project',s:'in progress',a:['GC'],u:'https://app.clickup.com/t/86b9bymad',tc:3,ch:[
+        {n:'Review management Trustpilot & Google',s:'in progress',d:'2026-04-12',a:['FP'],u:'https://app.clickup.com/t/86b9bz6dh'},
+        {n:'Monthly Reporting',s:'in progress',d:'2026-05-01',a:['GC'],u:'https://app.clickup.com/t/86b9bynct'},
+        {n:'Weekly monitoring',s:'not started',d:'2026-04-20',a:['GC'],u:'https://app.clickup.com/t/86b9bynak'}
+      ]},
+      {id:'86b9bypd5',n:'New AI visuals for META campaigns',s:'not started',a:['FP','SW'],u:'https://app.clickup.com/t/86b9bypd5',tc:0,ch:[]},
+      {id:'86b9byjjp',n:'Content for social advertisements (meta)',s:'not started',a:['FP'],u:'https://app.clickup.com/t/86b9byjjp',tc:3,ch:[
+        {n:'Create briefing for new lifestyle images',s:'not started',d:null,a:['FP'],u:'https://app.clickup.com/t/86b9e7brq'},
+        {n:'Monitor mid-funnel campaigns (by Follo)',s:'not started',d:null,a:['FP'],u:'https://app.clickup.com/t/86b9cxcf8'},
+        {n:'Create new templates for Meta ads',s:'not started',d:'2026-04-23',a:['SW','FP'],u:'https://app.clickup.com/t/86b9cw0df'}
+      ]},
+      {id:'86b9a350z',n:'Brand images AI',s:'not started',a:['SW'],u:'https://app.clickup.com/t/86b9a350z',tc:0,ch:[]},
+      {id:'86b9a3dar',n:'Web Chat Integration',s:'not started',a:[],u:'https://app.clickup.com/t/86b9a3dar',tc:0,ch:[]},
+      {id:'86b9a3dfx',n:'Calcumate Fix',s:'not started',a:[],u:'https://app.clickup.com/t/86b9a3dfx',tc:1,ch:[
+        {n:'Create integration with Store365',s:'not started',d:null,a:[],u:'https://app.clickup.com/t/86b9c0jdr'}
+      ]}
+    ];
+
+    const CU_AVATAR_COLORS = {FP:'#81b1ff',ZW:'#5a9a2f',EF:'#d60800',GC:'#f76808',SW:'#aa2fff'};
+
+    function renderClickupPanel() {
+        const container = document.getElementById('clickupCards');
+        if (!container) return;
+        const now = new Date();
+        let html = '';
+        CLICKUP_DATA.forEach(fa => {
+            const sc = fa.s.replace(/\s+/g, '-');
+            // card header
+            html += `<div class="cu-card">`;
+            html += `<div class="cu-card-head">`;
+            html += `<div class="cu-card-title"><a href="${fa.u}" target="_blank" title="${fa.n}">${fa.n}</a></div>`;
+            html += `<span class="cu-status ${sc}">${fa.s}</span>`;
+            html += `</div>`;
+            // card body - subtasks
+            html += `<div class="cu-card-body">`;
+            if (fa.ch.length === 0) {
+                html += `<div class="cu-empty">No subtasks</div>`;
+            } else {
+                fa.ch.slice(0, 5).forEach(t => {
+                    const tsc = t.s.replace(/\s+/g, '-');
+                    // due date formatting
+                    let dueHtml = '';
+                    if (t.d) {
+                        const dd = new Date(t.d + 'T00:00:00');
+                        const diff = Math.floor((dd - now) / 86400000);
+                        const label = dd.toLocaleDateString('en-GB', {day:'numeric',month:'short'});
+                        let cls = '';
+                        if (diff < 0) cls = 'overdue';
+                        else if (diff <= 7) cls = 'soon';
+                        dueHtml = `<span class="cu-task-due ${cls}">${diff < 0 ? '⚠ ' : ''}${label}</span>`;
+                    }
+                    // avatars
+                    let avHtml = '';
+                    if (t.a.length) {
+                        avHtml = '<span class="cu-avatars">' + t.a.map(i => `<span class="cu-avatar" style="background:${CU_AVATAR_COLORS[i]||'#888'}" title="${i}">${i}</span>`).join('') + '</span>';
+                    }
+                    html += `<div class="cu-task">`;
+                    html += `<span class="cu-task-dot ${tsc}"></span>`;
+                    html += `<span class="cu-task-name"><a href="${t.u}" target="_blank" title="${t.n}">${t.n}</a></span>`;
+                    html += dueHtml;
+                    html += avHtml;
+                    html += `</div>`;
+                });
+            }
+            html += `</div>`;
+            // card footer
+            const ownerAv = fa.a.length ? fa.a.map(i => `<span class="cu-avatar" style="background:${CU_AVATAR_COLORS[i]||'#888'}" title="${i}">${i}</span>`).join('') : '<span style="color:#bbb">Unassigned</span>';
+            const moreLabel = fa.tc > 5 ? `+${fa.tc - 5} more` : `${fa.tc} task${fa.tc !== 1 ? 's' : ''}`;
+            html += `<div class="cu-card-foot">`;
+            html += `<span class="cu-owner">${ownerAv}</span>`;
+            html += `<span class="cu-more">${moreLabel}</span>`;
+            html += `</div></div>`;
+        });
+        container.innerHTML = html;
+    }
+    renderClickupPanel();
 
     // ===== MONTHLY REPORT: GA4 INTEGRATION =====
     const MONTHLY_API = '/api/ga4/monthly-report';
