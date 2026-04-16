@@ -48,6 +48,42 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.sc-sample').forEach(el => {
         if (el.textContent.trim() === 'Sample') el.style.display = 'none';
     });
+
+    // Portal-based tooltips: clone tooltip content into a fixed-position element on <body>
+    // so it escapes any overflow:hidden containers
+    let activePortal = null;
+    document.querySelectorAll('.src-info').forEach(info => {
+        const tip = info.querySelector('.src-tip');
+        if (!tip) return;
+        info.addEventListener('mouseenter', () => {
+            // Remove any existing portal
+            if (activePortal) { activePortal.remove(); activePortal = null; }
+            // Create portal element
+            const portal = document.createElement('div');
+            portal.className = 'src-tip-portal';
+            portal.innerHTML = tip.innerHTML;
+            document.body.appendChild(portal);
+            activePortal = portal;
+            // Position: measure icon rect and portal size
+            const iconRect = info.getBoundingClientRect();
+            const portalRect = portal.getBoundingClientRect();
+            const TIP_W = 260;
+            let left = iconRect.left + iconRect.width / 2 - TIP_W / 2;
+            let top = iconRect.top - portalRect.height - 10;
+            // Keep within viewport
+            if (left < 8) left = 8;
+            if (left + TIP_W > window.innerWidth - 8) left = window.innerWidth - TIP_W - 8;
+            if (top < 8) {
+                top = iconRect.bottom + 10;
+                portal.classList.add('tip-below');
+            }
+            portal.style.left = left + 'px';
+            portal.style.top = top + 'px';
+        });
+        info.addEventListener('mouseleave', () => {
+            if (activePortal) { activePortal.remove(); activePortal = null; }
+        });
+    });
 });
 </script>
 
@@ -2070,18 +2106,19 @@ document.addEventListener('DOMContentLoaded', () => {
             flex-shrink: 0;
             vertical-align: middle;
             transition: background 0.2s, color 0.2s;
-            z-index: 1;
+            z-index: 10;
         }
         .src-info:hover {
             background: rgba(90,154,47,0.15);
             color: var(--green-700);
+            z-index: 99999;
         }
         .src-info .src-tip {
             display: none;
-            position: absolute;
-            bottom: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
+        }
+        /* Tooltip portal — appended to body via JS */
+        .src-tip-portal {
+            position: fixed;
             width: 260px;
             background: #1a2332;
             color: #e0e0e0;
@@ -2095,10 +2132,10 @@ document.addEventListener('DOMContentLoaded', () => {
             letter-spacing: 0;
             text-transform: none;
             box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-            z-index: 9999;
+            z-index: 999999;
             pointer-events: none;
         }
-        .src-info .src-tip::after {
+        .src-tip-portal::after {
             content: '';
             position: absolute;
             top: 100%;
@@ -2107,10 +2144,16 @@ document.addEventListener('DOMContentLoaded', () => {
             border: 6px solid transparent;
             border-top-color: #1a2332;
         }
-        .src-info:hover .src-tip { display: block; }
-        .src-tip b { color: #fff; font-weight: 600; }
-        .src-tip .src-row { margin-bottom: 4px; }
-        .src-tip .src-row:last-child { margin-bottom: 0; }
+        .src-tip-portal.tip-below::after {
+            top: auto;
+            bottom: 100%;
+            border-top-color: transparent;
+            border-bottom-color: #1a2332;
+        }
+        .src-tip b, .src-tip-portal b { color: #fff; font-weight: 600; }
+        .src-tip .src-row, .src-tip-portal .src-row { margin-bottom: 4px; }
+        .src-tip .src-row:last-child, .src-tip-portal .src-row:last-child { margin-bottom: 0; }
+
 
         /* ===== MONTHLY REPORT RESPONSIVE OVERRIDES (must come after base monthly CSS) ===== */
         @media (max-width: 1200px) {
