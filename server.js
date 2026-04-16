@@ -1026,19 +1026,28 @@ app.get('/api/ga4/conversion-trend', async (req, res) => {
   if (cached) return res.json(cached);
 
   try {
-    // Last 6 full months (not including current month)
+    // Last 6 full months + current month (partial, up to yesterday)
     const now = new Date();
     const months = [];
-    for (let i = 6; i >= 1; i--) {
+    for (let i = 6; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, '0');
-      const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+      let endDate;
+      if (i === 0) {
+        // Current month: use yesterday as end date
+        const yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1);
+        endDate = yesterday.toISOString().split('T')[0];
+      } else {
+        const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+        endDate = lastDay.toISOString().split('T')[0];
+      }
       months.push({
         year: y,
         month: m,
         start: `${y}-${m}-01`,
-        end: lastDay.toISOString().split('T')[0],
+        end: endDate,
         label: d.toLocaleString('en-US', { month: 'short' }),
       });
     }

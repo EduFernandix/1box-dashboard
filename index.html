@@ -3044,8 +3044,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <!-- CONVERSION TREND CHART -->
                 <div class="monthly-section">
-                    <div class="monthly-section-title">Conversion Rate Trend — Last 6 Months <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Monthly user_to_lead and lead_to_customer rates</div><div class="src-row"><b>Period:</b> Rolling 6 months</div></span></span></div>
-                    <div style="height:220px;">
+                    <div class="monthly-section-title" style="display:flex;align-items:center;gap:16px;">
+                        <span>Conversion Rate Trend — Last 6 Months <span class="src-info">i<span class="src-tip"><div class="src-row"><b>Source:</b> GA4 (Property 308309603)</div><div class="src-row"><b>Calculation:</b> Monthly user_to_lead and lead_to_customer rates</div><div class="src-row"><b>Period:</b> Rolling 6 months</div></span></span></span>
+                        <div style="display:flex;gap:14px;font-size:11px;font-weight:500;color:var(--text-dim);align-items:center;">
+                            <span style="display:inline-flex;align-items:center;gap:4px;"><span style="display:inline-block;width:12px;height:3px;background:#7CB342;border-radius:2px;"></span>User → Lead %</span>
+                            <span style="display:inline-flex;align-items:center;gap:4px;"><span style="display:inline-block;width:12px;height:3px;background:#1a3a5c;border-radius:2px;"></span>Lead → Booking %</span>
+                        </div>
+                    </div>
+                    <div style="height:240px;">
                         <canvas id="conversionTrendChart"></canvas>
                     </div>
                 </div>
@@ -5223,15 +5229,15 @@ Generate insights covering ALL of these topics:
                             data: {
                                 labels,
                                 datasets: [
-                                    { label:'User \u2192 Lead %', data:t.map(d=>d.user_to_lead), ...lineD('#7CB342',2.5), datalabels:{...lineDL('#7CB342'), align:'bottom', offset:6, formatter:v=>v+'%'} },
-                                    { label:'Lead \u2192 Booking %', data:t.map(d=>d.lead_to_customer), ...lineD('#1a3a5c',2.5), datalabels:{...lineDL('#1a3a5c'), align:'top', offset:6, formatter:v=>v+'%'} },
+                                    { label:'User \u2192 Lead %', data:t.map(d=>d.user_to_lead), ...lineD('#7CB342',2.5), datalabels:{...lineDL('#7CB342'), align:'bottom', offset:8, formatter:v=>v+'%'} },
+                                    { label:'Lead \u2192 Booking %', data:t.map(d=>d.lead_to_customer), ...lineD('#1a3a5c',2.5), datalabels:{...lineDL('#1a3a5c'), align:'top', offset:8, formatter:v=>v+'%'} },
                                 ],
                             },
                             options: {
                                 responsive: true,
                                 maintainAspectRatio: false,
-                                layout: { padding: { top: 18 } },
-                                plugins: { legend:{...lineLegend, position:'top', align:'start', labels:{...lineLegend.labels, padding:8, font:{family:"'DM Sans',sans-serif", size:10, weight:'600'}, color:'#555'}}, datalabels:{}, tooltip:{...darkTooltip} },
+                                layout: { padding: { top: 24, bottom: 4 } },
+                                plugins: { legend:{display:false}, datalabels:{}, tooltip:{...darkTooltip} },
                                 scales: {
                                     x: lineScaleX,
                                     y: lineScaleY({ callback: v => v + '%' }),
