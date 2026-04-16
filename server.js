@@ -602,16 +602,13 @@ app.get('/api/ga4/overview', async (req, res) => {
     const bookCompRows = parseGA4Rows(bookSrcCompleteReport);
 
     function buildBookingBySource(rows) {
-      const source = [];
-      const count = [];
-      rows.forEach((r) => {
-        source.push(r.sessionDefaultChannelGrouping || 'Unknown');
-        count.push(parseInt(r.eventCount, 10));
-      });
-      return { source, count };
+      return rows.map((r) => ({
+        source: r.sessionDefaultChannelGrouping || 'Unknown',
+        count: parseInt(r.eventCount, 10),
+      })).sort((a, b) => b.count - a.count);
     }
 
-    const bookings_by_source = {
+    const source_by_event = {
       transparent_booking: buildBookingBySource(bookTransRows),
       booking_complete: buildBookingBySource(bookCompRows),
     };
@@ -627,7 +624,7 @@ app.get('/api/ga4/overview', async (req, res) => {
       trend,
       top_cities,
       sessions_by_dow,
-      bookings_by_source,
+      source_by_event,
     };
 
     cacheSet(cacheKey, result);
